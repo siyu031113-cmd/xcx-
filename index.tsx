@@ -274,26 +274,26 @@ const RegisterView = ({ onRegister, onCancel }: any) => {
                         </div>
                         <div className="space-y-4">
                             <div>
-                                <label className="text-xs font-bold text-slate-400 ml-2 mb-1 block">FULL NAME</label>
+                                <label className="text-xs font-bold text-slate-400 ml-2 mb-1 block">真实姓名 (FULL NAME)</label>
                                 <input className="w-full bg-slate-50 p-4 rounded-2xl font-bold text-slate-700 focus:outline-none focus:ring-2 focus:ring-sky-200" placeholder="e.g. Alice Chen" value={formData.name} onChange={e => setFormData({...formData, name: e.target.value})}/>
                             </div>
                             <div>
-                                <label className="text-xs font-bold text-slate-400 ml-2 mb-1 block">UNIVERSITY (REQUIRED)</label>
+                                <label className="text-xs font-bold text-slate-400 ml-2 mb-1 block">就读学校 (UNIVERSITY)</label>
                                 <input className="w-full bg-slate-50 p-4 rounded-2xl font-bold text-slate-700 focus:outline-none focus:ring-2 focus:ring-sky-200" placeholder="e.g. Peking University" value={formData.school} onChange={e => setFormData({...formData, school: e.target.value})}/>
                             </div>
                             <div>
-                                <label className="text-xs font-bold text-slate-400 ml-2 mb-1 block">PHONE NUMBER</label>
+                                <label className="text-xs font-bold text-slate-400 ml-2 mb-1 block">手机号码 (PHONE)</label>
                                 <div className="flex gap-2">
                                      <input className="flex-1 bg-slate-50 p-4 rounded-2xl font-bold text-slate-700 focus:outline-none focus:ring-2 focus:ring-sky-200" placeholder="Mobile Number" value={formData.phone} onChange={e => setFormData({...formData, phone: e.target.value})}/>
-                                    <button className="bg-sky-100 text-sky-600 px-4 rounded-2xl font-bold text-sm">Send Code</button>
+                                    <button className="bg-sky-100 text-sky-600 px-4 rounded-2xl font-bold text-sm">验证码</button>
                                 </div>
                             </div>
                              <div>
-                                <label className="text-xs font-bold text-slate-400 ml-2 mb-1 block">VERIFICATION CODE</label>
+                                <label className="text-xs font-bold text-slate-400 ml-2 mb-1 block">验证码 (CODE)</label>
                                 <input className="w-full bg-slate-50 p-4 rounded-2xl font-bold text-slate-700 focus:outline-none focus:ring-2 focus:ring-sky-200" placeholder="1234" value={formData.code} onChange={e => setFormData({...formData, code: e.target.value})}/>
                             </div>
                         </div>
-                        <div className="pt-4"><Button onClick={handleSubmit} className="w-full text-lg h-14">Register Now</Button></div>
+                        <div className="pt-4"><Button onClick={handleSubmit} className="w-full text-lg h-14">立即注册 (Register Now)</Button></div>
                          <div className="text-center pb-8 pt-4"><p className="text-sm text-slate-400">Blueprint Global Exchange | 蓝途启航</p></div>
                     </div>
                 </div>
@@ -392,12 +392,12 @@ const StudentJobDetail = ({ job, user, onBack, onApplyConfirm, hasActiveApp, isF
                     <h1 className="text-3xl font-black text-slate-900 leading-tight mb-1">{job.title}</h1>
                     <p className="text-slate-500 font-medium text-lg mb-6">{job.companyName} <span className="text-slate-300">•</span> {job.location}</p>
                     <div className="grid grid-cols-2 gap-3 mb-8">
-                        <div className="bg-slate-50 p-4 rounded-2xl border border-slate-100"><p className="text-xs font-bold text-slate-400 uppercase mb-1">Program Year</p><p className="text-slate-800 font-bold">{job.programYear}</p></div>
-                         <div className="bg-slate-50 p-4 rounded-2xl border border-slate-100"><p className="text-xs font-bold text-slate-400 uppercase mb-1">Housing Cost</p><p className="text-slate-800 font-bold">{job.housingCost}</p></div>
-                         <div className="bg-slate-50 p-4 rounded-2xl border border-slate-100"><p className="text-xs font-bold text-slate-400 uppercase mb-1">Start Dates</p><p className="text-slate-800 font-bold">{job.startDateRange}</p></div>
-                         <div className="bg-slate-50 p-4 rounded-2xl border border-slate-100"><p className="text-xs font-bold text-slate-400 uppercase mb-1">End Date</p><p className="text-slate-800 font-bold">{job.endDate}</p></div>
+                        <div className="bg-slate-50 p-4 rounded-2xl border border-slate-100"><p className="text-xs font-bold text-slate-400 uppercase mb-1">届数 (Year)</p><p className="text-slate-800 font-bold">{job.programYear}</p></div>
+                         <div className="bg-slate-50 p-4 rounded-2xl border border-slate-100"><p className="text-xs font-bold text-slate-400 uppercase mb-1">住宿费 (Housing)</p><p className="text-slate-800 font-bold">{job.housingCost}</p></div>
+                         <div className="bg-slate-50 p-4 rounded-2xl border border-slate-100"><p className="text-xs font-bold text-slate-400 uppercase mb-1">开始日期 (Start)</p><p className="text-slate-800 font-bold">{job.startDateRange}</p></div>
+                         <div className="bg-slate-50 p-4 rounded-2xl border border-slate-100"><p className="text-xs font-bold text-slate-400 uppercase mb-1">结束日期 (End)</p><p className="text-slate-800 font-bold">{job.endDate}</p></div>
                     </div>
-                    <div className="prose prose-slate prose-p:text-slate-600 prose-headings:text-slate-800 mb-24"><h3 className="font-bold text-lg mb-2">Job Description</h3><p>{job.description}</p></div>
+                    <div className="prose prose-slate prose-p:text-slate-600 prose-headings:text-slate-800 mb-24"><h3 className="font-bold text-lg mb-2">职位描述 (Description)</h3><p>{job.description}</p></div>
                 </div>
             </div>
             <div className="p-4 bg-white border-t border-slate-100 sticky bottom-0 z-20 pb-8">
@@ -517,9 +517,9 @@ const StudentProfileView = ({ user, onLogout, onEdit, isEditing, onSaveProfile }
             <div className="flex-1 overflow-y-auto p-6 pt-12 pb-24 min-h-0 bg-[#F0F9FF]">
                  <div className="flex justify-between items-center mb-6"><h1 className="text-2xl font-black text-slate-900">Edit Profile</h1><button onClick={onEdit} className="text-slate-400 font-bold">Cancel</button></div>
                 <div className="bg-white p-6 rounded-[32px] shadow-lg space-y-4">
-                    <div><label className="text-xs font-bold text-slate-400 mb-1 block">FULL NAME</label><input className="w-full bg-slate-50 p-3 rounded-xl font-bold text-slate-800" value={editData.name} onChange={e => setEditData({...editData, name: e.target.value})}/></div>
-                     <div><label className="text-xs font-bold text-slate-400 mb-1 block">PHONE</label><input className="w-full bg-slate-50 p-3 rounded-xl font-bold text-slate-800" value={editData.phone} onChange={e => setEditData({...editData, phone: e.target.value})}/></div>
-                     <div><label className="text-xs font-bold text-slate-400 mb-1 block">SCHOOL (LOCKED)</label><input disabled className="w-full bg-slate-100 p-3 rounded-xl font-bold text-slate-400 cursor-not-allowed" value={user.school}/></div>
+                    <div><label className="text-xs font-bold text-slate-400 mb-1 block">姓名 (FULL NAME)</label><input className="w-full bg-slate-50 p-3 rounded-xl font-bold text-slate-800" value={editData.name} onChange={e => setEditData({...editData, name: e.target.value})}/></div>
+                     <div><label className="text-xs font-bold text-slate-400 mb-1 block">电话 (PHONE)</label><input className="w-full bg-slate-50 p-3 rounded-xl font-bold text-slate-800" value={editData.phone} onChange={e => setEditData({...editData, phone: e.target.value})}/></div>
+                     <div><label className="text-xs font-bold text-slate-400 mb-1 block">学校 (SCHOOL - LOCKED)</label><input disabled className="w-full bg-slate-100 p-3 rounded-xl font-bold text-slate-400 cursor-not-allowed" value={user.school}/></div>
                     <Button onClick={handleSave} className="w-full mt-4">Save Changes</Button>
                 </div>
             </div>
@@ -537,13 +537,13 @@ const StudentProfileView = ({ user, onLogout, onEdit, isEditing, onSaveProfile }
             </div>
             <div className="px-6 -mt-12 z-10 relative mb-8 flex-shrink-0">
                 <div className="grid grid-cols-2 gap-4">
-                    <div className="bg-white p-5 rounded-[32px] shadow-lg shadow-sky-50 border border-white flex flex-col items-center justify-center gap-2"><div className="w-10 h-10 bg-[#FEF9C3] rounded-full flex items-center justify-center text-yellow-600"><Star className="w-5 h-5 fill-current" /></div><span className="text-3xl font-black text-slate-800">{user.score.toFixed(1)}</span><span className="bg-slate-100 text-slate-400 px-2 py-0.5 rounded text-[10px] font-bold uppercase tracking-widest">Score</span></div>
-                     <div className="bg-white p-5 rounded-[32px] shadow-lg shadow-sky-50 border border-white flex flex-col items-center justify-center gap-2"><div className="w-10 h-10 bg-sky-100 rounded-full flex items-center justify-center text-sky-500"><Briefcase className="w-5 h-5" /></div><span className="text-3xl font-black text-slate-800">{user.programYear}</span><span className="bg-slate-100 text-slate-400 px-2 py-0.5 rounded text-[10px] font-bold uppercase tracking-widest">Cohort</span></div>
+                    <div className="bg-white p-5 rounded-[32px] shadow-lg shadow-sky-50 border border-white flex flex-col items-center justify-center gap-2"><div className="w-10 h-10 bg-[#FEF9C3] rounded-full flex items-center justify-center text-yellow-600"><Star className="w-5 h-5 fill-current" /></div><span className="text-3xl font-black text-slate-800">{user.score.toFixed(1)}</span><span className="bg-slate-100 text-slate-400 px-2 py-0.5 rounded text-[10px] font-bold uppercase tracking-widest">评分 (Score)</span></div>
+                     <div className="bg-white p-5 rounded-[32px] shadow-lg shadow-sky-50 border border-white flex flex-col items-center justify-center gap-2"><div className="w-10 h-10 bg-sky-100 rounded-full flex items-center justify-center text-sky-500"><Briefcase className="w-5 h-5" /></div><span className="text-3xl font-black text-slate-800">{user.programYear}</span><span className="bg-slate-100 text-slate-400 px-2 py-0.5 rounded text-[10px] font-bold uppercase tracking-widest">届数 (Cohort)</span></div>
                 </div>
             </div>
             <div className="px-6 space-y-3 flex-shrink-0">
-                 <button className="w-full bg-white p-4 rounded-full shadow-sm border border-slate-50 flex items-center justify-between active:scale-[0.98]"><div className="flex items-center gap-4"><div className="w-10 h-10 rounded-full bg-[#F0FDFA] flex items-center justify-center text-teal-500"><FileText className="w-5 h-5" /></div><span className="font-bold text-slate-700">Internship Agreement</span></div><ChevronRight className="text-slate-300" /></button>
-                <button onClick={onLogout} className="w-full bg-white p-4 rounded-full shadow-sm border border-slate-50 flex items-center justify-between active:scale-[0.98] group"><div className="flex items-center gap-4"><div className="w-10 h-10 rounded-full bg-rose-50 flex items-center justify-center text-rose-400 group-hover:text-rose-500"><LogOut className="w-5 h-5 ml-0.5" /></div><span className="font-bold text-slate-700 group-hover:text-rose-500 transition-colors">Sign Out</span></div></button>
+                 <button className="w-full bg-white p-4 rounded-full shadow-sm border border-slate-50 flex items-center justify-between active:scale-[0.98]"><div className="flex items-center gap-4"><div className="w-10 h-10 rounded-full bg-[#F0FDFA] flex items-center justify-center text-teal-500"><FileText className="w-5 h-5" /></div><span className="font-bold text-slate-700">实习协议 (Agreement)</span></div><ChevronRight className="text-slate-300" /></button>
+                <button onClick={onLogout} className="w-full bg-white p-4 rounded-full shadow-sm border border-slate-50 flex items-center justify-between active:scale-[0.98] group"><div className="flex items-center gap-4"><div className="w-10 h-10 rounded-full bg-rose-50 flex items-center justify-center text-rose-400 group-hover:text-rose-500"><LogOut className="w-5 h-5 ml-0.5" /></div><span className="font-bold text-slate-700 group-hover:text-rose-500 transition-colors">退出登录 (Sign Out)</span></div></button>
             </div>
              <div className="text-center mt-8 text-slate-300 text-xs flex-shrink-0 pb-4">v1.3.0 · Blueprint Global</div>
         </div>
@@ -552,7 +552,7 @@ const StudentProfileView = ({ user, onLogout, onEdit, isEditing, onSaveProfile }
 
 // --- Admin Views ---
 
-const AdminDashView = ({ jobs, students, onSelectJob, apps }: any) => {
+const AdminDashView = ({ jobs, students, onSelectJob, apps, onGoToGuides }: any) => {
     const [search, setSearch] = useState('');
     const filteredJobs = jobs.filter((j: any) => j.title.toLowerCase().includes(search.toLowerCase()) || String(j.seqNo).includes(search) || j.location.toLowerCase().includes(search.toLowerCase())).sort((a:any, b:any) => a.seqNo - b.seqNo);
     const activeJobs = filteredJobs.filter((j: any) => { const approvedCount = apps.filter((a: any) => a.jobId === j.id && a.status === 'approved').length; return approvedCount < j.capacity; });
@@ -567,6 +567,7 @@ const AdminDashView = ({ jobs, students, onSelectJob, apps }: any) => {
             <div className="flex gap-4 mb-8 overflow-x-auto pb-2 scrollbar-hide">
                  <div className="min-w-[140px] bg-white p-4 rounded-[24px] border border-slate-50 shadow-lg shadow-slate-100"><div className="w-10 h-10 bg-sky-100 rounded-full flex items-center justify-center text-sky-600 mb-2"><Users className="w-5 h-5" /></div><p className="text-2xl font-black text-slate-800">{students.length}</p><p className="text-xs text-slate-400 font-bold uppercase">Students</p></div>
                  <div className="min-w-[140px] bg-white p-4 rounded-[24px] border border-slate-50 shadow-lg shadow-slate-100"><div className="w-10 h-10 bg-[#FEF9C3] rounded-full flex items-center justify-center text-yellow-600 mb-2"><Briefcase className="w-5 h-5" /></div><p className="text-2xl font-black text-slate-800">{jobs.length}</p><p className="text-xs text-slate-400 font-bold uppercase">Jobs</p></div>
+                 <div onClick={onGoToGuides} className="min-w-[140px] bg-white p-4 rounded-[24px] border border-slate-50 shadow-lg shadow-slate-100 active:scale-95 cursor-pointer"><div className="w-10 h-10 bg-emerald-100 rounded-full flex items-center justify-center text-emerald-600 mb-2"><BookOpen className="w-5 h-5" /></div><p className="text-2xl font-black text-slate-800">Guides</p><p className="text-xs text-slate-400 font-bold uppercase">Manage</p></div>
             </div>
             
             <div className="mb-8">
@@ -683,15 +684,15 @@ const AdminPostJobView = ({ onSave, onCancel, editingJob }: any) => {
                     <div className="grid grid-cols-3 gap-2">{job.imgUrls?.map((url, idx) => (<div key={idx} className="aspect-square rounded-xl overflow-hidden relative group"><img src={url} className="w-full h-full object-cover" /><button onClick={() => setJob({...job, imgUrls: job.imgUrls?.filter((_, i) => i !== idx)})} className="absolute inset-0 bg-black/40 hidden group-hover:flex items-center justify-center text-white"><Trash2 className="w-5 h-5" /></button></div>))}{(job.imgUrls?.length || 0) < 9 && (<label className="aspect-square rounded-xl bg-sky-50 border-2 border-dashed border-sky-200 flex flex-col items-center justify-center text-sky-400 cursor-pointer hover:bg-sky-100 transition-colors"><Camera className="w-6 h-6 mb-1" /><span className="text-[10px] font-bold">Add</span><input type="file" className="hidden" accept="image/*" onChange={handleImageUpload} /></label>)}</div>
                 </div>
                 <div className="bg-white p-5 rounded-[32px] space-y-4">
-                     <div><label className="text-xs font-bold text-slate-400 ml-2 mb-1 block">SEQUENCE NO. (#ID)</label><input className="w-full bg-slate-50 p-4 rounded-2xl font-bold text-slate-700 focus:outline-none" type="number" value={job.seqNo} onChange={e => setJob({...job, seqNo: parseInt(e.target.value)})}/></div>
-                    <div><label className="text-xs font-bold text-slate-400 ml-2 mb-1 block">JOB TITLE</label><input className="w-full bg-slate-50 p-4 rounded-2xl font-bold text-slate-700 focus:outline-none" value={job.title} onChange={e => setJob({...job, title: e.target.value})} placeholder="e.g. Lifeguard"/></div>
-                     <div><label className="text-xs font-bold text-slate-400 ml-2 mb-1 block">COMPANY NAME</label><input className="w-full bg-slate-50 p-4 rounded-2xl font-bold text-slate-700 focus:outline-none" value={job.companyName} onChange={e => setJob({...job, companyName: e.target.value})} placeholder="e.g. Resort World"/></div>
-                     <div><label className="text-xs font-bold text-slate-400 ml-2 mb-1 block">LOCATION</label><input className="w-full bg-slate-50 p-4 rounded-2xl font-bold text-slate-700 focus:outline-none" value={job.location} onChange={e => setJob({...job, location: e.target.value})} placeholder="e.g. City, State"/></div>
-                    <div className="grid grid-cols-2 gap-4"><div><label className="text-xs font-bold text-slate-400 ml-2 mb-1 block">SALARY</label><input className="w-full bg-slate-50 p-4 rounded-2xl font-bold text-slate-700 focus:outline-none" value={job.salary} onChange={e => setJob({...job, salary: e.target.value})}/></div><div><label className="text-xs font-bold text-slate-400 ml-2 mb-1 block">CAPACITY</label><input className="w-full bg-slate-50 p-4 rounded-2xl font-bold text-slate-700 focus:outline-none" type="number" value={job.capacity} onChange={e => setJob({...job, capacity: parseInt(e.target.value)})}/></div></div>
-                    <div className="grid grid-cols-2 gap-4"><div><label className="text-xs font-bold text-slate-400 ml-2 mb-1 block">HOUSING</label><select className="w-full bg-slate-50 p-4 rounded-2xl font-bold text-slate-700 focus:outline-none appearance-none" value={job.housing} onChange={e => setJob({...job, housing: e.target.value})}><option value="Provided">Provided</option><option value="Assistance">Assistance</option><option value="None">None</option></select></div><div><label className="text-xs font-bold text-slate-400 ml-2 mb-1 block">COST</label><input className="w-full bg-slate-50 p-4 rounded-2xl font-bold text-slate-700 focus:outline-none" value={job.housingCost} onChange={e => setJob({...job, housingCost: e.target.value})}/></div></div>
-                    <div className="grid grid-cols-2 gap-4"><div><label className="text-xs font-bold text-slate-400 ml-2 mb-1 block">START DATES</label><input className="w-full bg-slate-50 p-4 rounded-2xl font-bold text-slate-700 focus:outline-none" value={job.startDateRange} onChange={e => setJob({...job, startDateRange: e.target.value})} placeholder="Jun 15 - 30"/></div><div><label className="text-xs font-bold text-slate-400 ml-2 mb-1 block">END DATE</label><input className="w-full bg-slate-50 p-4 rounded-2xl font-bold text-slate-700 focus:outline-none" value={job.endDate} onChange={e => setJob({...job, endDate: e.target.value})} placeholder="Sept 15"/></div></div>
-                    <div className="grid grid-cols-2 gap-4"><div><label className="text-xs font-bold text-slate-400 ml-2 mb-1 block">PROGRAM YEAR</label><input className="w-full bg-slate-50 p-4 rounded-2xl font-bold text-slate-700 focus:outline-none" value={job.programYear} onChange={e => setJob({...job, programYear: e.target.value})}/></div><div><label className="text-xs font-bold text-slate-400 ml-2 mb-1 block">MIN SCORE</label><input className="w-full bg-slate-50 p-4 rounded-2xl font-bold text-slate-700 focus:outline-none" type="number" step="0.5" min="6" max="10" value={job.minScore} onChange={e => setJob({...job, minScore: parseFloat(e.target.value)})}/></div></div>
-                     <div><label className="text-xs font-bold text-slate-400 ml-2 mb-1 block">DESCRIPTION</label><textarea className="w-full bg-slate-50 p-4 rounded-2xl font-medium text-slate-600 focus:outline-none min-h-[200px]" value={job.description} onChange={e => setJob({...job, description: e.target.value})} placeholder="Describe the role..."/></div>
+                     <div><label className="text-xs font-bold text-slate-400 ml-2 mb-1 block">序号 (SEQUENCE NO.)</label><input className="w-full bg-slate-50 p-4 rounded-2xl font-bold text-slate-700 focus:outline-none" type="number" value={job.seqNo} onChange={e => setJob({...job, seqNo: parseInt(e.target.value)})}/></div>
+                    <div><label className="text-xs font-bold text-slate-400 ml-2 mb-1 block">职位名称 (JOB TITLE)</label><input className="w-full bg-slate-50 p-4 rounded-2xl font-bold text-slate-700 focus:outline-none" value={job.title} onChange={e => setJob({...job, title: e.target.value})} placeholder="e.g. Lifeguard"/></div>
+                     <div><label className="text-xs font-bold text-slate-400 ml-2 mb-1 block">公司名称 (COMPANY NAME)</label><input className="w-full bg-slate-50 p-4 rounded-2xl font-bold text-slate-700 focus:outline-none" value={job.companyName} onChange={e => setJob({...job, companyName: e.target.value})} placeholder="e.g. Resort World"/></div>
+                     <div><label className="text-xs font-bold text-slate-400 ml-2 mb-1 block">地点 (LOCATION)</label><input className="w-full bg-slate-50 p-4 rounded-2xl font-bold text-slate-700 focus:outline-none" value={job.location} onChange={e => setJob({...job, location: e.target.value})} placeholder="e.g. City, State"/></div>
+                    <div className="grid grid-cols-2 gap-4"><div><label className="text-xs font-bold text-slate-400 ml-2 mb-1 block">薪资 (SALARY)</label><input className="w-full bg-slate-50 p-4 rounded-2xl font-bold text-slate-700 focus:outline-none" value={job.salary} onChange={e => setJob({...job, salary: e.target.value})}/></div><div><label className="text-xs font-bold text-slate-400 ml-2 mb-1 block">招聘人数 (CAPACITY)</label><input className="w-full bg-slate-50 p-4 rounded-2xl font-bold text-slate-700 focus:outline-none" type="number" value={job.capacity} onChange={e => setJob({...job, capacity: parseInt(e.target.value)})}/></div></div>
+                    <div className="grid grid-cols-2 gap-4"><div><label className="text-xs font-bold text-slate-400 ml-2 mb-1 block">住宿 (HOUSING)</label><select className="w-full bg-slate-50 p-4 rounded-2xl font-bold text-slate-700 focus:outline-none appearance-none" value={job.housing} onChange={e => setJob({...job, housing: e.target.value})}><option value="Provided">Provided</option><option value="Assistance">Assistance</option><option value="None">None</option></select></div><div><label className="text-xs font-bold text-slate-400 ml-2 mb-1 block">费用 (COST)</label><input className="w-full bg-slate-50 p-4 rounded-2xl font-bold text-slate-700 focus:outline-none" value={job.housingCost} onChange={e => setJob({...job, housingCost: e.target.value})}/></div></div>
+                    <div className="grid grid-cols-2 gap-4"><div><label className="text-xs font-bold text-slate-400 ml-2 mb-1 block">开始日期 (START)</label><input className="w-full bg-slate-50 p-4 rounded-2xl font-bold text-slate-700 focus:outline-none" value={job.startDateRange} onChange={e => setJob({...job, startDateRange: e.target.value})} placeholder="Jun 15 - 30"/></div><div><label className="text-xs font-bold text-slate-400 ml-2 mb-1 block">结束日期 (END)</label><input className="w-full bg-slate-50 p-4 rounded-2xl font-bold text-slate-700 focus:outline-none" value={job.endDate} onChange={e => setJob({...job, endDate: e.target.value})} placeholder="Sept 15"/></div></div>
+                    <div className="grid grid-cols-2 gap-4"><div><label className="text-xs font-bold text-slate-400 ml-2 mb-1 block">届数 (YEAR)</label><input className="w-full bg-slate-50 p-4 rounded-2xl font-bold text-slate-700 focus:outline-none" value={job.programYear} onChange={e => setJob({...job, programYear: e.target.value})}/></div><div><label className="text-xs font-bold text-slate-400 ml-2 mb-1 block">最低分数 (MIN SCORE)</label><input className="w-full bg-slate-50 p-4 rounded-2xl font-bold text-slate-700 focus:outline-none" type="number" step="0.5" min="6" max="10" value={job.minScore} onChange={e => setJob({...job, minScore: parseFloat(e.target.value)})}/></div></div>
+                     <div><label className="text-xs font-bold text-slate-400 ml-2 mb-1 block">职位描述 (DESCRIPTION)</label><textarea className="w-full bg-slate-50 p-4 rounded-2xl font-medium text-slate-600 focus:outline-none min-h-[200px]" value={job.description} onChange={e => setJob({...job, description: e.target.value})} placeholder="Describe the role..."/></div>
                 </div>
                 <Button onClick={() => onSave(job)} className="w-full shadow-xl shadow-sky-200">{editingJob ? 'Save Changes' : 'Publish Position'}</Button>
             </div>
@@ -794,12 +795,12 @@ const AdminStudentDetailView = ({ student, onBack, onUpdateScore }: any) => {
                  <div className="flex justify-center gap-2 mt-4"><span className="bg-slate-100 text-slate-500 px-3 py-1 rounded-full text-xs font-bold">{student.programYear}</span><span className="bg-slate-100 text-slate-500 px-3 py-1 rounded-full text-xs font-bold">{student.phone}</span></div>
             </div>
             <div className="bg-white p-6 rounded-[32px] shadow-lg space-y-4">
-                <h3 className="font-bold text-slate-800">Admin Actions</h3>
-                <div><label className="text-xs font-bold text-slate-400 ml-2 mb-1 block">SCORE (6.0 - 10.0)</label><input type="number" step="0.5" className="w-full bg-slate-50 p-4 rounded-2xl font-bold text-slate-700" value={score} onChange={e => setScore(e.target.value)}/></div>
-                 <div><label className="text-xs font-bold text-slate-400 ml-2 mb-1 block">SEQUENCE ID</label><input type="number" className="w-full bg-slate-50 p-4 rounded-2xl font-bold text-slate-700" value={seqNo} onChange={e => setSeqNo(e.target.value)}/></div>
+                <h3 className="font-bold text-slate-800">管理员操作 (Admin Actions)</h3>
+                <div><label className="text-xs font-bold text-slate-400 ml-2 mb-1 block">评分 (SCORE 6.0-10.0)</label><input type="number" step="0.5" className="w-full bg-slate-50 p-4 rounded-2xl font-bold text-slate-700" value={score} onChange={e => setScore(e.target.value)}/></div>
+                 <div><label className="text-xs font-bold text-slate-400 ml-2 mb-1 block">序号 (SEQUENCE ID)</label><input type="number" className="w-full bg-slate-50 p-4 rounded-2xl font-bold text-slate-700" value={seqNo} onChange={e => setSeqNo(e.target.value)}/></div>
                 <Button onClick={() => onUpdateScore(student.id, parseFloat(score), parseInt(seqNo))} className="w-full">Update Student</Button>
             </div>
-            <div className="mt-8 px-4"><h3 className="font-bold text-slate-400 text-sm uppercase mb-4">Emergency Contacts</h3>{student.emergencyContacts?.map((c: any, i: number) => (<div key={i} className="bg-white p-4 rounded-2xl mb-2 border border-slate-50"><p className="font-bold text-slate-800">{c.name} <span className="text-sky-500 text-xs ml-2">{c.type}</span></p><p className="text-slate-400 text-sm">{c.phone}</p></div>))}</div>
+            <div className="mt-8 px-4"><h3 className="font-bold text-slate-400 text-sm uppercase mb-4">紧急联系人 (Emergency Contacts)</h3>{student.emergencyContacts?.map((c: any, i: number) => (<div key={i} className="bg-white p-4 rounded-2xl mb-2 border border-slate-50"><p className="font-bold text-slate-800">{c.name} <span className="text-sky-500 text-xs ml-2">{c.type}</span></p><p className="text-slate-400 text-sm">{c.phone}</p></div>))}</div>
         </div>
     );
 };
@@ -807,7 +808,7 @@ const AdminStudentDetailView = ({ student, onBack, onUpdateScore }: any) => {
 const AdminGuidesView = ({ guides, onDelete, onEdit, onAdd, onBack }: any) => {
     return (
         <div className="flex-1 overflow-y-auto p-6 pb-24 min-h-0 bg-[#F0F9FF]">
-             <div className="flex justify-between items-center mb-6"><div className="flex items-center gap-2"><h1 className="text-3xl font-black text-slate-800">Guides</h1></div><button onClick={onAdd} className="w-12 h-12 bg-sky-500 rounded-full flex items-center justify-center text-white shadow-lg shadow-sky-200"><Plus className="w-6 h-6" /></button></div>
+             <div className="flex justify-between items-center mb-6"><div className="flex items-center gap-2"><button onClick={onBack} className="flex items-center text-slate-400 font-bold mr-2"><ChevronLeft className="w-5 h-5" /></button><h1 className="text-3xl font-black text-slate-800">Guides</h1></div><button onClick={onAdd} className="w-12 h-12 bg-sky-500 rounded-full flex items-center justify-center text-white shadow-lg shadow-sky-200"><Plus className="w-6 h-6" /></button></div>
             <div className="space-y-4">{guides.map((g: any) => (<div key={g.id} className="bg-white p-4 rounded-[28px] border border-slate-100 flex gap-4 items-center"><div className="w-16 h-16 bg-slate-100 rounded-2xl overflow-hidden flex-shrink-0">{g.imgUrl ? <img src={g.imgUrl} className="w-full h-full object-cover"/> : <BookOpen className="w-6 h-6 m-auto mt-5 text-slate-300"/>}</div><div className="flex-1"><h3 className="font-bold text-slate-800 leading-tight">{g.title}</h3><p className="text-xs text-slate-400">{g.category}</p></div><div className="flex flex-col gap-2"><button onClick={() => onEdit(g)} className="p-2 bg-slate-50 rounded-full text-slate-500"><Edit3 className="w-4 h-4" /></button><button onClick={() => onDelete(g.id)} className="p-2 bg-rose-50 rounded-full text-rose-500"><Trash2 className="w-4 h-4" /></button></div></div>))}</div>
         </div>
     );
@@ -987,6 +988,7 @@ const App = () => {
                 <AdminDashView 
                     jobs={jobs} students={students} apps={apps}
                     onSelectJob={(j: any) => { setSelectedJob(j); setView('admin-job-detail'); }}
+                    onGoToGuides={() => setView('admin-guides')}
                 />
             )}
             {view === 'admin-apps' && (
@@ -1074,9 +1076,6 @@ const App = () => {
                             
                             {/* Students Tab */}
                             <button onClick={() => setView('admin-students')} className={`flex flex-col items-center ${['admin-students', 'admin-student-detail'].includes(view) ? 'text-sky-500' : 'text-slate-300'}`}><Users className={`w-6 h-6 mb-1 ${view.includes('admin-students') ? 'fill-current' : ''}`} /><span className="text-[10px] font-bold">Students</span></button>
-                            
-                            {/* Guides Tab */}
-                            <button onClick={() => setView('admin-guides')} className={`flex flex-col items-center ${['admin-guides', 'admin-post-guide'].includes(view) ? 'text-sky-500' : 'text-slate-300'}`}><BookOpen className={`w-6 h-6 mb-1 ${view.includes('admin-guides') ? 'fill-current' : ''}`} /><span className="text-[10px] font-bold">Guides</span></button>
                         </>
                     )}
                 </div>

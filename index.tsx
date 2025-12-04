@@ -7,7 +7,8 @@ import {
   Loader2, BarChart3, Users, BookOpen, Send, ChevronLeft, MapPin, Home,
   Phone, Mail, Globe, AlertCircle, Trash2, MoreHorizontal, LayoutGrid,
   ArrowRight, Heart, Sparkles, Cloud, Image as ImageIcon, Upload, Camera,
-  Clock, XCircle, CheckCircle2, Ban, Hash, Edit3, Lock
+  Clock, XCircle, CheckCircle2, Ban, Hash, Edit3, Lock, PenTool, Filter,
+  Settings, Eye, Inbox
 } from 'lucide-react';
 import ReactMarkdown from 'react-markdown';
 import { GoogleGenAI } from "@google/genai";
@@ -60,6 +61,7 @@ interface Guide {
   title: string;
   content: string;
   category?: string;
+  imgUrl?: string;
 }
 
 // --- Mock Data ---
@@ -72,6 +74,17 @@ const INITIAL_USERS: UserData[] = [
     ]
   },
   { id: 'u2', seqNo: 0, name: 'Bob Admin', role: 'admin', score: 0 },
+  // Added Mock Students for Testing
+  { id: 'u3', seqNo: 2, name: 'Charlie Chen', role: 'student', score: 7.0, programYear: '2025', school: 'Beijing Normal', phone: '138-1234-5678' },
+  { id: 'u4', seqNo: 3, name: 'Daisy Wang', role: 'student', score: 9.0, programYear: '2025', school: 'Shanghai Jiaotong', phone: '139-8765-4321' },
+  { id: 'u5', seqNo: 4, name: 'Evan Li', role: 'student', score: 6.5, programYear: '2025', school: 'Sichuan Univ', phone: '137-0000-1111' },
+  { id: 'u6', seqNo: 5, name: 'Fiona Zhang', role: 'student', score: 8.0, programYear: '2026', school: 'Fudan Univ', phone: '136-2222-3333' },
+  { id: 'u7', seqNo: 6, name: 'George Wu', role: 'student', score: 6.0, programYear: '2025', school: 'Zhejiang Univ', phone: '135-4444-5555' },
+  { id: 'u8', seqNo: 7, name: 'Helen Liu', role: 'student', score: 7.5, programYear: '2025', school: 'Wuhan Univ', phone: '134-5555-6666' },
+  { id: 'u9', seqNo: 8, name: 'Ian Zhao', role: 'student', score: 5.5, programYear: '2025', school: 'Nanjing Univ', phone: '133-6666-7777' },
+  // Dummy users to fill the job
+  { id: 'u10', seqNo: 9, name: 'Dummy One', role: 'student', score: 8.0, programYear: '2025', school: 'Test U', phone: '000' },
+  { id: 'u11', seqNo: 10, name: 'Dummy Two', role: 'student', score: 8.0, programYear: '2025', school: 'Test U', phone: '000' },
 ];
 
 const INITIAL_JOBS: Job[] = [
@@ -117,13 +130,13 @@ const INITIAL_JOBS: Job[] = [
     title: 'Amusement Park Attendant',
     location: 'Sandusky, OH',
     companyName: 'Cedar Point',
-    description: 'Operate rides and games, ensuring guest safety and enjoyment in a fast-paced environment.',
+    description: 'Operate rides and assist guests. Great for students who love theme parks!',
     programYear: '2025',
-    housing: 'Dorm Style',
+    housing: 'Provided',
     housingCost: '$100/wk',
-    salary: '$15.50/hr',
+    salary: '$15.00/hr',
     startDateRange: 'Jun 1 - Jun 20',
-    endDate: 'Sept 10, 2025',
+    endDate: 'Sept 15, 2025',
     capacity: 20,
     minScore: 6.5,
     tags: ['Theme Park', 'Outdoors'],
@@ -132,1357 +145,944 @@ const INITIAL_JOBS: Job[] = [
   {
     id: 'j4',
     seqNo: 4,
-    title: 'Housekeeping Staff',
+    title: 'Housekeeper',
     location: 'Gatlinburg, TN',
     companyName: 'Smoky Mountain Lodge',
-    description: 'Maintain cleanliness of guest rooms and public areas. Detail-oriented and reliable staff needed.',
+    description: 'Ensure guest rooms are clean and welcoming. Tips available!',
     programYear: '2025',
     housing: 'Provided',
     housingCost: '$130/wk',
-    salary: '$17.00/hr',
+    salary: '$14.00/hr',
     startDateRange: 'Jun 10 - Jun 25',
-    endDate: 'Sept 30, 2025',
+    endDate: 'Sept 15, 2025',
     capacity: 8,
     minScore: 6.0,
-    tags: ['Hospitality', 'Indoor'],
-    imgUrls: ['https://images.unsplash.com/photo-1584622650111-993a426fbf0a?auto=format&fit=crop&w=800&q=80']
+    tags: ['Hospitality', 'Tips'],
+    imgUrls: ['https://images.unsplash.com/photo-1582719478250-c89cae4dc85b?auto=format&fit=crop&w=800&q=80']
   },
   {
     id: 'j5',
     seqNo: 5,
-    title: 'Retail Sales Associate',
-    location: 'Ocean City, MD',
-    companyName: 'Sun & Surf Shop',
-    description: 'Assist customers with merchandise, operate cash register, and keep the store organized.',
+    title: 'Test Filled Job (Coffee Shop)',
+    location: 'Seattle, WA',
+    companyName: 'Starbucks Local',
+    description: 'This is a test job that is already full.',
     programYear: '2025',
-    housing: 'Self-Arranged',
+    housing: 'None',
     housingCost: 'N/A',
-    salary: '$15.00/hr',
-    startDateRange: 'May 25 - Jun 15',
-    endDate: 'Sept 5, 2025',
-    capacity: 4,
-    minScore: 7.5,
-    tags: ['Sales', 'Beach'],
-    imgUrls: ['https://images.unsplash.com/photo-1441986300917-64674bd600d8?auto=format&fit=crop&w=800&q=80']
+    salary: '$20.00/hr',
+    startDateRange: 'Jun 1 - Jun 1',
+    endDate: 'Sept 15, 2025',
+    capacity: 2, // Low capacity to fill easily
+    minScore: 6.0,
+    tags: ['Test', 'Full'],
+    imgUrls: ['https://images.unsplash.com/photo-1509042239860-f550ce710b93?auto=format&fit=crop&w=800&q=80']
   },
-  {
-    id: 'j6',
-    seqNo: 6,
-    title: 'National Park Server',
-    location: 'Yellowstone, WY',
-    companyName: 'Yellowstone Dining',
-    description: 'Serve meals to park visitors in a high-volume dining hall. Great opportunity to see nature.',
-    programYear: '2025',
-    housing: 'Dormitory',
-    housingCost: '$80/wk',
-    salary: '$14.00/hr + Tips',
-    startDateRange: 'May 15 - Jun 5',
-    endDate: 'Oct 1, 2025',
-    capacity: 15,
-    minScore: 8.0,
-    tags: ['Nature', 'Server'],
-    imgUrls: ['https://images.unsplash.com/photo-1551632436-cbf8dd354ca8?auto=format&fit=crop&w=800&q=80']
-  },
-  {
-    id: 'j7',
-    seqNo: 7,
-    title: 'Ice Cream Scooper',
-    location: 'Cape Cod, MA',
-    companyName: 'Seaside Scoops',
-    description: 'Scoop ice cream and make sundaes for happy vacationers. Must be friendly and energetic!',
-    programYear: '2025',
-    housing: 'Shared House',
-    housingCost: '$160/wk',
-    salary: '$16.50/hr',
-    startDateRange: 'Jun 20 - Jul 1',
-    endDate: 'Sept 1, 2025',
-    capacity: 3,
-    minScore: 6.5,
-    tags: ['Food', 'Fun'],
-    imgUrls: ['https://images.unsplash.com/photo-1560008581-09826d1de69e?auto=format&fit=crop&w=800&q=80']
-  },
-  {
-    id: 'j8',
-    seqNo: 8,
-    title: 'Camp Counselor',
-    location: 'Asheville, NC',
-    companyName: 'Mountain Kids Camp',
-    description: 'Lead activities and supervise children in an outdoor camp setting. Experience with kids required.',
-    programYear: '2025',
-    housing: 'Cabin Provided',
-    housingCost: 'Free',
-    salary: '$3000/season',
-    startDateRange: 'Jun 1 - Jun 5',
-    endDate: 'Aug 15, 2025',
-    capacity: 6,
-    minScore: 8.5,
-    tags: ['Kids', 'Outdoor'],
-    imgUrls: ['https://images.unsplash.com/photo-1478131143081-80f7f84ca84d?auto=format&fit=crop&w=800&q=80']
-  }
+  // Extra jobs for scrolling
+  { id: 'j6', seqNo: 6, title: 'Server Assistant', location: 'Miami, FL', companyName: 'Beachside Grill', description: 'Assist servers.', programYear: '2025', housing: 'Assistance', housingCost: '$200/wk', salary: '$12/hr + tips', startDateRange: 'Jun 1-15', endDate: 'Sept 15, 2025', capacity: 5, minScore: 7.0, imgUrls: ['https://images.unsplash.com/photo-1559339352-11d035aa65de?auto=format&fit=crop&w=800&q=80'], tags: ['Dining'] },
+  { id: 'j7', seqNo: 7, title: 'Retail Associate', location: 'Ocean City, MD', companyName: 'Boardwalk Shop', description: 'Sell souvenirs.', programYear: '2025', housing: 'Provided', housingCost: '$120/wk', salary: '$14/hr', startDateRange: 'Jun 15-20', endDate: 'Sept 15, 2025', capacity: 6, minScore: 6.0, imgUrls: ['https://images.unsplash.com/photo-1441986300917-64674bd600d8?auto=format&fit=crop&w=800&q=80'], tags: ['Retail'] },
+  { id: 'j8', seqNo: 8, title: 'Grounds Crew', location: 'Yellowstone, WY', companyName: 'National Park Service', description: 'Maintain park grounds.', programYear: '2025', housing: 'Provided', housingCost: '$50/wk', salary: '$15/hr', startDateRange: 'May 15', endDate: 'Sept 15, 2025', capacity: 10, minScore: 6.0, imgUrls: ['https://images.unsplash.com/photo-1533240332313-0db49b459ad6?auto=format&fit=crop&w=800&q=80'], tags: ['Outdoors'] },
 ];
 
-const INITIAL_APPS: Application[] = [];
+const INITIAL_APPS: Application[] = [
+  // FIll the test job
+  { id: 'a1', userId: 'u10', jobId: 'j5', status: 'approved', date: '2024-01-01' },
+  { id: 'a2', userId: 'u11', jobId: 'j5', status: 'approved', date: '2024-01-01' },
+];
 
 const INITIAL_GUIDES: Guide[] = [
-  { id: 'g1', title: 'Visa Interview ✨', content: '## Interview Tips\nBe honest and confident. Smile!' },
-  { id: 'g2', title: 'Packing List 🧳', content: '## Essentials\n- Passport\n- DS-2019\n- Adaptors' },
-  { id: 'g3', title: 'Insurance 🏥', content: '## Coverage\nIncludes emergency medical.' }
+  { id: 'g1', title: 'Visa Interview Tips', content: '## Be Confident!\n\n1. Dress professionally.\n2. Bring all documents.\n3. Speak clearly.', category: 'Pre-Departure', imgUrl: 'https://images.unsplash.com/photo-1557804506-669a67965ba0?auto=format&fit=crop&w=800&q=80' },
+  { id: 'g2', title: 'Packing List', content: '## Essentials\n\n- Passport\n- DS-2019\n- Warm clothes', category: 'Pre-Departure' },
+  { id: 'g3', title: 'Insurance Overview', content: '## Coverage\n\nYour insurance covers emergency medical expenses.', category: 'Safety' },
 ];
 
 // --- Components ---
 
-const Button = ({ onClick, children, variant = 'primary', className = '', disabled = false }: any) => {
-  const base = "px-6 py-4 rounded-full font-bold text-[16px] transition-all active:scale-[0.95] flex items-center justify-center gap-2 shadow-sm disabled:opacity-50 disabled:cursor-not-allowed";
-  const styles = {
-    primary: "bg-[#38BDF8] text-white disabled:bg-sky-200 shadow-lg shadow-sky-200 hover:shadow-sky-300", 
-    secondary: "bg-white text-slate-600 border border-slate-100 hover:bg-sky-50",
-    danger: "bg-red-50 text-red-400 hover:bg-red-100",
-    outline: "border-2 border-sky-200 text-sky-400 bg-transparent hover:bg-sky-50"
+const Button = ({ children, onClick, variant = 'primary', className = '', disabled = false, type = 'button' }: any) => {
+  const baseStyle = "px-6 py-3 rounded-full font-bold transition-all active:scale-95 flex items-center justify-center gap-2";
+  const variants = {
+    primary: "bg-[#38BDF8] text-white shadow-lg shadow-sky-200 disabled:opacity-50 disabled:shadow-none",
+    secondary: "bg-[#FEF08A] text-slate-800 shadow-lg shadow-yellow-100",
+    outline: "border-2 border-slate-200 text-slate-600 hover:bg-slate-50",
+    ghost: "text-slate-500 hover:bg-slate-50",
+    danger: "bg-rose-50 text-rose-500 hover:bg-rose-100",
+    black: "bg-slate-900 text-white shadow-xl shadow-slate-300"
   };
   return (
-    <button onClick={onClick} className={`${base} ${styles[variant as keyof typeof styles]} ${className}`} disabled={disabled}>
+    <button type={type} disabled={disabled} onClick={onClick} className={`${baseStyle} ${variants[variant as keyof typeof variants]} ${className}`}>
       {children}
     </button>
   );
 };
 
-const InputGroup = ({ title, children, className = '' }: any) => (
-  <div className={`mb-6 ${className}`}>
-    {title && <div className="px-4 mb-2 text-xs font-bold text-sky-400 uppercase tracking-wider flex items-center gap-1"><Sparkles className="w-3 h-3" /> {title}</div>}
-    <div className="bg-white overflow-hidden rounded-[24px] shadow-sm border border-sky-50/50">{children}</div>
-  </div>
-);
+// --- Views ---
 
-const InputCell = ({ label, className = '', readOnly = false, ...props }: any) => (
-  <div className={`flex items-center px-5 py-4 bg-white border-b border-slate-50 last:border-0 relative ${className}`}>
-    <label className="w-32 text-[15px] font-bold text-slate-500">{label}</label>
-    <input 
-      {...props} 
-      readOnly={readOnly}
-      className={`flex-1 text-[15px] font-bold outline-none bg-transparent placeholder-sky-200 text-slate-700 text-right ${readOnly ? 'opacity-60 cursor-not-allowed' : ''}`}
-    />
-    {readOnly && <Lock className="w-4 h-4 text-slate-300 ml-2" />}
-  </div>
-);
-
-// Navigation Layout
-const Layout = ({ children, nav, title, backAction, rightAction, bgClass = "bg-[#F0F9FF]" }: any) => (
-  <div className={`flex flex-col h-[100dvh] ${bgClass} relative font-sans text-slate-700 overflow-hidden`}>
-    {/* Navigation Bar */}
-    <div className={`h-[70px] flex items-center justify-between px-6 sticky top-0 z-50 shrink-0 ${bgClass} transition-colors`}>
-       <div className="w-[60px] flex items-center">
-         {backAction && (
-           <button onClick={backAction} className="w-10 h-10 bg-white rounded-full flex items-center justify-center shadow-sm text-sky-400 active:scale-90 transition-transform">
-             <ChevronLeft className="w-6 h-6 stroke-[3]" />
-           </button>
-         )}
-       </div>
-       <div className="font-black text-xl tracking-tight text-slate-700 truncate">{title || ''}</div>
-       <div className="w-[60px] flex justify-end items-center gap-2">
-          {rightAction}
-       </div>
-    </div>
-
-    {/* Content Area */}
-    <div className="flex-1 overflow-y-auto scrollbar-hide pb-[120px] relative">
-      {children}
-    </div>
-
-    {/* Bottom Tab Bar */}
-    {nav && (
-      <nav className="absolute bottom-6 left-6 right-6 mx-auto bg-white/95 backdrop-blur-md rounded-full shadow-[0_8px_30px_rgb(0,0,0,0.08)] flex justify-between items-center px-6 py-4 z-40 border border-white/50">
-        {nav}
-      </nav>
-    )}
-  </div>
-);
-
-// --- Sub-Views ---
-
-const StudentRegisterView = ({ setUsers, users, setCurrentUser, setCurrentView }: any) => {
-  const [regForm, setRegForm] = useState({ name: '', school: '', phone: '', code: '', programYear: '2025', score: '6.0' });
-
-  const handleRegister = () => {
-    if (!regForm.name || !regForm.phone || !regForm.school) {
-       alert("Please fill all required fields, especially School Name.");
-       return;
-    }
-    const newUser: UserData = {
-      id: `u${Date.now()}`,
-      seqNo: users.length + 1, // Default seqNo
-      name: regForm.name,
-      role: 'student',
-      score: parseFloat(regForm.score) || 6.0, 
-      school: regForm.school,
-      phone: regForm.phone,
-      programYear: regForm.programYear
-    };
-    setUsers([...users, newUser]);
-    setCurrentUser(newUser);
-    setCurrentView('student-jobs');
-  };
-
+const LoginView = ({ onLogin, onRegister }: any) => {
   return (
-    <div className="min-h-screen bg-[#F0F9FF] flex flex-col relative overflow-hidden">
-       {/* Decorative Shapes */}
-       <div className="absolute top-[-10%] right-[-10%] w-[300px] h-[300px] bg-[#BAE6FD] rounded-full opacity-40 blur-3xl animate-pulse" />
-       <div className="absolute bottom-[10%] left-[-5%] w-[200px] h-[200px] bg-[#FEF08A] rounded-full opacity-50 blur-3xl" />
-
-       <div className="flex-1 px-8 pt-12 pb-10 flex flex-col z-10 overflow-y-auto">
-          <button onClick={() => setCurrentView('login')} className="self-start w-10 h-10 bg-white rounded-full flex items-center justify-center mb-8 shadow-sm text-sky-400">
-             <ChevronLeft className="w-6 h-6 stroke-[3]" />
-          </button>
-          
-          <h1 className="text-4xl font-black text-slate-700 mb-2 tracking-tight">Blueprint<br/><span className="text-sky-400">Global</span></h1>
-          <p className="text-slate-400 font-bold mb-8">Create your student account.</p>
-
-          <div className="bg-white/60 backdrop-blur-xl rounded-[40px] p-6 shadow-sm border border-white">
-                <div className="space-y-4">
-                    <div className="bg-white rounded-2xl px-5 py-4 flex items-center border border-sky-50 shadow-sm focus-within:border-sky-300 transition-colors">
-                       <input className="bg-transparent flex-1 outline-none text-slate-700 font-bold placeholder-sky-200" placeholder="Full Name" value={regForm.name} onChange={e => setRegForm({...regForm, name: e.target.value})} />
-                    </div>
-                    <div className="bg-white rounded-2xl px-5 py-4 flex items-center border border-sky-50 shadow-sm focus-within:border-sky-300 transition-colors relative">
-                       <input className="bg-transparent flex-1 outline-none text-slate-700 font-bold placeholder-sky-200" placeholder="School Name (Required)" value={regForm.school} onChange={e => setRegForm({...regForm, school: e.target.value})} />
-                       {!regForm.school && <span className="absolute right-4 text-xs font-black text-rose-400">*</span>}
-                    </div>
-                    <div className="bg-white rounded-2xl px-5 py-4 flex items-center border border-sky-50 shadow-sm focus-within:border-sky-300 transition-colors">
-                          <input className="bg-transparent w-full outline-none text-slate-700 font-bold placeholder-sky-200" placeholder="Phone Number" value={regForm.phone} onChange={e => setRegForm({...regForm, phone: e.target.value})} />
-                    </div>
-                    <div className="bg-white rounded-2xl px-5 py-4 flex items-center border border-sky-50 shadow-sm gap-3">
-                       <div className="w-6 h-6 rounded-full bg-sky-100 text-sky-500 flex items-center justify-center text-xs font-bold shrink-0">i</div>
-                       <input className="bg-transparent flex-1 outline-none text-slate-700 font-bold placeholder-sky-200" placeholder="Auth Code (1234)" value={regForm.code} onChange={e => setRegForm({...regForm, code: e.target.value})} />
-                    </div>
-                    
-                    <div className="grid grid-cols-2 gap-3">
-                      <div className="bg-white rounded-2xl px-5 py-4 border border-sky-50 shadow-sm">
-                         <label className="block text-[10px] font-black uppercase text-sky-300 mb-1">SCORE</label>
-                         <input className="bg-transparent w-full outline-none text-slate-700 font-black text-xl placeholder-sky-100" placeholder="6.0" type="number" step="0.5" value={regForm.score} onChange={e => setRegForm({...regForm, score: e.target.value})} />
-                      </div>
-                      <div className="bg-white rounded-2xl px-5 py-4 border border-sky-50 shadow-sm">
-                         <label className="block text-[10px] font-black uppercase text-sky-300 mb-1">YEAR</label>
-                         <input className="bg-transparent w-full outline-none text-slate-700 font-black text-xl placeholder-sky-100" placeholder="2025" value={regForm.programYear} onChange={e => setRegForm({...regForm, programYear: e.target.value})} />
-                      </div>
-                    </div>
-                </div>
-
-                <div className="mt-8">
-                  <Button className="w-full shadow-sky-300" onClick={handleRegister}>
-                    Start Journey <Cloud className="w-5 h-5 ml-1 fill-white" />
-                  </Button>
-                </div>
+    <div className="flex flex-col h-full bg-[#F0F9FF] relative overflow-hidden">
+      <div className="absolute top-[-20%] right-[-20%] w-[500px] h-[500px] bg-sky-200 rounded-full blur-3xl opacity-40 animate-pulse" />
+      <div className="absolute bottom-[-10%] left-[-10%] w-[300px] h-[300px] bg-[#FEF08A] rounded-full blur-3xl opacity-40" />
+      <div className="relative z-10 flex flex-col justify-center h-full px-8">
+        <div className="mb-12">
+          <div className="w-20 h-20 bg-white rounded-[30px] flex items-center justify-center shadow-xl shadow-sky-100 mb-6">
+            <Globe className="w-10 h-10 text-[#38BDF8]" />
           </div>
-          
-          <div className="mt-12 text-center space-y-1 opacity-60">
-             <div className="text-sm font-black text-slate-400">Blueprint Global Exchange</div>
-             <div className="text-xs font-bold text-slate-300">蓝途启航 · 赴美带薪实习</div>
-          </div>
-       </div>
-    </div>
-  );
-};
-
-const StudentJobsView = ({ jobs, currentUser, setCurrentView, nav }: any) => {
-  const [searchQuery, setSearchQuery] = useState('');
-  
-  // Filter then Sort by Manual Sequence Number
-  const filteredJobs = jobs.filter((j: Job) => 
-    j.programYear === currentUser.programYear &&
-    (j.title.toLowerCase().includes(searchQuery.toLowerCase()) || 
-     j.companyName.toLowerCase().includes(searchQuery.toLowerCase()) ||
-     j.location.toLowerCase().includes(searchQuery.toLowerCase()))
-  ).sort((a: Job, b: Job) => (a.seqNo || 9999) - (b.seqNo || 9999));
-
-  return (
-    <Layout nav={nav} title="Job Board" rightAction={<div className="bg-[#FEF9C3] px-3 py-1.5 rounded-full text-xs font-black text-yellow-700 shadow-sm">⭐ {currentUser.score.toFixed(1)}</div>}>
-      {/* Search Bar */}
-      <div className="px-6 py-4 sticky top-0 z-30 bg-[#F0F9FF]/95 backdrop-blur-sm">
-         <div className="bg-white rounded-full flex items-center px-6 py-4 shadow-sm border border-sky-50">
-            <Search className="w-5 h-5 text-sky-200 mr-3" strokeWidth={3} />
-            <input 
-              type="text" 
-              placeholder="Search jobs, states..." 
-              className="flex-1 text-sm font-bold outline-none placeholder-sky-200 text-slate-700" 
-              value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
-            />
-         </div>
-      </div>
-
-      <div className="px-6 space-y-4 pb-4">
-        {filteredJobs.length === 0 ? (
-          <div className="text-center py-20">
-            <div className="w-24 h-24 bg-white rounded-full flex items-center justify-center mx-auto mb-4 shadow-sm text-sky-200">
-               <Search className="w-10 h-10" />
-            </div>
-            <div className="text-sky-300 font-bold">No jobs found 🥺</div>
-          </div>
-        ) : filteredJobs.map((job: Job, index: number) => (
-          <div key={job.id} onClick={() => setCurrentView(`job-${job.id}`)} className="bg-white rounded-[32px] p-2 flex items-stretch shadow-[0_4px_20px_rgb(0,0,0,0.03)] border border-sky-50 active:scale-[0.98] transition-transform cursor-pointer group hover:shadow-lg hover:shadow-sky-100 min-h-[120px] relative">
-            
-            {/* Number Badge (Manual SeqNo) */}
-            <div className="absolute top-[-8px] left-[-8px] w-8 h-8 rounded-full bg-slate-800 text-white flex items-center justify-center text-[10px] font-black shadow-sm z-10 border-2 border-[#F0F9FF]">
-              #{String(job.seqNo || index + 1).padStart(2, '0')}
-            </div>
-
-            {/* Image Logic: Show first image */}
-            <div className="w-28 rounded-[24px] overflow-hidden shrink-0 relative bg-slate-100">
-               {job.imgUrls && job.imgUrls.length > 0 ? (
-                  <img src={job.imgUrls[0]} alt={job.title} className="w-full h-full object-cover" />
-               ) : (
-                  <div className="w-full h-full flex items-center justify-center text-sky-200">
-                     <ImageIcon className="w-8 h-8" />
-                  </div>
-               )}
-               <div className="absolute top-0 left-0 w-full h-full bg-black/5 group-hover:bg-transparent transition-colors" />
-            </div>
-            
-            {/* Right Content */}
-            <div className="flex-1 p-3 pl-4 flex flex-col justify-between min-w-0">
-               <div>
-                  <h3 className="font-bold text-[17px] text-slate-700 leading-tight line-clamp-2 mb-1">{job.title}</h3>
-                  <div className="text-xs font-bold text-slate-400 uppercase tracking-wide truncate">{job.companyName}</div>
-               </div>
-               
-               <div className="flex gap-2 flex-wrap mt-2">
-                  <span className="bg-[#E0F2FE] text-sky-500 px-3 py-1 rounded-full text-[10px] font-bold uppercase truncate max-w-[100px]">{job.location.split(',')[0]}</span>
-                  <span className="bg-slate-50 text-slate-400 px-3 py-1 rounded-full text-[10px] font-bold uppercase">{job.salary}</span>
-               </div>
-            </div>
-          </div>
-        ))}
-      </div>
-    </Layout>
-  );
-};
-
-const StudentEmergencyView = ({ currentUser, setCurrentView }: any) => {
-   const contacts = currentUser.emergencyContacts || [];
-   return (
-     <Layout title="Help & Safety" backAction={() => setCurrentView('student-services')}>
-        <div className="p-4 space-y-6">
-           {/* Cute Red Card - Keeping Red for Emergency, but softer */}
-           <div className="bg-[#FDA4AF] rounded-[40px] p-8 text-white shadow-xl shadow-red-200 relative overflow-hidden flex flex-col justify-between h-[240px]">
-              {/* Blobs */}
-              <div className="absolute top-[-30px] right-[-30px] w-40 h-40 bg-white rounded-full opacity-20 animate-pulse"></div>
-              <div className="absolute bottom-[-20px] left-[10px] w-24 h-24 bg-[#BE123C] rounded-full opacity-10"></div>
-              
-              <div className="relative z-10 flex justify-between items-start">
-                  <div className="w-14 h-14 bg-white/20 rounded-full flex items-center justify-center backdrop-blur-sm border border-white/30">
-                    <Heart className="w-7 h-7 text-white fill-white" />
-                  </div>
-                  <button className="bg-white/20 hover:bg-white/30 px-5 py-2 rounded-full text-xs font-bold border border-white/20">Edit Card</button>
-              </div>
-
-              <div className="relative z-10">
-                 <h2 className="text-4xl font-black leading-none mb-2 tracking-tight">Don't<br/>Panic!</h2>
-                 <p className="text-red-50 font-bold opacity-90">We are here for you.</p>
-              </div>
-           </div>
-
-           {/* Local Emergency */}
-           <section>
-              <div className="flex items-center gap-2 mb-4 px-4">
-                 <div className="w-2 h-2 rounded-full bg-sky-400"></div>
-                 <div className="text-xs font-bold text-sky-400 uppercase tracking-widest">Local Help</div>
-              </div>
-              
-              <div className="space-y-3">
-                 <div className="bg-white p-2 pr-5 rounded-[30px] flex items-center justify-between border border-sky-50 shadow-sm">
-                    <div className="flex items-center gap-4">
-                       <div className="w-16 h-16 rounded-[24px] bg-[#FFF1F2] flex items-center justify-center text-rose-500 font-black text-2xl">
-                         911
-                       </div>
-                       <div>
-                          <div className="font-bold text-slate-700 text-lg">Police</div>
-                          <div className="text-rose-300 text-xs font-bold uppercase">Medical / Fire</div>
-                       </div>
-                    </div>
-                    <a href="tel:911" className="w-12 h-12 bg-rose-400 rounded-full flex items-center justify-center shadow-md shadow-rose-200 hover:scale-105 transition-transform">
-                       <Phone className="w-6 h-6 text-white" />
-                    </a>
-                 </div>
-
-                 <div className="bg-white p-2 pr-5 rounded-[30px] flex items-center justify-between border border-sky-50 shadow-sm">
-                    <div className="flex items-center gap-4">
-                       <div className="w-16 h-16 rounded-[24px] bg-[#ECFDF5] flex items-center justify-center text-emerald-500">
-                         <Globe className="w-8 h-8" />
-                       </div>
-                       <div>
-                          <div className="font-bold text-slate-700 text-lg">Consulate</div>
-                          <div className="text-emerald-300 text-xs font-bold uppercase">Protection</div>
-                       </div>
-                    </div>
-                    <a href="tel:+12024952266" className="w-12 h-12 bg-emerald-400 rounded-full flex items-center justify-center shadow-md shadow-emerald-200 hover:scale-105 transition-transform">
-                       <Phone className="w-6 h-6 text-white" />
-                    </a>
-                 </div>
-              </div>
-           </section>
-
-           {/* My Contacts */}
-           <section>
-              <div className="flex items-center gap-2 mb-4 px-4 mt-8">
-                 <div className="w-2 h-2 rounded-full bg-sky-400"></div>
-                 <div className="text-xs font-bold text-sky-400 uppercase tracking-widest">Saved Contacts</div>
-              </div>
-              <div className="space-y-3">
-                 {contacts.map((c: any, i: number) => (
-                    <div key={i} className="bg-white p-5 rounded-[30px] border border-sky-50 shadow-sm">
-                       <div className="flex justify-between items-start mb-2">
-                          <span className="bg-[#FEF9C3] px-3 py-1 rounded-full text-[10px] font-bold uppercase text-yellow-700">{c.type || 'Contact'}</span>
-                       </div>
-                       <div className="font-bold text-slate-700 text-xl mb-1">{c.name}</div>
-                       <div className="text-slate-400 font-medium tracking-wide">{c.phone}</div>
-                    </div>
-                 ))}
-                 <Button variant="outline" className="w-full border-dashed border-2 rounded-[30px] py-4 border-sky-200 text-sky-300 hover:border-sky-300 hover:text-sky-400">
-                    <Plus className="w-5 h-5 mr-2" />
-                    Add Friend
-                 </Button>
-              </div>
-           </section>
+          <h1 className="text-4xl font-black text-slate-900 leading-tight mb-2">Blueprint <br/> <span className="text-[#38BDF8]">Global</span></h1>
+          <p className="text-slate-500 text-lg">蓝途启航 · 赴美带薪实习</p>
         </div>
-     </Layout>
-   )
+        <div className="space-y-4">
+          <Button onClick={() => onLogin('student')} variant="black" className="w-full text-lg h-16">Student Login</Button>
+          <Button onClick={() => onLogin('admin')} variant="outline" className="w-full text-lg h-16 border-sky-200 text-sky-500 bg-white">Admin Console</Button>
+        </div>
+        <div className="mt-8 text-center">
+           <p className="text-slate-400 mb-2">New here?</p>
+           <button onClick={onRegister} className="text-[#38BDF8] font-bold text-lg">Create Account</button>
+        </div>
+      </div>
+    </div>
+  );
+};
+
+const RegisterView = ({ onRegister, onCancel }: any) => {
+    const [step, setStep] = useState(1);
+    const [formData, setFormData] = useState({
+        name: '', school: '', phone: '', code: '', year: '2025', score: '6.0'
+    });
+    const handleSubmit = () => {
+        if (!formData.name || !formData.school || !formData.phone) {
+            alert("Please fill in all required fields (Name, School, Phone).");
+            return;
+        }
+        onRegister(formData);
+    };
+    return (
+        <div className="flex-1 overflow-y-auto bg-[#F0F9FF]">
+            <div className="p-6 pt-12 pb-24">
+                 <button onClick={onCancel} className="mb-6 flex items-center text-slate-400 font-bold"><ChevronLeft className="w-5 h-5 mr-1" /> Back</button>
+                <h1 className="text-3xl font-black text-slate-900 mb-2">Blueprint Global Exchange</h1>
+                <p className="text-slate-500 mb-8">蓝途启航 · 赴美带薪实习</p>
+                <div className="bg-white rounded-[32px] p-6 shadow-xl shadow-sky-100 border border-white">
+                    <h2 className="text-xl font-bold text-center mb-6 text-slate-800">Student Registration</h2>
+                    <div className="space-y-5">
+                        <div className="bg-[#FEF9C3] p-4 rounded-2xl border border-yellow-100">
+                             <label className="block text-xs font-bold text-yellow-700 uppercase tracking-wider mb-2">Intended Program Year</label>
+                             <div className="flex gap-2">
+                                 {['2025', '2026'].map(y => (
+                                     <button key={y} onClick={() => setFormData({...formData, year: y})} className={`flex-1 py-2 rounded-xl font-bold transition-all ${formData.year === y ? 'bg-yellow-400 text-yellow-900 shadow-sm' : 'bg-white/50 text-yellow-700'}`}>{y}</button>
+                                 ))}
+                             </div>
+                        </div>
+                        <div className="space-y-4">
+                            <div>
+                                <label className="text-xs font-bold text-slate-400 ml-2 mb-1 block">FULL NAME</label>
+                                <input className="w-full bg-slate-50 p-4 rounded-2xl font-bold text-slate-700 focus:outline-none focus:ring-2 focus:ring-sky-200" placeholder="e.g. Alice Chen" value={formData.name} onChange={e => setFormData({...formData, name: e.target.value})}/>
+                            </div>
+                            <div>
+                                <label className="text-xs font-bold text-slate-400 ml-2 mb-1 block">UNIVERSITY (REQUIRED)</label>
+                                <input className="w-full bg-slate-50 p-4 rounded-2xl font-bold text-slate-700 focus:outline-none focus:ring-2 focus:ring-sky-200" placeholder="e.g. Peking University" value={formData.school} onChange={e => setFormData({...formData, school: e.target.value})}/>
+                            </div>
+                            <div>
+                                <label className="text-xs font-bold text-slate-400 ml-2 mb-1 block">PHONE NUMBER</label>
+                                <div className="flex gap-2">
+                                     <input className="flex-1 bg-slate-50 p-4 rounded-2xl font-bold text-slate-700 focus:outline-none focus:ring-2 focus:ring-sky-200" placeholder="Mobile Number" value={formData.phone} onChange={e => setFormData({...formData, phone: e.target.value})}/>
+                                    <button className="bg-sky-100 text-sky-600 px-4 rounded-2xl font-bold text-sm">Send Code</button>
+                                </div>
+                            </div>
+                             <div>
+                                <label className="text-xs font-bold text-slate-400 ml-2 mb-1 block">VERIFICATION CODE</label>
+                                <input className="w-full bg-slate-50 p-4 rounded-2xl font-bold text-slate-700 focus:outline-none focus:ring-2 focus:ring-sky-200" placeholder="1234" value={formData.code} onChange={e => setFormData({...formData, code: e.target.value})}/>
+                            </div>
+                        </div>
+                        <div className="pt-4"><Button onClick={handleSubmit} className="w-full text-lg h-14">Register Now</Button></div>
+                         <div className="text-center pb-8 pt-4"><p className="text-sm text-slate-400">Blueprint Global Exchange | 蓝途启航</p></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    );
 }
 
-const StudentServicesView = ({ currentUser, setCurrentUser, users, setUsers, guides, nav, setCurrentView }: any) => {
-  const [showGuide, setShowGuide] = useState<Guide | null>(null);
+const StudentJobsView = ({ jobs, user, onApply, myApps }: any) => {
+    const [search, setSearch] = useState('');
+    const sortedJobs = [...jobs].sort((a, b) => (a.seqNo || 0) - (b.seqNo || 0));
+    const activeJobs = sortedJobs.filter(j => 
+        j.programYear === user.programYear && 
+        (j.title.toLowerCase().includes(search.toLowerCase()) || j.location.toLowerCase().includes(search.toLowerCase()) || String(j.seqNo).includes(search)) &&
+        (myApps.filter((a:any) => a.jobId === j.id && a.status === 'approved').length < j.capacity)
+    );
+    const fullJobs = sortedJobs.filter(j => 
+         j.programYear === user.programYear && 
+         (j.title.toLowerCase().includes(search.toLowerCase()) || j.location.toLowerCase().includes(search.toLowerCase()) || String(j.seqNo).includes(search)) &&
+         (myApps.filter((a:any) => a.jobId === j.id && a.status === 'approved').length >= j.capacity)
+    );
 
-  return (
-    <Layout nav={nav} title="Services">
-      <div className="p-4 space-y-6">
-        
-        {/* Hero Card - Cute Style Blue */}
-        <div className="bg-[#38BDF8] rounded-[40px] p-8 text-white relative overflow-hidden shadow-xl shadow-sky-200">
-            <div className="absolute right-[-20px] top-[-20px] w-40 h-40 bg-white rounded-full opacity-20"></div>
-            <div className="absolute left-[-20px] bottom-[-20px] w-24 h-24 bg-sky-800 rounded-full opacity-10"></div>
-            <div className="relative z-10">
-               <div className="flex justify-between items-center mb-8">
-                  <div className="bg-white/20 px-3 py-1 rounded-full text-[10px] font-bold uppercase tracking-wider">Tap in Emergency</div>
-               </div>
-               <h2 className="text-3xl font-black mb-4 tracking-tight">Emergency<br/>Card</h2>
-               <button onClick={() => setCurrentView('student-emergency')} className="bg-white text-sky-500 px-6 py-3 rounded-full font-bold text-sm hover:scale-105 transition-transform flex items-center gap-2 shadow-sm">
-                  Open Now <Heart className="w-4 h-4 fill-sky-500"/>
-               </button>
+    return (
+        <div className="flex-1 overflow-y-auto p-4 space-y-6 pb-32 bg-[#F0F9FF]">
+            <div className="flex justify-between items-end">
+                <div><h1 className="text-3xl font-black text-slate-900">Job Board</h1><p className="text-slate-400 font-medium">Find your perfect summer</p></div>
+                <div className="w-10 h-10 bg-sky-100 rounded-full flex items-center justify-center text-sky-600 font-bold border border-sky-200">{user.score.toFixed(1)}</div>
             </div>
-        </div>
-
-        <section>
-          <div className="flex items-center gap-2 mb-4 px-4">
-             <div className="w-2 h-2 rounded-full bg-sky-400"></div>
-             <div className="text-xs font-bold text-sky-400 uppercase tracking-widest">Little Guides</div>
-          </div>
-          <div className="space-y-3">
-            {guides.map((g: Guide) => (
-              <div 
-                key={g.id} 
-                onClick={() => setShowGuide(g)} 
-                className="group bg-white p-4 rounded-[28px] border border-sky-50 flex justify-between items-center active:scale-[0.98] transition-all hover:shadow-lg hover:shadow-sky-50 cursor-pointer"
-              >
-                <div className="flex items-center gap-4 pl-2">
-                   <div className="w-12 h-12 rounded-full bg-[#EFF6FF] group-hover:bg-[#60A5FA] transition-colors flex items-center justify-center text-sky-400 group-hover:text-white">
-                      <BookOpen className="w-5 h-5 stroke-[2.5]" />
-                   </div>
-                   <span className="text-[15px] font-bold text-slate-700">{g.title}</span>
+            <div className="sticky top-0 z-20 bg-[#F0F9FF]/95 backdrop-blur-sm py-2 -mx-4 px-4">
+                 <div className="relative">
+                    <Search className="absolute left-4 top-3.5 text-slate-400 w-5 h-5" />
+                    <input className="w-full bg-white pl-12 pr-4 py-3 rounded-full shadow-sm border border-slate-100 focus:outline-none focus:ring-2 focus:ring-sky-200 text-slate-600 font-medium placeholder:text-slate-300" placeholder="Search jobs, #ID, states..." value={search} onChange={e => setSearch(e.target.value)}/>
                 </div>
-                <div className="pr-2">
-                   <div className="w-8 h-8 rounded-full bg-sky-50 flex items-center justify-center">
-                     <ChevronRight className="w-5 h-5 text-sky-300" />
-                   </div>
-                </div>
-              </div>
-            ))}
-          </div>
-        </section>
-      </div>
-
-      {showGuide && (
-         <div className="fixed inset-0 z-[60] flex items-end sm:items-center justify-center">
-            <div className="absolute inset-0 bg-slate-900/20 backdrop-blur-sm" onClick={() => setShowGuide(null)} />
-            <div className="bg-[#F0F9FF] w-full max-w-md rounded-t-[40px] sm:rounded-[40px] shadow-2xl relative z-10 max-h-[85vh] flex flex-col p-2">
-              <div className="flex justify-between items-center p-6 border-b border-sky-100">
-                 <h3 className="font-black text-xl text-slate-700">{showGuide.title}</h3>
-                 <button onClick={() => setShowGuide(null)} className="w-10 h-10 bg-white rounded-full flex items-center justify-center hover:bg-sky-100 shadow-sm"><X className="w-5 h-5 text-sky-400"/></button>
-              </div>
-              <div className="p-8 overflow-y-auto prose prose-sky prose-lg">
-                 <ReactMarkdown>{showGuide.content}</ReactMarkdown>
-              </div>
             </div>
-         </div>
-      )}
-    </Layout>
-  );
-};
-
-const StudentProfileView = ({ currentUser, setCurrentUser, users, setUsers, nav, setCurrentView }: any) => {
-  const [isEditing, setIsEditing] = useState(false);
-  const [editForm, setEditForm] = useState({ name: currentUser.name, phone: currentUser.phone || '' });
-
-  const handleSave = () => {
-    const updatedUser = { ...currentUser, name: editForm.name, phone: editForm.phone };
-    setCurrentUser(updatedUser);
-    setUsers(users.map((u: UserData) => u.id === currentUser.id ? updatedUser : u));
-    setIsEditing(false);
-  };
-
-  return (
-    <Layout nav={nav} title="" bgClass="bg-[#F0F9FF]">
-      {/* Soft Header Section */}
-      <div className="bg-gradient-to-b from-sky-200 to-[#F0F9FF] pt-8 pb-4 rounded-b-[50px] px-6 relative overflow-visible">
-          
-          <div className="flex flex-col items-center gap-3 mb-4">
-             <div className="w-28 h-28 rounded-full bg-white p-1 shadow-xl shadow-sky-200 relative">
-                <div className="w-full h-full rounded-full bg-[#BAE6FD] flex items-center justify-center text-sky-600 text-4xl font-black">
-                  {currentUser.name[0]}
+            <div className="space-y-4">
+                {activeJobs.map((job: any) => (
+                    <div key={job.id} onClick={() => onApply(job)} className="bg-white rounded-[32px] p-4 shadow-lg shadow-sky-50 border border-white active:scale-[0.98] transition-all relative overflow-hidden group">
+                         <div className="absolute top-4 right-4 bg-slate-900 text-white text-xs font-bold px-2 py-1 rounded-lg z-10 opacity-80">#{String(job.seqNo || 0).padStart(2, '0')}</div>
+                        <div className="flex gap-4">
+                            <div className="w-20 h-20 rounded-2xl bg-slate-100 flex-shrink-0 overflow-hidden border border-slate-100">
+                                {job.imgUrls && job.imgUrls.length > 0 ? (<img src={job.imgUrls[0]} alt={job.title} className="w-full h-full object-cover" />) : (<div className="w-full h-full flex items-center justify-center text-slate-300"><ImageIcon className="w-8 h-8" /></div>)}
+                            </div>
+                            <div className="flex-1 min-w-0">
+                                <div className="flex flex-wrap gap-2 mb-2">
+                                    <span className="bg-[#FEF08A] text-yellow-800 text-[10px] font-black px-2 py-1 rounded-md uppercase tracking-wide">{job.salary}</span>
+                                    <span className="bg-sky-50 text-sky-600 text-[10px] font-black px-2 py-1 rounded-md uppercase tracking-wide">{job.location.split(',')[1] || 'USA'}</span>
+                                </div>
+                                <h3 className="text-lg font-black text-slate-800 leading-tight mb-1 truncate">{job.title}</h3>
+                                <p className="text-slate-400 text-sm truncate">{job.companyName}</p>
+                            </div>
+                            <div className="flex items-center text-slate-300"><ChevronRight /></div>
+                        </div>
+                    </div>
+                ))}
+            </div>
+             {fullJobs.length > 0 && (
+                <div className="pt-8">
+                     <div className="flex items-center gap-2 mb-4"><div className="w-2 h-2 rounded-full bg-slate-300"></div><h2 className="text-sm font-bold text-slate-400 uppercase tracking-widest">Filled / Closed</h2></div>
+                    <div className="space-y-4 opacity-60 grayscale">
+                        {fullJobs.map((job: any) => (
+                             <div key={job.id} className="bg-white rounded-[32px] p-4 border border-slate-100 relative">
+                                <div className="absolute top-4 right-4 bg-slate-200 text-slate-500 text-xs font-bold px-2 py-1 rounded-lg z-10">FULL</div>
+                                <div className="flex gap-4">
+                                     <div className="w-20 h-20 rounded-2xl bg-slate-100 flex-shrink-0 overflow-hidden">
+                                        {job.imgUrls && job.imgUrls.length > 0 ? (<img src={job.imgUrls[0]} alt={job.title} className="w-full h-full object-cover opacity-50" />) : (<div className="w-full h-full flex items-center justify-center text-slate-300"><ImageIcon className="w-8 h-8" /></div>)}
+                                    </div>
+                                    <div className="flex-1 min-w-0 py-1"><h3 className="text-lg font-black text-slate-600 leading-tight mb-1">{job.title}</h3><p className="text-slate-400 text-sm">{job.companyName}</p></div>
+                                </div>
+                             </div>
+                        ))}
+                    </div>
                 </div>
-                {/* Edit Button Trigger */}
-                {!isEditing && (
-                  <button onClick={() => setIsEditing(true)} className="absolute bottom-0 right-0 w-8 h-8 bg-white rounded-full flex items-center justify-center shadow-md text-sky-500 hover:scale-110 transition-transform">
-                      <Edit3 className="w-4 h-4" />
-                  </button>
-                )}
-             </div>
-             
-             {isEditing ? (
-               <div className="bg-white/80 p-4 rounded-[24px] shadow-sm w-full backdrop-blur-sm space-y-3 mt-2">
-                   <div className="flex items-center gap-2 border-b border-sky-100 pb-2">
-                      <User className="w-4 h-4 text-sky-300" />
-                      <input className="bg-transparent font-bold text-slate-700 outline-none w-full" value={editForm.name} onChange={e => setEditForm({...editForm, name: e.target.value})} placeholder="Full Name" />
-                   </div>
-                   <div className="flex items-center gap-2 pb-2">
-                      <Phone className="w-4 h-4 text-sky-300" />
-                      <input className="bg-transparent font-bold text-slate-700 outline-none w-full" value={editForm.phone} onChange={e => setEditForm({...editForm, phone: e.target.value})} placeholder="Phone" />
-                   </div>
-                   <div className="flex gap-2 pt-1">
-                      <button onClick={handleSave} className="flex-1 bg-sky-400 text-white rounded-full py-2 text-xs font-bold shadow-sm">Save</button>
-                      <button onClick={() => setIsEditing(false)} className="flex-1 bg-slate-100 text-slate-500 rounded-full py-2 text-xs font-bold">Cancel</button>
-                   </div>
-                   <div className="text-[10px] text-center text-rose-400 font-bold flex items-center justify-center gap-1">
-                      <Lock className="w-3 h-3" /> School info cannot be changed.
-                   </div>
-               </div>
-             ) : (
-               <div className="text-center">
-                 <h2 className="text-2xl font-black text-slate-700 mb-1">{currentUser.name}</h2>
-                 <div className="inline-block bg-white px-4 py-1.5 rounded-full text-sky-400 text-xs font-bold shadow-sm uppercase tracking-wider">
-                    {currentUser.school}
-                 </div>
-               </div>
              )}
-          </div>
-      </div>
-
-      <div className="px-6 relative z-20 -mt-2">
-          <div className="grid grid-cols-2 gap-4 mb-6">
-              <div className="bg-white p-6 rounded-[32px] shadow-md shadow-sky-100 flex flex-col items-center justify-center h-40 gap-2">
-                 <div className="w-10 h-10 bg-[#FEF9C3] rounded-full flex items-center justify-center">
-                    <Star className="w-5 h-5 text-yellow-600 fill-yellow-600" />
-                 </div>
-                 <div className="text-3xl font-black text-slate-700">{currentUser.score.toFixed(1)}</div>
-                 <div className="text-[10px] font-bold text-slate-400 uppercase tracking-widest bg-slate-50 px-2 py-1 rounded-full">Score</div>
-              </div>
-              <div className="bg-white p-6 rounded-[32px] shadow-md shadow-sky-100 flex flex-col items-center justify-center h-40 gap-2">
-                 <div className="w-10 h-10 bg-[#E0F2FE] rounded-full flex items-center justify-center">
-                    <Briefcase className="w-5 h-5 text-sky-500" />
-                 </div>
-                 <div className="text-3xl font-black text-slate-700">{currentUser.programYear}</div>
-                 <div className="text-[10px] font-bold text-slate-400 uppercase tracking-widest bg-slate-50 px-2 py-1 rounded-full">Cohort</div>
-              </div>
-          </div>
-
-          <div className="space-y-3">
-             <button onClick={() => setCurrentView('student-internship')} className="w-full p-2 pl-4 pr-2 bg-white rounded-full flex items-center justify-between shadow-sm border border-sky-50 hover:scale-[1.02] transition-transform">
-                <div className="flex items-center gap-4">
-                   <div className="w-12 h-12 rounded-full bg-[#F0FDFA] flex items-center justify-center"><FileText className="w-5 h-5 text-teal-500" /></div>
-                   <span className="font-bold text-slate-600">My Applications</span>
-                </div>
-                <div className="w-10 h-10 rounded-full bg-slate-50 flex items-center justify-center">
-                   <ChevronRight className="w-5 h-5 text-slate-300" />
-                </div>
-             </button>
-             <button onClick={() => setCurrentView('login')} className="w-full p-2 pl-4 pr-2 bg-white rounded-full flex items-center justify-between shadow-sm border border-sky-50 hover:scale-[1.02] transition-transform group">
-                <div className="flex items-center gap-4">
-                   <div className="w-12 h-12 rounded-full bg-rose-50 flex items-center justify-center"><LogOut className="w-5 h-5 text-rose-400" /></div>
-                   <span className="font-bold text-slate-600 group-hover:text-rose-500">Sign Out</span>
-                </div>
-             </button>
-          </div>
-      </div>
-    </Layout>
-  );
-};
-
-const StudentInternshipView = ({ currentUser, apps, jobs, nav, setCurrentView, setApps }: any) => {
-  // Fix: Show ALL applications, not just approved ones
-  const myApps = apps.filter((a: Application) => a.userId === currentUser.id);
-
-  const withdrawApp = (appId: string) => {
-    if (confirm("Are you sure you want to withdraw this application? You will lose your spot.")) {
-      setApps(apps.filter((a: Application) => a.id !== appId));
-    }
-  };
-
-  return (
-    <Layout nav={nav} title="Applications">
-        <div className="p-6 pt-6 space-y-6">
-          {myApps.length > 0 ? (
-            myApps.map((app: Application) => {
-              const job = jobs.find((j: Job) => j.id === app.jobId);
-              if (!job) return null;
-
-              const isApproved = app.status === 'approved';
-              const isRejected = app.status === 'rejected';
-
-              return (
-                <div key={app.id} className={`bg-white rounded-[40px] overflow-hidden shadow-xl border ${isApproved ? 'border-blue-50 shadow-blue-100' : isRejected ? 'border-rose-50 shadow-rose-100' : 'border-slate-50 shadow-slate-100'}`}>
-                  {/* Card Header */}
-                  <div className={`${isApproved ? 'bg-[#60A5FA]' : isRejected ? 'bg-rose-400' : 'bg-slate-400'} p-8 text-white relative overflow-hidden`}>
-                     <div className="absolute -right-4 -top-4 w-32 h-32 bg-white rounded-full opacity-20 animate-pulse"></div>
-                     <div className="absolute -left-4 -bottom-4 w-24 h-24 bg-black rounded-full opacity-10"></div>
-                     
-                     <div className="relative z-10">
-                         <div className="inline-block bg-white/20 px-3 py-1 rounded-full text-[10px] font-black uppercase tracking-widest mb-4">
-                           {isApproved ? 'You did it! 🎉' : isRejected ? 'Application Update' : 'In Review ⏳'}
-                         </div>
-                         <h2 className="text-2xl font-black leading-tight mb-2">{job.title}</h2>
-                         <p className="font-bold opacity-90">{job.location}</p>
-                     </div>
-                  </div>
-                  
-                  {/* Card Actions */}
-                  {isApproved && (
-                    <div className="p-3 space-y-1">
-                        <button className="w-full p-4 hover:bg-slate-50 rounded-[24px] flex items-center justify-between transition-colors group">
-                          <div className="flex items-center gap-4">
-                              <div className="w-12 h-12 rounded-full bg-emerald-50 flex items-center justify-center text-emerald-500 font-bold text-lg">1</div>
-                              <span className="font-bold text-slate-700">Weekly Check-in</span>
-                          </div>
-                          <div className="w-3 h-3 rounded-full bg-emerald-400"></div>
-                        </button>
-                    </div>
-                  )}
-                  
-                  {isRejected && (
-                     <div className="p-6 text-center">
-                       <p className="text-slate-500 font-bold text-sm">We're sorry, this position has been filled. Please apply for other openings.</p>
-                       <Button variant="outline" className="mt-4 w-full" onClick={() => setCurrentView('student-jobs')}>Find More Jobs</Button>
-                     </div>
-                  )}
-
-                  {!isApproved && !isRejected && (
-                     <div className="p-6 flex flex-col items-center gap-4 text-center">
-                        <Loader2 className="w-8 h-8 text-sky-300 animate-spin" />
-                        <div className="text-slate-500 font-bold text-sm leading-relaxed">
-                            Your application will be reviewed by the team. After it is reviewed, there will be a long wait. Please do not constantly check in. Once our backend team approves it, you can proceed. Do not repeatedly check in. Constantly checking in is unproductive.
-                        </div>
-                        <Button variant="secondary" className="w-full text-rose-400 hover:text-rose-500 hover:bg-rose-50" onClick={() => withdrawApp(app.id)}>
-                            Withdraw Application
-                        </Button>
-                     </div>
-                  )}
-                </div>
-              );
-            })
-          ) : (
-            <div className="flex flex-col items-center justify-center py-24 px-8 text-center">
-              <div className="w-40 h-40 bg-white rounded-full flex items-center justify-center mb-8 shadow-sm relative text-sky-200">
-                <Briefcase className="w-16 h-16 relative z-10" />
-              </div>
-              <h2 className="text-2xl font-black text-slate-700 mb-2">No active apps</h2>
-              <p className="text-slate-400 font-bold mb-8 leading-relaxed">You haven't applied to any jobs yet.</p>
-              <Button onClick={() => setCurrentView('student-jobs')} className="px-8 bg-slate-700 text-white shadow-slate-300">
-                Find Jobs
-              </Button>
-            </div>
-          )}
+            <div className="h-12 text-center text-slate-300 text-sm pt-4">End of list</div>
         </div>
-    </Layout>
-  );
+    );
 };
 
-const AdminDashView = ({ users, jobs, setCurrentView, nav, navigateTo }: any) => {
-  const [jobSearch, setJobSearch] = useState('');
-  
-  // Sort by manual seqNo
-  const filteredJobs = jobs.filter((j: Job) => 
-    j.title.toLowerCase().includes(jobSearch.toLowerCase()) || 
-    j.companyName.toLowerCase().includes(jobSearch.toLowerCase())
-  ).sort((a: Job, b: Job) => (a.seqNo || 9999) - (b.seqNo || 9999));
-
-  return (
-    <Layout nav={nav} title="Dashboard" bgClass="bg-slate-50">
-       <div className="px-5 pt-6">
-         {/* Stats Grid */}
-         <div className="grid grid-cols-2 gap-3 mb-8">
-            <div className="bg-slate-800 p-6 rounded-[32px] text-white flex flex-col justify-between h-36">
-               <Users className="w-6 h-6 opacity-50" />
-               <div>
-                  <div className="text-4xl font-black">{users.filter((u: UserData) => u.role==='student').length}</div>
-                  <div className="text-[10px] font-bold uppercase tracking-widest opacity-60">Students</div>
-               </div>
+const StudentJobDetail = ({ job, user, onBack, onApplyConfirm, hasActiveApp, isFull }: any) => {
+    return (
+        <div className="flex flex-col h-full bg-white">
+            <div className="relative h-64 bg-slate-100">
+                <div className="flex overflow-x-auto snap-x snap-mandatory h-full w-full scrollbar-hide">
+                    {job.imgUrls && job.imgUrls.length > 0 ? (job.imgUrls.map((url: string, idx: number) => (<img key={idx} src={url} className="w-full h-full object-cover snap-center flex-shrink-0" alt="Job Cover" />))) : (<div className="w-full h-full flex items-center justify-center text-slate-300"><ImageIcon className="w-12 h-12" /></div>)}
+                </div>
+                <button onClick={onBack} className="absolute top-4 left-4 w-10 h-10 bg-white/80 backdrop-blur rounded-full flex items-center justify-center shadow-lg text-slate-800 z-10"><ChevronLeft /></button>
+                 {job.imgUrls && job.imgUrls.length > 1 && (<div className="absolute bottom-4 right-4 bg-black/50 text-white text-xs px-2 py-1 rounded-full backdrop-blur">Swipe for more photos</div>)}
             </div>
-            <div className="bg-white p-6 rounded-[32px] text-slate-800 flex flex-col justify-between h-36 shadow-sm border border-slate-100">
-               <Briefcase className="w-6 h-6 text-slate-300" />
-               <div>
-                  <div className="text-4xl font-black">{jobs.length}</div>
-                  <div className="text-[10px] font-bold uppercase tracking-widest text-slate-400">Active Jobs</div>
-               </div>
-            </div>
-         </div>
-
-         <div className="flex items-center justify-between mb-4 px-2">
-            <h2 className="text-xl font-black text-slate-700">Jobs</h2>
-            <button onClick={() => navigateTo('admin-post-job')} className="text-xs font-bold bg-white px-3 py-1.5 rounded-full shadow-sm border border-slate-200 text-slate-700 flex items-center gap-1">
-               <Plus className="w-3 h-3"/> New
-            </button>
-         </div>
-
-         {/* Job Search */}
-         <div className="mb-4 bg-white rounded-full flex items-center px-4 py-3 shadow-sm border border-slate-100">
-            <Search className="w-4 h-4 text-slate-300 mr-2" />
-            <input 
-               placeholder="Search jobs..." 
-               className="flex-1 text-sm font-bold outline-none text-slate-600 placeholder-slate-300"
-               value={jobSearch}
-               onChange={e => setJobSearch(e.target.value)}
-            />
-         </div>
-
-         <div className="space-y-3">
-           {filteredJobs.map((job: Job, index: number) => (
-             <div 
-               key={job.id} 
-               onClick={() => navigateTo('admin-post-job', { job })} 
-               className="bg-white p-4 rounded-[24px] shadow-sm border border-slate-100 flex items-center gap-4 active:scale-[0.98] transition-transform cursor-pointer relative"
-             >
-                <div className="absolute top-2 left-2 w-5 h-5 bg-slate-100 rounded-full flex items-center justify-center text-[9px] font-black text-slate-400 z-10">
-                   {/* Manual Sequence Number */}
-                   {String(job.seqNo || index + 1).padStart(2, '0')}
-                </div>
-                <div className="w-12 h-12 rounded-2xl overflow-hidden shrink-0 bg-slate-100">
-                   {job.imgUrls && job.imgUrls.length > 0 ? (
-                       <img src={job.imgUrls[0]} className="w-full h-full object-cover" />
-                   ) : (
-                       <ImageIcon className="w-6 h-6 text-slate-300 m-auto" />
-                   )}
-                </div>
-                <div className="flex-1">
-                   <h3 className="font-bold text-slate-700 leading-tight">{job.title}</h3>
-                   <div className="text-xs font-medium text-slate-400 mt-1">{job.companyName}</div>
-                </div>
-                <button className="w-10 h-10 rounded-full hover:bg-slate-50 flex items-center justify-center">
-                   <MoreHorizontal className="w-5 h-5 text-slate-400" />
-                </button>
-             </div>
-           ))}
-         </div>
-       </div>
-    </Layout>
-  );
-};
-
-const AdminStudentsView = ({ users, apps, navigateTo, nav }: any) => {
-  const [studentSearch, setStudentSearch] = useState('');
-  
-  // Sort by manual seqNo
-  const studentList = users.filter((u: UserData) => 
-    u.role === 'student' && 
-    u.name.toLowerCase().includes(studentSearch.toLowerCase())
-  ).sort((a: UserData, b: UserData) => (a.seqNo || 9999) - (b.seqNo || 9999));
-
-  return (
-    <Layout nav={nav} title="Students">
-      <div className="p-4 space-y-4">
-          <div className="bg-white rounded-full flex items-center px-4 py-3 shadow-sm border border-slate-100 mb-2">
-             <Search className="w-4 h-4 text-slate-300 mr-2" />
-             <input 
-                placeholder="Search students..." 
-                className="flex-1 text-sm font-bold outline-none text-slate-600 placeholder-slate-300"
-                value={studentSearch}
-                onChange={e => setStudentSearch(e.target.value)}
-             />
-          </div>
-
-          <div className="space-y-3">
-            {studentList.map((s: UserData, i: number) => {
-              const sApp = apps.find((a: Application) => a.userId === s.id);
-              return (
-                <div 
-                  key={s.id} 
-                  onClick={() => navigateTo('admin-student-detail', { studentId: s.id })} 
-                  className="bg-white p-4 rounded-[28px] shadow-sm border border-slate-100 flex items-center justify-between active:scale-[0.98] transition-transform cursor-pointer relative"
-                >
-                  <div className="flex items-center gap-4">
-                    <div className="w-6 h-6 rounded-full bg-slate-100 text-slate-500 flex items-center justify-center text-[10px] font-black mr-[-8px] z-10 border-2 border-white">
-                       {/* Manual Sequence Number */}
-                       {String(s.seqNo || i + 1).padStart(2, '0')}
+            <div className="flex-1 overflow-y-auto p-6 relative -mt-6 bg-white rounded-t-[32px] z-10">
+                <div className="absolute top-20 right-[-20px] rotate-[-15deg] text-8xl font-black text-slate-50 select-none pointer-events-none z-0 whitespace-nowrap opacity-50">Blueprint Global</div>
+                <div className="relative z-10">
+                    <div className="flex justify-between items-start mb-2">
+                        <div className="flex gap-2 mb-4">{job.tags?.map((t: string) => (<span key={t} className="px-3 py-1 bg-sky-50 text-sky-600 rounded-lg text-xs font-bold uppercase">{t}</span>))}</div>
+                         <div className="bg-sky-400 text-white p-2 rounded-full shadow-lg shadow-sky-200"><Star className="w-5 h-5 fill-current" /></div>
                     </div>
-                    <div className="w-12 h-12 rounded-full bg-slate-100 text-slate-600 flex items-center justify-center font-bold text-sm">
-                      {s.name[0]}
+                    <h1 className="text-3xl font-black text-slate-900 leading-tight mb-1">{job.title}</h1>
+                    <p className="text-slate-500 font-medium text-lg mb-6">{job.companyName} <span className="text-slate-300">•</span> {job.location}</p>
+                    <div className="grid grid-cols-2 gap-3 mb-8">
+                        <div className="bg-slate-50 p-4 rounded-2xl border border-slate-100"><p className="text-xs font-bold text-slate-400 uppercase mb-1">Program Year</p><p className="text-slate-800 font-bold">{job.programYear}</p></div>
+                         <div className="bg-slate-50 p-4 rounded-2xl border border-slate-100"><p className="text-xs font-bold text-slate-400 uppercase mb-1">Housing Cost</p><p className="text-slate-800 font-bold">{job.housingCost}</p></div>
+                         <div className="bg-slate-50 p-4 rounded-2xl border border-slate-100"><p className="text-xs font-bold text-slate-400 uppercase mb-1">Start Dates</p><p className="text-slate-800 font-bold">{job.startDateRange}</p></div>
+                         <div className="bg-slate-50 p-4 rounded-2xl border border-slate-100"><p className="text-xs font-bold text-slate-400 uppercase mb-1">End Date</p><p className="text-slate-800 font-bold">{job.endDate}</p></div>
                     </div>
-                    <div>
-                      <div className="font-black text-slate-700">{s.name}</div>
-                      <div className="text-xs font-bold text-slate-400 mt-0.5">{s.programYear} • Score: {s.score.toFixed(1)}</div>
-                    </div>
-                  </div>
-                  {sApp && (
-                    <span className={`text-[10px] px-2 py-1 rounded-full font-black uppercase ${
-                      sApp.status === 'approved' ? 'bg-green-100 text-green-700' : 
-                      sApp.status === 'rejected' ? 'bg-red-100 text-red-700' : 'bg-orange-100 text-orange-700'
-                    }`}>
-                      {sApp.status}
-                    </span>
-                  )}
+                    <div className="prose prose-slate prose-p:text-slate-600 prose-headings:text-slate-800 mb-24"><h3 className="font-bold text-lg mb-2">Job Description</h3><p>{job.description}</p></div>
                 </div>
-              );
-            })}
-          </div>
-      </div>
-    </Layout>
-  );
+            </div>
+            <div className="p-4 bg-white border-t border-slate-100 sticky bottom-0 z-20 pb-8">
+                {isFull ? (<Button disabled className="w-full text-lg bg-slate-100 text-slate-400 shadow-none cursor-not-allowed">Position Filled</Button>) : hasActiveApp ? (<Button disabled className="w-full text-lg bg-rose-50 text-rose-400 shadow-none border-2 border-rose-100">Limit Reached (1 Active App)</Button>) : user.score < job.minScore ? (<Button disabled className="w-full text-lg bg-slate-100 text-slate-400 shadow-none">Score Too Low (Min {job.minScore})</Button>) : (<Button onClick={() => onApplyConfirm(job.id)} className="w-full text-lg">Apply Now</Button>)}
+            </div>
+        </div>
+    );
 };
 
-const AdminPostJobView = ({ jobs, setJobs, setCurrentView, nav, editJob = null }: any) => {
-  const [form, setForm] = useState<Partial<Job>>({
-    title: '', location: '', companyName: '', housing: 'Provided', housingCost: '$150/wk', salary: '$15.00/hr', programYear: '2025', capacity: 10, minScore: 6.0,
-    startDateRange: 'Jun 15 - Jun 30', endDate: 'Sept 15, 2025', description: '', imgUrls: [], seqNo: jobs.length + 1
-  });
-
-  useEffect(() => {
-    if (editJob) {
-      setForm(editJob);
-    }
-  }, [editJob]);
-
-  const fileRef = useRef<HTMLInputElement>(null);
-
-  const handleImageUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0];
-    if (file) {
-      if ((form.imgUrls?.length || 0) >= 9) {
-          alert("Maximum 9 images allowed.");
-          return;
-      }
-      const reader = new FileReader();
-      reader.onloadend = () => {
-        setForm({ ...form, imgUrls: [...(form.imgUrls || []), reader.result as string] });
-      };
-      reader.readAsDataURL(file);
-    }
-  };
-
-  const removeImage = (index: number) => {
-    const newUrls = form.imgUrls?.filter((_, i) => i !== index);
-    setForm({ ...form, imgUrls: newUrls });
-  };
-
-  const handleSubmit = () => {
-    if (editJob) {
-      // Update existing
-      const updatedJobs = jobs.map((j: Job) => j.id === editJob.id ? { ...form, id: editJob.id } : j);
-      setJobs(updatedJobs);
-    } else {
-      // Create new
-      const newJob = { ...form, id: `j${Date.now()}` } as Job;
-      setJobs([...jobs, newJob]);
-    }
-    setCurrentView('admin-dash');
-  };
-
-  const handleDelete = () => {
-    if (confirm("Delete this job?")) {
-      setJobs(jobs.filter((j: Job) => j.id !== editJob.id));
-      setCurrentView('admin-dash');
-    }
-  };
-
-  return (
-    <Layout nav={nav} title={editJob ? "Edit Job" : "Post Job"} backAction={() => setCurrentView('admin-dash')}>
-      <div className="p-4 pb-20">
-         <div className="text-3xl font-black text-slate-700 mb-6 px-4">{editJob ? "Edit" : "New"}<br/><span className="text-sky-400">{editJob ? "Details" : "Position"}</span></div>
-         
-         <div className="mb-6 px-4">
-           <div className="flex justify-between items-center mb-2 px-1">
-             <div className="text-[10px] font-black text-sky-300 uppercase tracking-widest">Job Images</div>
-             <div className="text-[10px] font-bold text-slate-400">{form.imgUrls?.length || 0} / 9</div>
-           </div>
-           
-           <div className="grid grid-cols-3 gap-2">
-              {form.imgUrls?.map((url, idx) => (
-                <div key={idx} className="aspect-square rounded-[20px] overflow-hidden relative shadow-sm border border-sky-100">
-                    <img src={url} className="w-full h-full object-cover" />
-                    <button onClick={() => removeImage(idx)} className="absolute top-1 right-1 w-6 h-6 bg-white/80 rounded-full flex items-center justify-center text-rose-500 shadow-sm backdrop-blur-sm">
-                        <X size={14} strokeWidth={3} />
-                    </button>
+const StudentInternshipView = ({ user, apps, jobs, onWithdraw }: any) => {
+    const myApps = apps.filter((a: any) => a.userId === user.id).sort((a: any, b: any) => new Date(b.date).getTime() - new Date(a.date).getTime());
+    return (
+        <div className="flex-1 overflow-y-auto p-6 pt-12 pb-32 min-h-0 bg-[#F0F9FF]">
+            <h1 className="text-3xl font-black text-slate-900 mb-2">My Applications</h1>
+            <p className="text-slate-500 mb-8">Track your status</p>
+            {myApps.length === 0 ? (
+                <div className="text-center py-20 opacity-50"><Briefcase className="w-16 h-16 mx-auto mb-4 text-slate-300" /><p className="text-slate-500 font-medium">No applications yet.</p></div>
+            ) : (
+                <div className="space-y-6">
+                    {myApps.map((app: any) => {
+                        const job = jobs.find((j: any) => j.id === app.jobId);
+                        if (!job) return null;
+                        return (
+                            <div key={app.id} className="bg-white rounded-[32px] p-6 shadow-xl shadow-sky-50 border border-white">
+                                <div className="flex justify-between items-start mb-4">
+                                    <div><h2 className="text-xl font-black text-slate-800 mb-1">{job.title}</h2><p className="text-slate-400">{job.companyName}</p></div>
+                                    <div className={`px-3 py-1 rounded-full text-xs font-bold uppercase border ${app.status === 'approved' ? 'bg-emerald-50 text-emerald-600 border-emerald-100' : app.status === 'rejected' ? 'bg-rose-50 text-rose-600 border-rose-100' : 'bg-yellow-50 text-yellow-600 border-yellow-100'}`}>{app.status}</div>
+                                </div>
+                                {app.status === 'pending' && (
+                                    <div className="bg-[#FEF9C3] p-4 rounded-2xl border border-yellow-100 mb-4">
+                                        <div className="flex items-start gap-3"><AlertCircle className="w-5 h-5 text-yellow-600 flex-shrink-0 mt-0.5" /><p className="text-sm text-yellow-800 leading-relaxed font-medium">Your application will be reviewed by the team. After it is reviewed, there will be a long wait. Please do not constantly check in. Once our backend team approves it, you can proceed.</p></div>
+                                    </div>
+                                )}
+                                {app.status === 'approved' && (
+                                     <div className="bg-emerald-50 p-4 rounded-2xl border border-emerald-100 mb-4">
+                                        <div className="flex items-start gap-3"><CheckCircle2 className="w-5 h-5 text-emerald-600 flex-shrink-0 mt-0.5" /><p className="text-sm text-emerald-800 font-medium">Congratulations! You have been approved for this position.</p></div>
+                                    </div>
+                                )}
+                                {app.status === 'pending' && (<button onClick={() => onWithdraw(app.id)} className="w-full py-3 rounded-xl border border-rose-100 text-rose-500 font-bold hover:bg-rose-50 transition-colors text-sm">Withdraw Application</button>)}
+                            </div>
+                        );
+                    })}
                 </div>
-              ))}
-              
-              {(form.imgUrls?.length || 0) < 9 && (
-                <div 
-                    onClick={() => fileRef.current?.click()}
-                    className="aspect-square border-2 border-dashed border-sky-200 bg-sky-50 rounded-[20px] flex flex-col items-center justify-center cursor-pointer hover:bg-sky-100 transition-colors active:scale-[0.98] text-sky-300"
-                >
-                    <Plus size={24} strokeWidth={3} />
-                    <span className="text-[10px] font-bold mt-1 uppercase">Add</span>
-                </div>
-              )}
-           </div>
-           <input type="file" ref={fileRef} className="hidden" onChange={handleImageUpload} accept="image/*" />
-         </div>
-
-         <InputGroup title="Basic Info">
-            <div className="p-6 border-b border-slate-50">
-               <div className="text-[10px] font-black text-sky-300 uppercase tracking-widest mb-2">JOB TITLE</div>
-               <input className="w-full text-2xl font-black text-slate-700 outline-none placeholder-sky-200" placeholder="e.g. Resort Lifeguard" value={form.title} onChange={(e) => setForm({...form, title: e.target.value})} />
-            </div>
-            {/* Sequence Number Input */}
-            <InputCell label="Sequence No." type="number" value={form.seqNo} onChange={(e:any) => setForm({...form, seqNo: parseInt(e.target.value)})} placeholder="e.g. 1" />
-         </InputGroup>
-
-         <InputGroup title="Program Details">
-            <InputCell label="Program Year" value={form.programYear} onChange={(e:any) => setForm({...form, programYear: e.target.value})} />
-            <InputCell label="Min Score" type="number" step="0.5" value={form.minScore} onChange={(e:any) => setForm({...form, minScore: parseFloat(e.target.value)})} />
-            <InputCell label="Location" value={form.location} onChange={(e:any) => setForm({...form, location: e.target.value})} placeholder="City, State" />
-            <InputCell label="Company" value={form.companyName} onChange={(e:any) => setForm({...form, companyName: e.target.value})} placeholder="Company Name" />
-         </InputGroup>
-
-         <InputGroup title="Compensation">
-            <InputCell label="Salary" value={form.salary} onChange={(e:any) => setForm({...form, salary: e.target.value})} placeholder="$16.00/hr" />
-            <InputCell label="Housing Cost" value={form.housingCost} onChange={(e:any) => setForm({...form, housingCost: e.target.value})} placeholder="$150/wk" />
-            <InputCell label="Capacity" type="number" value={form.capacity} onChange={(e:any) => setForm({...form, capacity: parseInt(e.target.value)})} />
-         </InputGroup>
-         
-         <InputGroup title="Dates">
-            <InputCell label="Start Range" value={form.startDateRange} onChange={(e:any) => setForm({...form, startDateRange: e.target.value})} />
-            <InputCell label="End Date" value={form.endDate} onChange={(e:any) => setForm({...form, endDate: e.target.value})} />
-         </InputGroup>
-
-         <InputGroup title={`Description`}>
-             <div className="p-6">
-                 <textarea 
-                    className="w-full h-40 bg-transparent text-sm font-bold outline-none resize-none text-slate-600 leading-relaxed placeholder-sky-200" 
-                    value={form.description} 
-                    onChange={e => setForm({...form, description: e.target.value})}
-                    placeholder="Enter full job details here..."
-                  />
-             </div>
-         </InputGroup>
-
-         <div className="mt-8 space-y-4">
-            <Button className="w-full" onClick={handleSubmit}>{editJob ? "Save Changes" : "Publish Position"}</Button>
-            {editJob && <Button className="w-full" variant="danger" onClick={handleDelete}>Delete Job</Button>}
-         </div>
-      </div>
-    </Layout>
-  );
+            )}
+        </div>
+    );
 };
 
-const AdminStudentDetailView = ({ studentId, users, setUsers, apps, setApps, jobs, setCurrentView }: any) => {
-   const student = users.find((u: UserData) => u.id === studentId);
-   const studentApps = apps.filter((a: Application) => a.userId === studentId);
-
-   if (!student) return <div>User not found</div>;
-
-   const handleStatusChange = (appId: string, newStatus: AppStatus) => {
-      setApps(apps.map((a: Application) => a.id === appId ? { ...a, status: newStatus } : a));
-   };
-
-   const updateStudent = (field: string, value: any) => {
-      setUsers(users.map((u: UserData) => u.id === studentId ? { ...u, [field]: value } : u));
-   };
-
-   return (
-      <Layout title="Student Profile" backAction={() => setCurrentView('admin-students')}>
-         <div className="p-6">
-            {/* Header */}
-            <div className="bg-white rounded-[32px] p-6 shadow-sm border border-slate-100 flex flex-col items-center mb-6">
-               <div className="w-20 h-20 rounded-full bg-sky-100 text-sky-500 flex items-center justify-center font-black text-2xl mb-4">
-                  {student.name[0]}
-               </div>
-               <h2 className="text-2xl font-black text-slate-700">{student.name}</h2>
-               <p className="text-slate-400 font-bold">{student.school}</p>
-               <div className="mt-4 flex gap-2">
-                  <a href={`tel:${student.phone}`} className="w-10 h-10 rounded-full bg-emerald-50 text-emerald-500 flex items-center justify-center hover:bg-emerald-100"><Phone size={18} /></a>
-                  <div className="w-10 h-10 rounded-full bg-sky-50 text-sky-500 flex items-center justify-center"><Mail size={18} /></div>
-               </div>
+const StudentServicesView = ({ user, onEmergency, guides, onSelectGuide }: any) => {
+    return (
+        <div className="flex-1 overflow-y-auto p-4 space-y-6 pb-32 min-h-0 bg-[#F0F9FF]">
+            <div><h1 className="text-3xl font-black text-slate-900">Services</h1><p className="text-slate-400 font-medium">Essential tools for your trip.</p></div>
+            <div onClick={onEmergency} className="bg-[#38BDF8] rounded-[40px] p-6 shadow-xl shadow-sky-200 relative overflow-hidden h-48 flex flex-col justify-between active:scale-[0.98] transition-transform cursor-pointer group">
+                <div className="absolute top-[-20px] right-[-20px] w-32 h-32 bg-white/20 rounded-full blur-xl" /><div className="absolute bottom-[-20px] left-[-20px] w-24 h-24 bg-sky-600/20 rounded-full blur-xl" />
+                <div className="relative z-10 flex justify-between items-start"><span className="bg-white/20 backdrop-blur text-white text-[10px] font-bold px-3 py-1 rounded-full uppercase tracking-widest border border-white/10">Tap in Emergency</span><div className="w-10 h-10 bg-white/20 rounded-full flex items-center justify-center"><ShieldAlert className="text-white w-6 h-6" /></div></div>
+                <div className="relative z-10"><h2 className="text-3xl font-black text-white mb-2">Emergency Card</h2><div className="flex items-center gap-2 text-white/90"><span className="bg-white text-sky-500 px-4 py-2 rounded-full text-sm font-bold flex items-center gap-2 shadow-lg">Open Now <Heart className="w-3 h-3 fill-current" /></span></div></div>
             </div>
+            <div>
+                <div className="flex items-center gap-2 mb-4 px-2"><div className="w-1.5 h-1.5 rounded-full bg-sky-400"></div><h2 className="text-sm font-bold text-sky-400 uppercase tracking-widest">Little Guides</h2></div>
+                <div className="space-y-3">{guides.map((guide: any) => (<div key={guide.id} onClick={() => onSelectGuide(guide)} className="bg-white p-2 pr-4 rounded-[28px] border border-sky-50 shadow-sm flex items-center gap-4 active:scale-[0.98] transition-transform"><div className="w-16 h-16 bg-[#EFF6FF] rounded-[20px] flex items-center justify-center text-sky-500 overflow-hidden flex-shrink-0">{guide.imgUrl ? (<img src={guide.imgUrl} className="w-full h-full object-cover" alt="icon" />) : (<BookOpen className="w-6 h-6" />)}</div><div className="flex-1"><h3 className="text-slate-700 font-bold leading-tight">{guide.title}</h3><p className="text-slate-400 text-xs mt-0.5">{guide.category}</p></div><ChevronRight className="text-slate-300 w-5 h-5" /></div>))}</div>
+            </div>
+        </div>
+    );
+};
 
-            {/* Score Edit & Sequence No */}
-            <InputGroup title="Academic">
-               <InputCell label="Score" type="number" step="0.5" value={student.score} onChange={(e: any) => updateStudent('score', parseFloat(e.target.value))} />
-               <InputCell label="Sequence No." type="number" value={student.seqNo} onChange={(e: any) => updateStudent('seqNo', parseInt(e.target.value))} />
-               <InputCell label="Cohort" value={student.programYear} readOnly />
-            </InputGroup>
-
-            {/* Applications */}
-            <div className="mb-6">
-               <div className="px-4 mb-2 text-xs font-bold text-sky-400 uppercase tracking-wider flex items-center gap-1"><Sparkles className="w-3 h-3" /> Applications</div>
-               <div className="space-y-3">
-                  {studentApps.length === 0 ? (
-                     <div className="bg-white p-6 rounded-[24px] text-center text-slate-400 font-bold text-sm">No applications yet.</div>
-                  ) : studentApps.map((app: Application) => {
-                     const job = jobs.find((j: Job) => j.id === app.jobId);
-                     return (
-                        <div key={app.id} className="bg-white p-5 rounded-[24px] shadow-sm border border-slate-50">
-                           <div className="font-bold text-slate-700 mb-1">{job?.title}</div>
-                           <div className="text-xs font-bold text-slate-400 uppercase mb-4">{job?.companyName}</div>
-                           
-                           <div className="flex gap-2">
-                              {app.status === 'pending' && (
-                                 <>
-                                    <button onClick={() => handleStatusChange(app.id, 'approved')} className="flex-1 bg-emerald-50 text-emerald-600 py-2 rounded-xl font-bold text-xs hover:bg-emerald-100 flex items-center justify-center gap-1">
-                                       <CheckCircle2 size={14} /> Approve
-                                    </button>
-                                    <button onClick={() => handleStatusChange(app.id, 'rejected')} className="flex-1 bg-rose-50 text-rose-500 py-2 rounded-xl font-bold text-xs hover:bg-rose-100 flex items-center justify-center gap-1">
-                                       <XCircle size={14} /> Reject
-                                    </button>
-                                 </>
-                              )}
-                              {app.status === 'approved' && (
-                                 <div className="flex-1 bg-emerald-100 text-emerald-700 py-2 rounded-xl font-bold text-xs text-center">Approved</div>
-                              )}
-                              {app.status === 'rejected' && (
-                                 <div className="flex-1 bg-rose-100 text-rose-700 py-2 rounded-xl font-bold text-xs text-center">Rejected</div>
-                              )}
-                           </div>
+const StudentEmergencyView = ({ user, onBack, onUpdateUser }: any) => {
+    const [isAdding, setIsAdding] = useState(false);
+    const [newContact, setNewContact] = useState({ name: '', phone: '', type: 'Friend' });
+    const handleAdd = () => {
+        if (!newContact.name || !newContact.phone) return;
+        const updatedUser = { ...user, emergencyContacts: [...(user.emergencyContacts || []), { ...newContact }] };
+        onUpdateUser(updatedUser);
+        setIsAdding(false);
+        setNewContact({ name: '', phone: '', type: 'Friend' });
+    };
+    return (
+        <div className="flex-1 overflow-y-auto flex flex-col h-full bg-[#F0F9FF]">
+            <div className="bg-[#38BDF8] px-6 pt-12 pb-8 rounded-b-[40px] shadow-xl shadow-sky-200 z-10 flex-shrink-0">
+                <div className="flex items-center justify-between text-white mb-6"><button onClick={onBack} className="flex items-center font-bold opacity-80 hover:opacity-100"><ChevronLeft className="w-5 h-5 mr-1" /> Back</button></div>
+                <h1 className="text-3xl font-black text-white mb-2">Emergency Card</h1><p className="text-sky-100 font-medium opacity-90">Access these contacts offline.</p>
+            </div>
+            <div className="flex-1 overflow-y-auto p-6 space-y-6">
+                <div className="bg-white p-5 rounded-[32px] border border-slate-50 shadow-lg shadow-sky-50">
+                    <h3 className="text-xs font-bold text-slate-400 uppercase tracking-wider mb-4">Local Emergency</h3>
+                    <div className="space-y-3">
+                        <div className="bg-rose-50 p-4 rounded-2xl flex justify-between items-center border border-rose-100"><div><p className="font-bold text-slate-800">Police / Ambulance</p><p className="text-rose-500 font-black text-xl">911</p></div><div className="w-10 h-10 bg-rose-500 rounded-full shadow-lg shadow-rose-200"></div></div>
+                         <div className="bg-rose-50 p-4 rounded-2xl flex justify-between items-center border border-rose-100"><div><p className="font-bold text-slate-800">Chinese Consulate</p><p className="text-rose-500 font-black text-lg">+1-202-495-2266</p></div><div className="w-10 h-10 bg-rose-500 rounded-full shadow-lg shadow-rose-200"></div></div>
+                    </div>
+                </div>
+                <div className="bg-white p-5 rounded-[32px] border border-slate-50 shadow-lg shadow-sky-50">
+                    <h3 className="text-xs font-bold text-slate-400 uppercase tracking-wider mb-4">My Contacts</h3>
+                    <div className="space-y-4 mb-6">{user.emergencyContacts?.map((c: any, i: number) => (<div key={i} className="bg-slate-50 p-4 rounded-2xl border border-slate-100"><div className="flex justify-between items-center mb-1"><p className="text-xs font-bold text-sky-500 uppercase">{c.type}</p></div><p className="font-bold text-slate-800 text-lg">{c.name}</p><p className="text-slate-500 font-mono text-lg">{c.phone}</p></div>))}</div>
+                    {!isAdding ? (
+                        <button onClick={() => setIsAdding(true)} className="w-full py-4 rounded-2xl border-2 border-dashed border-sky-200 text-sky-400 font-bold flex items-center justify-center gap-2 hover:bg-sky-50 active:scale-95 transition-all"><Plus className="w-5 h-5" />Add Friend / Family</button>
+                    ) : (
+                        <div className="bg-sky-50 p-4 rounded-2xl border border-sky-100 animate-in fade-in zoom-in duration-200">
+                            <h4 className="font-bold text-sky-800 mb-3 text-center">New Contact</h4>
+                            <div className="space-y-3">
+                                <input className="w-full bg-white p-3 rounded-xl text-slate-700 font-bold focus:outline-none border border-sky-100" placeholder="Name (e.g. Mom)" value={newContact.name} onChange={e => setNewContact({...newContact, name: e.target.value})}/>
+                                <input className="w-full bg-white p-3 rounded-xl text-slate-700 font-bold focus:outline-none border border-sky-100" placeholder="Phone Number" value={newContact.phone} onChange={e => setNewContact({...newContact, phone: e.target.value})}/>
+                                <div className="flex gap-2">{['Friend', 'Family', 'Work'].map(type => (<button key={type} onClick={() => setNewContact({...newContact, type})} className={`flex-1 py-2 rounded-lg text-xs font-bold ${newContact.type === type ? 'bg-sky-400 text-white shadow-md' : 'bg-white text-slate-400'}`}>{type}</button>))}</div>
+                                <div className="flex gap-2 pt-2"><button onClick={() => setIsAdding(false)} className="flex-1 py-3 rounded-xl bg-slate-200 text-slate-500 font-bold">Cancel</button><button onClick={handleAdd} className="flex-1 py-3 rounded-xl bg-sky-400 text-white font-bold shadow-lg shadow-sky-200">Save</button></div>
+                            </div>
                         </div>
-                     )
-                  })}
-               </div>
+                    )}
+                </div>
+            </div>
+        </div>
+    );
+};
+
+const StudentProfileView = ({ user, onLogout, onEdit, isEditing, onSaveProfile }: any) => {
+    const [editData, setEditData] = useState({ name: user.name, phone: user.phone || '' });
+    const handleSave = () => { onSaveProfile(editData); };
+    if (isEditing) {
+        return (
+            <div className="flex-1 overflow-y-auto p-6 pt-12 pb-24 min-h-0 bg-[#F0F9FF]">
+                 <div className="flex justify-between items-center mb-6"><h1 className="text-2xl font-black text-slate-900">Edit Profile</h1><button onClick={onEdit} className="text-slate-400 font-bold">Cancel</button></div>
+                <div className="bg-white p-6 rounded-[32px] shadow-lg space-y-4">
+                    <div><label className="text-xs font-bold text-slate-400 mb-1 block">FULL NAME</label><input className="w-full bg-slate-50 p-3 rounded-xl font-bold text-slate-800" value={editData.name} onChange={e => setEditData({...editData, name: e.target.value})}/></div>
+                     <div><label className="text-xs font-bold text-slate-400 mb-1 block">PHONE</label><input className="w-full bg-slate-50 p-3 rounded-xl font-bold text-slate-800" value={editData.phone} onChange={e => setEditData({...editData, phone: e.target.value})}/></div>
+                     <div><label className="text-xs font-bold text-slate-400 mb-1 block">SCHOOL (LOCKED)</label><input disabled className="w-full bg-slate-100 p-3 rounded-xl font-bold text-slate-400 cursor-not-allowed" value={user.school}/></div>
+                    <Button onClick={handleSave} className="w-full mt-4">Save Changes</Button>
+                </div>
+            </div>
+        );
+    }
+    return (
+        <div className="flex-1 overflow-y-auto flex flex-col pb-32 min-h-0 bg-[#F0F9FF]">
+            <div className="bg-gradient-to-b from-sky-200 to-[#F0F9FF] pt-12 pb-20 px-6 rounded-b-[50px] text-center relative z-0 flex-shrink-0">
+                <div className="w-28 h-28 mx-auto bg-sky-200 rounded-full p-1 shadow-xl shadow-sky-100 mb-4 border-4 border-white relative">
+                     <div className="w-full h-full bg-[#BAE6FD] rounded-full flex items-center justify-center text-3xl font-black text-sky-600">{user.name.charAt(0)}</div>
+                     <button onClick={onEdit} className="absolute bottom-0 right-0 w-8 h-8 bg-white rounded-full flex items-center justify-center shadow-md text-slate-600"><Edit3 className="w-4 h-4" /></button>
+                </div>
+                <h1 className="text-2xl font-black text-slate-900 mb-1">{user.name}</h1>
+                <div className="inline-block bg-white px-3 py-1 rounded-full shadow-sm text-sky-500 font-bold text-xs uppercase tracking-wider">{user.school || 'University'}</div>
+            </div>
+            <div className="px-6 -mt-12 z-10 relative mb-8 flex-shrink-0">
+                <div className="grid grid-cols-2 gap-4">
+                    <div className="bg-white p-5 rounded-[32px] shadow-lg shadow-sky-50 border border-white flex flex-col items-center justify-center gap-2"><div className="w-10 h-10 bg-[#FEF9C3] rounded-full flex items-center justify-center text-yellow-600"><Star className="w-5 h-5 fill-current" /></div><span className="text-3xl font-black text-slate-800">{user.score.toFixed(1)}</span><span className="bg-slate-100 text-slate-400 px-2 py-0.5 rounded text-[10px] font-bold uppercase tracking-widest">Score</span></div>
+                     <div className="bg-white p-5 rounded-[32px] shadow-lg shadow-sky-50 border border-white flex flex-col items-center justify-center gap-2"><div className="w-10 h-10 bg-sky-100 rounded-full flex items-center justify-center text-sky-500"><Briefcase className="w-5 h-5" /></div><span className="text-3xl font-black text-slate-800">{user.programYear}</span><span className="bg-slate-100 text-slate-400 px-2 py-0.5 rounded text-[10px] font-bold uppercase tracking-widest">Cohort</span></div>
+                </div>
+            </div>
+            <div className="px-6 space-y-3 flex-shrink-0">
+                 <button className="w-full bg-white p-4 rounded-full shadow-sm border border-slate-50 flex items-center justify-between active:scale-[0.98]"><div className="flex items-center gap-4"><div className="w-10 h-10 rounded-full bg-[#F0FDFA] flex items-center justify-center text-teal-500"><FileText className="w-5 h-5" /></div><span className="font-bold text-slate-700">Internship Agreement</span></div><ChevronRight className="text-slate-300" /></button>
+                <button onClick={onLogout} className="w-full bg-white p-4 rounded-full shadow-sm border border-slate-50 flex items-center justify-between active:scale-[0.98] group"><div className="flex items-center gap-4"><div className="w-10 h-10 rounded-full bg-rose-50 flex items-center justify-center text-rose-400 group-hover:text-rose-500"><LogOut className="w-5 h-5 ml-0.5" /></div><span className="font-bold text-slate-700 group-hover:text-rose-500 transition-colors">Sign Out</span></div></button>
+            </div>
+             <div className="text-center mt-8 text-slate-300 text-xs flex-shrink-0 pb-4">v1.3.0 · Blueprint Global</div>
+        </div>
+    );
+};
+
+// --- Admin Views ---
+
+const AdminDashView = ({ jobs, students, onSelectJob, apps }: any) => {
+    const [search, setSearch] = useState('');
+    const filteredJobs = jobs.filter((j: any) => j.title.toLowerCase().includes(search.toLowerCase()) || String(j.seqNo).includes(search) || j.location.toLowerCase().includes(search.toLowerCase())).sort((a:any, b:any) => a.seqNo - b.seqNo);
+    const activeJobs = filteredJobs.filter((j: any) => { const approvedCount = apps.filter((a: any) => a.jobId === j.id && a.status === 'approved').length; return approvedCount < j.capacity; });
+    const fullJobs = filteredJobs.filter((j: any) => { const approvedCount = apps.filter((a: any) => a.jobId === j.id && a.status === 'approved').length; return approvedCount >= j.capacity; });
+    
+    return (
+        <div className="flex-1 overflow-y-auto p-6 pb-32 bg-[#F0F9FF]">
+             <div className="flex items-center justify-between mb-6"><div><p className="text-xs font-bold text-slate-400 uppercase tracking-widest mb-1">ADMIN CONSOLE</p><h1 className="text-3xl font-black text-slate-800">Dashboard</h1></div></div>
+             
+            <div className="mb-8 relative"><Search className="absolute left-4 top-3.5 text-slate-400 w-5 h-5" /><input className="w-full bg-white pl-12 pr-4 py-3 rounded-2xl shadow-sm border border-slate-100 focus:outline-none focus:ring-2 focus:ring-sky-200 font-bold text-slate-700" placeholder="Search jobs by Title or #ID..." value={search} onChange={e => setSearch(e.target.value)}/></div>
+            
+            <div className="flex gap-4 mb-8 overflow-x-auto pb-2 scrollbar-hide">
+                 <div className="min-w-[140px] bg-white p-4 rounded-[24px] border border-slate-50 shadow-lg shadow-slate-100"><div className="w-10 h-10 bg-sky-100 rounded-full flex items-center justify-center text-sky-600 mb-2"><Users className="w-5 h-5" /></div><p className="text-2xl font-black text-slate-800">{students.length}</p><p className="text-xs text-slate-400 font-bold uppercase">Students</p></div>
+                 <div className="min-w-[140px] bg-white p-4 rounded-[24px] border border-slate-50 shadow-lg shadow-slate-100"><div className="w-10 h-10 bg-[#FEF9C3] rounded-full flex items-center justify-center text-yellow-600 mb-2"><Briefcase className="w-5 h-5" /></div><p className="text-2xl font-black text-slate-800">{jobs.length}</p><p className="text-xs text-slate-400 font-bold uppercase">Jobs</p></div>
             </div>
             
-            {/* Emergency Contacts */}
-             <div className="mb-6">
-               <div className="px-4 mb-2 text-xs font-bold text-sky-400 uppercase tracking-wider flex items-center gap-1"><ShieldAlert className="w-3 h-3" /> Emergency Contacts</div>
-               <div className="bg-white rounded-[24px] overflow-hidden">
-                  {student.emergencyContacts?.map((c: any, i: number) => (
-                     <div key={i} className="p-4 border-b border-slate-50 last:border-0 flex justify-between items-center">
-                        <div>
-                           <div className="font-bold text-slate-700">{c.name}</div>
-                           <div className="text-xs text-slate-400 font-bold">{c.type}</div>
-                        </div>
-                        <div className="font-bold text-slate-500 text-sm">{c.phone}</div>
-                     </div>
-                  ))}
-                  {(!student.emergencyContacts || student.emergencyContacts.length === 0) && (
-                     <div className="p-4 text-center text-slate-400 text-sm font-bold">No contacts added.</div>
-                  )}
-               </div>
+            <div className="mb-8">
+                 <div className="flex items-center gap-2 mb-4"><div className="w-2 h-2 rounded-full bg-emerald-400 shadow-[0_0_10px_rgba(52,211,153,0.5)]"></div><h2 className="text-sm font-bold text-slate-500 uppercase tracking-widest">Active Recruiting</h2></div>
+                <div className="space-y-4">{activeJobs.map((job: any) => (<div key={job.id} onClick={() => onSelectJob(job)} className="bg-white p-5 rounded-[28px] shadow-sm border border-slate-100 active:scale-[0.98] transition-all relative overflow-hidden group"><div className="absolute top-4 right-4 bg-slate-900 text-white text-[10px] font-bold px-2 py-0.5 rounded">#{String(job.seqNo).padStart(2,'0')}</div><div className="flex gap-4"><div className="w-16 h-16 rounded-2xl bg-slate-50 flex-shrink-0 overflow-hidden">{job.imgUrls && job.imgUrls.length > 0 ? (<img src={job.imgUrls[0]} className="w-full h-full object-cover" />) : <div className="w-full h-full flex items-center justify-center text-slate-300"><ImageIcon /></div>}</div><div className="flex-1"><h3 className="text-lg font-black text-slate-800 leading-tight mb-1">{job.title}</h3><p className="text-slate-400 text-xs">{job.companyName}</p></div></div><div className="mt-4 pt-3 border-t border-slate-50 flex justify-between items-center text-sky-500 text-xs font-bold"><span>View Applicants</span><ChevronRight className="w-4 h-4" /></div></div>))}</div>
             </div>
-
-         </div>
-      </Layout>
-   )
+             <div>
+                 <div className="flex items-center gap-2 mb-4"><div className="w-2 h-2 rounded-full bg-slate-300"></div><h2 className="text-sm font-bold text-slate-400 uppercase tracking-widest">Filled / Closed</h2></div>
+                <div className="space-y-4 opacity-70 grayscale">{fullJobs.map((job: any) => (<div key={job.id} onClick={() => onSelectJob(job)} className="bg-white p-5 rounded-[28px] border border-slate-100 active:scale-[0.98] relative"><div className="absolute top-4 right-4 bg-slate-200 text-slate-500 text-[10px] font-bold px-2 py-0.5 rounded">FULL</div><div className="flex gap-4"><div className="w-16 h-16 rounded-2xl bg-slate-50 flex-shrink-0 overflow-hidden">{job.imgUrls && job.imgUrls.length > 0 ? (<img src={job.imgUrls[0]} className="w-full h-full object-cover" />) : <div className="w-full h-full flex items-center justify-center text-slate-300"><ImageIcon /></div>}</div><div className="flex-1"><h3 className="text-lg font-black text-slate-600 leading-tight mb-1">{job.title}</h3><p className="text-slate-400 text-xs">{job.companyName}</p></div></div></div>))}</div>
+             </div>
+        </div>
+    );
 };
 
+const AdminApplicationsView = ({ apps, jobs, students, onBack, onUpdateAppStatus, onSelectStudent }: any) => {
+    const [filter, setFilter] = useState('pending'); // 'pending', 'history'
+    
+    // Enrich application data
+    const enrichedApps = apps.map((app: any) => ({
+        ...app,
+        job: jobs.find((j: any) => j.id === app.jobId),
+        student: students.find((s: any) => s.id === app.userId)
+    })).filter((a: any) => a.job && a.student);
 
-// --- Main App ---
+    const filteredList = enrichedApps.filter((a: any) => {
+        if (filter === 'pending') return a.status === 'pending';
+        return a.status !== 'pending';
+    }).sort((a: any, b: any) => new Date(b.date).getTime() - new Date(a.date).getTime());
+
+    return (
+        <div className="flex-1 overflow-y-auto p-6 pt-12 pb-24 min-h-0 bg-[#F0F9FF]">
+            <div className="flex justify-between items-center mb-6">
+                 {/* No Back button needed if in bottom nav, but keeping header clean */}
+                 <div></div>
+            </div>
+            <h1 className="text-3xl font-black text-slate-900 mb-2">Application Center</h1>
+            <p className="text-slate-400 mb-6 font-medium">Manage student submissions</p>
+
+            <div className="flex p-1 bg-white rounded-xl mb-6 shadow-sm border border-slate-100">
+                <button onClick={() => setFilter('pending')} className={`flex-1 py-2 rounded-lg text-sm font-bold transition-all ${filter === 'pending' ? 'bg-sky-400 text-white shadow-md' : 'text-slate-400 hover:bg-slate-50'}`}>Pending ({enrichedApps.filter((a:any) => a.status === 'pending').length})</button>
+                <button onClick={() => setFilter('history')} className={`flex-1 py-2 rounded-lg text-sm font-bold transition-all ${filter === 'history' ? 'bg-slate-800 text-white shadow-md' : 'text-slate-400 hover:bg-slate-50'}`}>History</button>
+            </div>
+
+            <div className="space-y-4">
+                {filteredList.length === 0 ? (
+                    <div className="text-center py-20 opacity-50"><Inbox className="w-16 h-16 mx-auto mb-4 text-slate-300" /><p className="text-slate-500 font-medium">No {filter} applications.</p></div>
+                ) : filteredList.map((item: any) => (
+                    <div key={item.id} className="bg-white p-5 rounded-[28px] shadow-sm border border-slate-100">
+                        <div className="flex justify-between items-start mb-4">
+                            <span className="bg-sky-50 text-sky-600 text-[10px] font-bold px-2 py-1 rounded-md uppercase tracking-wide truncate max-w-[150px]">{item.job.title}</span>
+                            <span className="text-slate-300 text-xs font-mono">{new Date(item.date).toLocaleDateString()}</span>
+                        </div>
+                        <div className="flex items-center gap-4 mb-6 cursor-pointer" onClick={() => onSelectStudent(item.student)}>
+                            <div className="w-12 h-12 bg-sky-100 rounded-full flex items-center justify-center font-black text-sky-500 text-lg">{item.student.name.charAt(0)}</div>
+                            <div>
+                                <h3 className="font-bold text-slate-800 text-lg leading-tight flex items-center gap-2">{item.student.name} <ChevronRight className="w-4 h-4 text-slate-300" /></h3>
+                                <p className="text-xs text-slate-400 font-bold uppercase">{item.student.school}</p>
+                            </div>
+                        </div>
+                        {item.status === 'pending' ? (
+                            <div className="grid grid-cols-2 gap-3">
+                                <button onClick={() => onUpdateAppStatus(item.id, 'rejected')} className="py-3 rounded-xl bg-slate-50 text-slate-500 font-bold text-xs hover:bg-rose-50 hover:text-rose-500 transition-colors">Reject</button>
+                                <button onClick={() => onUpdateAppStatus(item.id, 'approved')} className="py-3 rounded-xl bg-[#38BDF8] text-white font-bold text-xs shadow-lg shadow-sky-200 hover:bg-sky-400">Approve</button>
+                            </div>
+                        ) : (
+                            <div className={`w-full py-3 rounded-xl text-center font-bold text-xs border ${item.status === 'approved' ? 'bg-emerald-50 text-emerald-600 border-emerald-100' : 'bg-rose-50 text-rose-600 border-rose-100'}`}>
+                                {item.status.toUpperCase()}
+                            </div>
+                        )}
+                    </div>
+                ))}
+            </div>
+        </div>
+    );
+};
+
+const AdminJobDetailView = ({ job, applicants, onBack, onEditJob, onUpdateAppStatus }: any) => {
+    return (
+        <div className="flex-1 overflow-y-auto p-6 pt-12 pb-24 min-h-0 bg-[#F0F9FF]">
+            <div className="flex justify-between items-center mb-6"><button onClick={onBack} className="flex items-center text-slate-400 font-bold"><ChevronLeft className="w-5 h-5 mr-1" /> Back</button><button onClick={() => onEditJob(job)} className="bg-white px-4 py-2 rounded-full text-sky-500 font-bold text-xs shadow-sm border border-slate-100 flex items-center gap-2"><Edit3 className="w-4 h-4" /> Edit Job</button></div>
+            <div className="bg-white p-6 rounded-[32px] shadow-lg mb-8">
+                 <div className="flex gap-4 mb-4">
+                    <div className="w-20 h-20 rounded-2xl bg-slate-100 flex-shrink-0 overflow-hidden">{job.imgUrls && job.imgUrls.length > 0 ? (<img src={job.imgUrls[0]} className="w-full h-full object-cover" />) : <div className="w-full h-full flex items-center justify-center text-slate-300"><ImageIcon /></div>}</div>
+                    <div><h1 className="text-xl font-black text-slate-800 leading-tight mb-1">{job.title}</h1><p className="text-slate-500 font-medium text-sm">{job.companyName}</p><div className="flex gap-2 mt-2"><span className="bg-slate-100 text-slate-500 text-[10px] font-bold px-2 py-0.5 rounded">#{job.seqNo}</span><span className="bg-[#FEF9C3] text-yellow-700 text-[10px] font-bold px-2 py-0.5 rounded">{job.programYear}</span></div></div>
+                </div>
+                <div className="flex justify-between items-center bg-slate-50 p-3 rounded-2xl"><span className="text-xs font-bold text-slate-400">CAPACITY</span><span className="font-black text-slate-800 text-lg">{applicants.filter((a: any) => a.application.status === 'approved').length} / {job.capacity}</span></div>
+            </div>
+            <h2 className="text-lg font-black text-slate-800 mb-4 px-2">Applicants ({applicants.length})</h2>
+            <div className="space-y-4">
+                {applicants.length === 0 ? (
+                    <div className="text-center py-10 text-slate-400 text-sm font-medium">No applications yet.</div>
+                ) : applicants.map((item: any) => (
+                    <div key={item.application.id} className="bg-white p-5 rounded-[28px] border border-slate-100 shadow-sm">
+                        <div className="flex items-center gap-3 mb-4"><div className="w-10 h-10 bg-sky-100 rounded-full flex items-center justify-center font-black text-sky-500">{item.student.name.charAt(0)}</div><div><h3 className="font-bold text-slate-800">{item.student.name}</h3><p className="text-xs text-slate-400 font-bold">{item.student.school}</p></div><div className="ml-auto flex flex-col items-end"><span className={`text-[10px] font-bold uppercase px-2 py-0.5 rounded ${item.application.status === 'approved' ? 'bg-emerald-100 text-emerald-600' : item.application.status === 'rejected' ? 'bg-rose-100 text-rose-600' : 'bg-yellow-100 text-yellow-600'}`}>{item.application.status}</span><span className="text-xs text-slate-300 font-mono mt-1">Score: {item.student.score}</span></div></div>
+                        {item.application.status === 'pending' && (<div className="flex gap-2"><button onClick={() => onUpdateAppStatus(item.application.id, 'rejected')} className="flex-1 py-3 rounded-xl bg-slate-50 text-slate-500 font-bold text-xs hover:bg-rose-50 hover:text-rose-500 transition-colors">Reject</button><button onClick={() => onUpdateAppStatus(item.application.id, 'approved')} className="flex-1 py-3 rounded-xl bg-[#38BDF8] text-white font-bold text-xs shadow-lg shadow-sky-200">Approve</button></div>)}
+                         {item.application.status === 'approved' && (<button onClick={() => onUpdateAppStatus(item.application.id, 'pending')} className="w-full py-2 rounded-xl text-slate-400 text-xs font-bold hover:bg-slate-50">Revoke Approval</button>)}
+                    </div>
+                ))}
+            </div>
+        </div>
+    );
+};
+
+const AdminPostJobView = ({ onSave, onCancel, editingJob }: any) => {
+    const [job, setJob] = useState<Partial<Job>>({ seqNo: 0, title: '', companyName: '', location: '', description: '', programYear: '2025', housing: 'Provided', housingCost: '$150/wk', salary: '$16.00/hr', startDateRange: 'Jun 15 - Jun 30', endDate: 'Sept 15, 2025', capacity: 10, minScore: 6.0, tags: [], imgUrls: [] });
+    useEffect(() => { if (editingJob) setJob(editingJob); }, [editingJob]);
+    const handleImageUpload = (e: any) => { const file = e.target.files[0]; if (file) { const reader = new FileReader(); reader.onloadend = () => { const currentUrls = job.imgUrls || []; if (currentUrls.length < 9) { setJob({ ...job, imgUrls: [...currentUrls, reader.result as string] }); } else { alert("Max 9 images allowed"); } }; reader.readAsDataURL(file); } };
+    return (
+        <div className="flex-1 overflow-y-auto p-6 pb-24 min-h-0 bg-[#F0F9FF]">
+            <div className="flex justify-between items-center mb-6"><h1 className="text-2xl font-black text-slate-900">{editingJob ? 'Edit Position' : 'New Position'}</h1><button onClick={onCancel} className="text-slate-400 font-bold">Cancel</button></div>
+            <div className="space-y-6">
+                <div className="bg-white p-5 rounded-[32px] border border-slate-100">
+                    <div className="flex justify-between mb-4"><label className="text-xs font-bold text-slate-400 uppercase">Gallery ({job.imgUrls?.length || 0}/9)</label></div>
+                    <div className="grid grid-cols-3 gap-2">{job.imgUrls?.map((url, idx) => (<div key={idx} className="aspect-square rounded-xl overflow-hidden relative group"><img src={url} className="w-full h-full object-cover" /><button onClick={() => setJob({...job, imgUrls: job.imgUrls?.filter((_, i) => i !== idx)})} className="absolute inset-0 bg-black/40 hidden group-hover:flex items-center justify-center text-white"><Trash2 className="w-5 h-5" /></button></div>))}{(job.imgUrls?.length || 0) < 9 && (<label className="aspect-square rounded-xl bg-sky-50 border-2 border-dashed border-sky-200 flex flex-col items-center justify-center text-sky-400 cursor-pointer hover:bg-sky-100 transition-colors"><Camera className="w-6 h-6 mb-1" /><span className="text-[10px] font-bold">Add</span><input type="file" className="hidden" accept="image/*" onChange={handleImageUpload} /></label>)}</div>
+                </div>
+                <div className="bg-white p-5 rounded-[32px] space-y-4">
+                     <div><label className="text-xs font-bold text-slate-400 ml-2 mb-1 block">SEQUENCE NO. (#ID)</label><input className="w-full bg-slate-50 p-4 rounded-2xl font-bold text-slate-700 focus:outline-none" type="number" value={job.seqNo} onChange={e => setJob({...job, seqNo: parseInt(e.target.value)})}/></div>
+                    <div><label className="text-xs font-bold text-slate-400 ml-2 mb-1 block">JOB TITLE</label><input className="w-full bg-slate-50 p-4 rounded-2xl font-bold text-slate-700 focus:outline-none" value={job.title} onChange={e => setJob({...job, title: e.target.value})} placeholder="e.g. Lifeguard"/></div>
+                     <div><label className="text-xs font-bold text-slate-400 ml-2 mb-1 block">COMPANY NAME</label><input className="w-full bg-slate-50 p-4 rounded-2xl font-bold text-slate-700 focus:outline-none" value={job.companyName} onChange={e => setJob({...job, companyName: e.target.value})} placeholder="e.g. Resort World"/></div>
+                     <div><label className="text-xs font-bold text-slate-400 ml-2 mb-1 block">LOCATION</label><input className="w-full bg-slate-50 p-4 rounded-2xl font-bold text-slate-700 focus:outline-none" value={job.location} onChange={e => setJob({...job, location: e.target.value})} placeholder="e.g. City, State"/></div>
+                    <div className="grid grid-cols-2 gap-4"><div><label className="text-xs font-bold text-slate-400 ml-2 mb-1 block">SALARY</label><input className="w-full bg-slate-50 p-4 rounded-2xl font-bold text-slate-700 focus:outline-none" value={job.salary} onChange={e => setJob({...job, salary: e.target.value})}/></div><div><label className="text-xs font-bold text-slate-400 ml-2 mb-1 block">CAPACITY</label><input className="w-full bg-slate-50 p-4 rounded-2xl font-bold text-slate-700 focus:outline-none" type="number" value={job.capacity} onChange={e => setJob({...job, capacity: parseInt(e.target.value)})}/></div></div>
+                    <div className="grid grid-cols-2 gap-4"><div><label className="text-xs font-bold text-slate-400 ml-2 mb-1 block">HOUSING</label><select className="w-full bg-slate-50 p-4 rounded-2xl font-bold text-slate-700 focus:outline-none appearance-none" value={job.housing} onChange={e => setJob({...job, housing: e.target.value})}><option value="Provided">Provided</option><option value="Assistance">Assistance</option><option value="None">None</option></select></div><div><label className="text-xs font-bold text-slate-400 ml-2 mb-1 block">COST</label><input className="w-full bg-slate-50 p-4 rounded-2xl font-bold text-slate-700 focus:outline-none" value={job.housingCost} onChange={e => setJob({...job, housingCost: e.target.value})}/></div></div>
+                    <div className="grid grid-cols-2 gap-4"><div><label className="text-xs font-bold text-slate-400 ml-2 mb-1 block">START DATES</label><input className="w-full bg-slate-50 p-4 rounded-2xl font-bold text-slate-700 focus:outline-none" value={job.startDateRange} onChange={e => setJob({...job, startDateRange: e.target.value})} placeholder="Jun 15 - 30"/></div><div><label className="text-xs font-bold text-slate-400 ml-2 mb-1 block">END DATE</label><input className="w-full bg-slate-50 p-4 rounded-2xl font-bold text-slate-700 focus:outline-none" value={job.endDate} onChange={e => setJob({...job, endDate: e.target.value})} placeholder="Sept 15"/></div></div>
+                    <div className="grid grid-cols-2 gap-4"><div><label className="text-xs font-bold text-slate-400 ml-2 mb-1 block">PROGRAM YEAR</label><input className="w-full bg-slate-50 p-4 rounded-2xl font-bold text-slate-700 focus:outline-none" value={job.programYear} onChange={e => setJob({...job, programYear: e.target.value})}/></div><div><label className="text-xs font-bold text-slate-400 ml-2 mb-1 block">MIN SCORE</label><input className="w-full bg-slate-50 p-4 rounded-2xl font-bold text-slate-700 focus:outline-none" type="number" step="0.5" min="6" max="10" value={job.minScore} onChange={e => setJob({...job, minScore: parseFloat(e.target.value)})}/></div></div>
+                     <div><label className="text-xs font-bold text-slate-400 ml-2 mb-1 block">DESCRIPTION</label><textarea className="w-full bg-slate-50 p-4 rounded-2xl font-medium text-slate-600 focus:outline-none min-h-[200px]" value={job.description} onChange={e => setJob({...job, description: e.target.value})} placeholder="Describe the role..."/></div>
+                </div>
+                <Button onClick={() => onSave(job)} className="w-full shadow-xl shadow-sky-200">{editingJob ? 'Save Changes' : 'Publish Position'}</Button>
+            </div>
+        </div>
+    );
+};
+
+const AdminStudentsView = ({ students, onSelectStudent, apps, jobs }: any) => {
+    const [search, setSearch] = useState('');
+    const [yearFilter, setYearFilter] = useState('All');
+    const [matchFilter, setMatchFilter] = useState('All'); // 'All' | 'Matched' | 'Unmatched'
+
+    const filteredStudents = students.filter((s: any) => {
+        // Year Logic
+        const yearMatch = yearFilter === 'All' || s.programYear === yearFilter;
+        // Search Logic
+        const searchMatch = s.name.toLowerCase().includes(search.toLowerCase()) || String(s.seqNo).includes(search);
+        
+        // Match Status Logic
+        const approvedApp = apps.find((a: any) => a.userId === s.id && a.status === 'approved');
+        const isMatched = !!approvedApp;
+
+        let statusMatch = true;
+        if (matchFilter === 'Matched') statusMatch = isMatched;
+        if (matchFilter === 'Unmatched') statusMatch = !isMatched;
+
+        return yearMatch && searchMatch && statusMatch;
+    }).sort((a: any, b: any) => (a.seqNo || 0) - (b.seqNo || 0));
+
+    return (
+        <div className="flex-1 overflow-y-auto p-6 pb-32 bg-[#F0F9FF]">
+            <h1 className="text-3xl font-black text-slate-800 mb-6">Student Registry</h1>
+            
+            <div className="flex gap-2 mb-4">
+                <div className="relative flex-1">
+                    <Search className="absolute left-4 top-3.5 text-slate-400 w-5 h-5" />
+                    <input className="w-full bg-white pl-12 pr-4 py-3 rounded-2xl shadow-sm border border-slate-100 focus:outline-none font-bold text-slate-700" placeholder="Search Name or #ID..." value={search} onChange={e => setSearch(e.target.value)}/>
+                </div>
+            </div>
+            <div className="flex gap-2 mb-6">
+                <select className="bg-white px-4 py-2 rounded-xl font-bold text-slate-600 border border-slate-100 focus:outline-none flex-1" value={yearFilter} onChange={e => setYearFilter(e.target.value)}>
+                    <option value="All">All Years</option>
+                    <option value="2025">2025</option>
+                    <option value="2026">2026</option>
+                </select>
+                <select className="bg-white px-4 py-2 rounded-xl font-bold text-slate-600 border border-slate-100 focus:outline-none flex-1" value={matchFilter} onChange={e => setMatchFilter(e.target.value)}>
+                    <option value="All">All Status</option>
+                    <option value="Matched">Matched</option>
+                    <option value="Unmatched">Unmatched</option>
+                </select>
+            </div>
+
+            <div className="space-y-3">
+                {filteredStudents.map((s: any) => {
+                    const approvedApp = apps.find((a: any) => a.userId === s.id && a.status === 'approved');
+                    const matchedJob = approvedApp ? jobs.find((j: any) => j.id === approvedApp.jobId) : null;
+
+                    return (
+                        <div key={s.id} onClick={() => onSelectStudent(s)} className="bg-white p-4 rounded-[24px] border border-slate-100 shadow-sm flex flex-col gap-2 active:scale-[0.98]">
+                            <div className="flex items-center justify-between">
+                                <div className="flex items-center gap-4">
+                                     <div className="w-12 h-12 bg-slate-100 rounded-full flex items-center justify-center font-black text-slate-400 text-sm">#{s.seqNo}</div>
+                                     <div><h3 className="font-bold text-slate-800">{s.name}</h3><p className="text-xs text-slate-400 font-bold uppercase">{s.school}</p></div>
+                                </div>
+                                <div className="flex flex-col items-end gap-1">
+                                     <span className="bg-sky-50 text-sky-600 text-[10px] font-bold px-2 py-0.5 rounded">{s.programYear}</span>
+                                     <span className="text-slate-300 font-bold">{s.score}</span>
+                                </div>
+                            </div>
+                            {/* Match Status Badge */}
+                            {matchedJob ? (
+                                <div className="bg-emerald-50 text-emerald-600 px-3 py-2 rounded-xl text-xs font-bold flex items-center gap-2">
+                                    <CheckCircle2 className="w-4 h-4" />
+                                    Matched: {matchedJob.title}
+                                </div>
+                            ) : (
+                                <div className="bg-slate-50 text-slate-400 px-3 py-2 rounded-xl text-xs font-bold flex items-center gap-2">
+                                    <Clock className="w-4 h-4" />
+                                    Unmatched
+                                </div>
+                            )}
+                        </div>
+                    );
+                })}
+            </div>
+        </div>
+    );
+};
+
+const AdminStudentDetailView = ({ student, onBack, onUpdateScore }: any) => {
+    const [score, setScore] = useState(student.score);
+    const [seqNo, setSeqNo] = useState(student.seqNo || 0);
+    return (
+        <div className="flex-1 overflow-y-auto p-6 pt-12 pb-24 min-h-0 bg-[#F0F9FF]">
+            <button onClick={onBack} className="mb-6 flex items-center text-slate-400 font-bold"><ChevronLeft className="w-5 h-5 mr-1" /> Back</button>
+            <div className="bg-white p-6 rounded-[32px] shadow-lg mb-6 text-center">
+                 <div className="w-24 h-24 bg-sky-100 rounded-full mx-auto flex items-center justify-center text-3xl font-black text-sky-500 mb-4">{student.name.charAt(0)}</div>
+                 <h1 className="text-2xl font-black text-slate-900">{student.name}</h1>
+                 <p className="text-slate-400 font-bold">{student.school}</p>
+                 <div className="flex justify-center gap-2 mt-4"><span className="bg-slate-100 text-slate-500 px-3 py-1 rounded-full text-xs font-bold">{student.programYear}</span><span className="bg-slate-100 text-slate-500 px-3 py-1 rounded-full text-xs font-bold">{student.phone}</span></div>
+            </div>
+            <div className="bg-white p-6 rounded-[32px] shadow-lg space-y-4">
+                <h3 className="font-bold text-slate-800">Admin Actions</h3>
+                <div><label className="text-xs font-bold text-slate-400 ml-2 mb-1 block">SCORE (6.0 - 10.0)</label><input type="number" step="0.5" className="w-full bg-slate-50 p-4 rounded-2xl font-bold text-slate-700" value={score} onChange={e => setScore(e.target.value)}/></div>
+                 <div><label className="text-xs font-bold text-slate-400 ml-2 mb-1 block">SEQUENCE ID</label><input type="number" className="w-full bg-slate-50 p-4 rounded-2xl font-bold text-slate-700" value={seqNo} onChange={e => setSeqNo(e.target.value)}/></div>
+                <Button onClick={() => onUpdateScore(student.id, parseFloat(score), parseInt(seqNo))} className="w-full">Update Student</Button>
+            </div>
+            <div className="mt-8 px-4"><h3 className="font-bold text-slate-400 text-sm uppercase mb-4">Emergency Contacts</h3>{student.emergencyContacts?.map((c: any, i: number) => (<div key={i} className="bg-white p-4 rounded-2xl mb-2 border border-slate-50"><p className="font-bold text-slate-800">{c.name} <span className="text-sky-500 text-xs ml-2">{c.type}</span></p><p className="text-slate-400 text-sm">{c.phone}</p></div>))}</div>
+        </div>
+    );
+};
+
+const AdminGuidesView = ({ guides, onDelete, onEdit, onAdd, onBack }: any) => {
+    return (
+        <div className="flex-1 overflow-y-auto p-6 pb-24 min-h-0 bg-[#F0F9FF]">
+             <div className="flex justify-between items-center mb-6"><div className="flex items-center gap-2"><h1 className="text-3xl font-black text-slate-800">Guides</h1></div><button onClick={onAdd} className="w-12 h-12 bg-sky-500 rounded-full flex items-center justify-center text-white shadow-lg shadow-sky-200"><Plus className="w-6 h-6" /></button></div>
+            <div className="space-y-4">{guides.map((g: any) => (<div key={g.id} className="bg-white p-4 rounded-[28px] border border-slate-100 flex gap-4 items-center"><div className="w-16 h-16 bg-slate-100 rounded-2xl overflow-hidden flex-shrink-0">{g.imgUrl ? <img src={g.imgUrl} className="w-full h-full object-cover"/> : <BookOpen className="w-6 h-6 m-auto mt-5 text-slate-300"/>}</div><div className="flex-1"><h3 className="font-bold text-slate-800 leading-tight">{g.title}</h3><p className="text-xs text-slate-400">{g.category}</p></div><div className="flex flex-col gap-2"><button onClick={() => onEdit(g)} className="p-2 bg-slate-50 rounded-full text-slate-500"><Edit3 className="w-4 h-4" /></button><button onClick={() => onDelete(g.id)} className="p-2 bg-rose-50 rounded-full text-rose-500"><Trash2 className="w-4 h-4" /></button></div></div>))}</div>
+        </div>
+    );
+};
+
+const AdminPostGuideView = ({ onSave, onCancel, editingGuide }: any) => {
+    const [guide, setGuide] = useState<Partial<Guide>>({ title: '', content: '', category: 'General', imgUrl: '' });
+    useEffect(() => { if (editingGuide) setGuide(editingGuide); }, [editingGuide]);
+    const handleImageUpload = (e: any) => { const file = e.target.files[0]; if (file) { const reader = new FileReader(); reader.onloadend = () => { setGuide({ ...guide, imgUrl: reader.result as string }); }; reader.readAsDataURL(file); } };
+    return (
+        <div className="flex-1 overflow-y-auto p-6 pb-24 min-h-0 bg-[#F0F9FF]">
+             <div className="flex justify-between items-center mb-6"><h1 className="text-2xl font-black text-slate-900">{editingGuide ? 'Edit Guide' : 'New Guide'}</h1><button onClick={onCancel} className="text-slate-400 font-bold">Cancel</button></div>
+            <div className="space-y-4 bg-white p-6 rounded-[32px] shadow-lg">
+                 <div className="w-full h-40 bg-slate-50 rounded-2xl border-2 border-dashed border-slate-200 overflow-hidden relative group">{guide.imgUrl ? (<img src={guide.imgUrl} className="w-full h-full object-cover" />) : (<div className="flex flex-col items-center justify-center h-full text-slate-300"><ImageIcon className="w-8 h-8 mb-2" /><span className="text-xs font-bold">Upload Cover</span></div>)}<input type="file" className="absolute inset-0 opacity-0 cursor-pointer" onChange={handleImageUpload} /></div>
+                 <input className="w-full bg-slate-50 p-4 rounded-2xl font-bold text-slate-700 focus:outline-none" placeholder="Title" value={guide.title} onChange={e => setGuide({...guide, title: e.target.value})}/>
+                 <input className="w-full bg-slate-50 p-4 rounded-2xl font-bold text-slate-700 focus:outline-none" placeholder="Category" value={guide.category} onChange={e => setGuide({...guide, category: e.target.value})}/>
+                 <textarea className="w-full bg-slate-50 p-4 rounded-2xl font-medium text-slate-600 focus:outline-none min-h-[400px]" placeholder="Markdown Content..." value={guide.content} onChange={e => setGuide({...guide, content: e.target.value})}/>
+                 <Button onClick={() => onSave(guide)} className="w-full">Save Guide</Button>
+            </div>
+        </div>
+    );
+};
 
 const App = () => {
-  // State
-  const [users, setUsers] = useState<UserData[]>(INITIAL_USERS);
-  const [jobs, setJobs] = useState<Job[]>(INITIAL_JOBS);
-  const [apps, setApps] = useState<Application[]>(INITIAL_APPS);
-  const [guides, setGuides] = useState<Guide[]>(INITIAL_GUIDES);
-  
-  const [currentUser, setCurrentUser] = useState<UserData | null>(null);
-  const [currentView, setCurrentView] = useState('login'); 
-  const [selectedJob, setSelectedJob] = useState<Job | null>(null); // For admin editing
-  const [selectedStudentId, setSelectedStudentId] = useState<string | null>(null); // For admin student detail
+    const [user, setUser] = useState<UserData | null>(null);
+    const [view, setView] = useState('login'); // login, register, student-jobs, student-internship, student-services, student-profile, admin-dash, admin-post, admin-students, admin-student-detail, admin-guides, admin-post-guide, admin-apps
+    const [jobs, setJobs] = useState<Job[]>(INITIAL_JOBS);
+    const [apps, setApps] = useState<Application[]>(INITIAL_APPS);
+    const [students, setStudents] = useState<UserData[]>(INITIAL_USERS);
+    const [guides, setGuides] = useState<Guide[]>(INITIAL_GUIDES);
+    const [selectedJob, setSelectedJob] = useState<Job | null>(null);
+    const [selectedStudent, setSelectedStudent] = useState<UserData | null>(null);
+    const [editingJob, setEditingJob] = useState<Job | null>(null);
+    const [selectedGuide, setSelectedGuide] = useState<Guide | null>(null);
+    const [editingGuide, setEditingGuide] = useState<Guide | null>(null);
+    const [isEditingProfile, setIsEditingProfile] = useState(false);
 
-  // Helper to change view and pass data
-  const navigateTo = (view: string, data?: any) => {
-     if (view === 'admin-post-job' && data?.job) {
-        setSelectedJob(data.job);
-     } else if (view === 'admin-post-job') {
-        setSelectedJob(null); // Clear for new job
-     }
+    const handleLogin = (role: Role) => {
+        if (role === 'student') setUser(INITIAL_USERS[0]);
+        else setUser(INITIAL_USERS[1]);
+        setView(role === 'student' ? 'student-jobs' : 'admin-dash');
+    };
 
-     if (view === 'admin-student-detail' && data?.studentId) {
-        setSelectedStudentId(data.studentId);
-     }
+    const handleRegister = (data: any) => {
+        const newUser: UserData = {
+            id: `u${Date.now()}`,
+            seqNo: students.length + 1,
+            name: data.name,
+            role: 'student',
+            school: data.school,
+            phone: data.phone,
+            score: 6.0,
+            programYear: data.year,
+            emergencyContacts: []
+        };
+        setStudents([...students, newUser]);
+        setUser(newUser);
+        setView('student-jobs');
+    };
 
-     setCurrentView(view);
-  }
-  
-  // --- Views: Auth ---
-  
-  if (currentView === 'login') {
+    const handleApply = (job: Job) => {
+        if (user?.role === 'student') {
+            setSelectedJob(job);
+            setView('student-job-detail');
+        }
+    };
+
+    const handleApplyConfirm = (jobId: string) => {
+        if (!user) return;
+        const newApp: Application = {
+            id: `a${Date.now()}`,
+            userId: user.id,
+            jobId,
+            status: 'pending',
+            date: new Date().toISOString()
+        };
+        setApps([...apps, newApp]);
+        setView('student-internship');
+    };
+
+    const handleWithdrawApp = (appId: string) => {
+        if (confirm("Are you sure you want to withdraw this application?")) {
+            setApps(apps.filter(a => a.id !== appId));
+        }
+    };
+
+    const handleUpdateUser = (updatedUser: UserData) => {
+        setStudents(students.map(s => s.id === updatedUser.id ? updatedUser : s));
+        setUser(updatedUser);
+    };
+
+    const handleSaveJob = (jobData: Job) => {
+        if (editingJob) {
+            setJobs(jobs.map(j => j.id === jobData.id ? jobData : j));
+        } else {
+            setJobs([...jobs, { ...jobData, id: `j${Date.now()}` }]);
+        }
+        setView('admin-dash');
+        setEditingJob(null);
+    };
+
+    const handleUpdateAppStatus = (appId: string, status: AppStatus) => {
+        setApps(apps.map(a => a.id === appId ? { ...a, status } : a));
+    };
+
+    const handleUpdateScore = (userId: string, score: number, seqNo: number) => {
+        setStudents(students.map(s => s.id === userId ? { ...s, score, seqNo } : s));
+        setView('admin-students');
+    };
+
+    // Admin Guide Handlers
+    const handleSaveGuide = (guideData: Guide) => {
+        if (editingGuide) {
+            setGuides(guides.map(g => g.id === guideData.id ? guideData : g));
+        } else {
+            setGuides([...guides, { ...guideData, id: `g${Date.now()}` }]);
+        }
+        setView('admin-guides');
+        setEditingGuide(null);
+    };
+
     return (
-      <Layout bgClass="bg-[#F0F9FF]">
-        <div className="min-h-full flex flex-col items-center justify-center p-8 relative overflow-hidden">
-          {/* Cute Blobs Blue */}
-          <div className="absolute top-[-50px] left-[-50px] w-64 h-64 bg-[#BAE6FD] rounded-full mix-blend-multiply filter blur-xl animate-pulse"></div>
-          <div className="absolute bottom-[10%] right-[-20%] w-80 h-80 bg-[#FEF08A] rounded-full mix-blend-multiply filter blur-xl opacity-60 animate-pulse delay-75"></div>
-          <div className="absolute top-[20%] right-[10%] w-32 h-32 bg-[#A5F3FC] rounded-full mix-blend-multiply filter blur-xl opacity-60"></div>
+        <div className="flex flex-col h-[100dvh] bg-slate-50 overflow-hidden">
+            {view === 'login' && <LoginView onLogin={handleLogin} onRegister={() => setView('register')} />}
+            {view === 'register' && <RegisterView onRegister={handleRegister} onCancel={() => setView('login')} />}
 
-          <div className="relative z-10 w-full max-w-xs text-center">
-            {/* Logo Mark */}
-            <div className="w-24 h-24 bg-white rounded-full flex items-center justify-center shadow-lg shadow-sky-200 mb-10 mx-auto border-4 border-white">
-               <div className="w-16 h-16 bg-[#38BDF8] rounded-full flex items-center justify-center">
-                  <Heart className="w-8 h-8 text-white fill-white" />
-               </div>
-            </div>
+            {/* Student Views */}
+            {view === 'student-jobs' && user && (
+                <StudentJobsView 
+                    jobs={jobs} user={user} onApply={handleApply} 
+                    myApps={apps.filter(a => a.userId === user.id)}
+                />
+            )}
+            {view === 'student-job-detail' && selectedJob && user && (
+                <StudentJobDetail 
+                    job={selectedJob} user={user} 
+                    onBack={() => setView('student-jobs')} 
+                    onApplyConfirm={handleApplyConfirm}
+                    hasActiveApp={apps.some(a => a.userId === user.id && (a.status === 'pending' || a.status === 'approved'))}
+                    isFull={apps.filter(a => a.jobId === selectedJob.id && a.status === 'approved').length >= selectedJob.capacity}
+                />
+            )}
+            {view === 'student-internship' && user && (
+                <StudentInternshipView 
+                    user={user} apps={apps} jobs={jobs} 
+                    onWithdraw={handleWithdrawApp}
+                />
+            )}
+            {view === 'student-services' && user && (
+                <StudentServicesView 
+                    user={user} guides={guides}
+                    onEmergency={() => setView('student-emergency')}
+                    onSelectGuide={(g: any) => { /* Mock open guide */ alert(g.content); }}
+                />
+            )}
+            {view === 'student-emergency' && user && (
+                <StudentEmergencyView 
+                    user={user} onBack={() => setView('student-services')}
+                    onUpdateUser={handleUpdateUser}
+                />
+            )}
+            {view === 'student-profile' && user && (
+                <StudentProfileView 
+                    user={user} 
+                    onLogout={() => setView('login')}
+                    isEditing={isEditingProfile}
+                    onEdit={() => setIsEditingProfile(!isEditingProfile)}
+                    onSaveProfile={(data: any) => {
+                        handleUpdateUser({ ...user, ...data });
+                        setIsEditingProfile(false);
+                    }}
+                />
+            )}
 
-            <h1 className="text-4xl font-black text-slate-700 mb-2 tracking-tight">
-              Blueprint<span className="text-sky-400">Global</span>
-            </h1>
-            <p className="text-slate-400 font-bold text-lg mb-16 tracking-wide">蓝途启航 · 赴美带薪实习</p>
-            
-            <div className="space-y-4">
-              <Button className="w-full shadow-sky-200 hover:shadow-sky-300" onClick={() => { setCurrentUser(users[0]); setCurrentView('student-jobs'); }}>
-                Start as Student
-              </Button>
-              <Button className="w-full text-sky-400" variant="secondary" onClick={() => { setCurrentUser(users[1]); setCurrentView('admin-dash'); }}>
-                Admin Access
-              </Button>
-              
-              <div className="pt-8 flex justify-center">
-                 <button onClick={() => setCurrentView('register')} className="text-sky-400 text-sm font-black underline decoration-2 underline-offset-4 decoration-sky-200">
-                   Create Account
-                 </button>
-              </div>
-            </div>
-          </div>
+            {/* Admin Views */}
+            {view === 'admin-dash' && (
+                <AdminDashView 
+                    jobs={jobs} students={students} apps={apps}
+                    onSelectJob={(j: any) => { setSelectedJob(j); setView('admin-job-detail'); }}
+                />
+            )}
+            {view === 'admin-apps' && (
+                <AdminApplicationsView 
+                    apps={apps} jobs={jobs} students={students}
+                    onBack={() => setView('admin-dash')}
+                    onUpdateAppStatus={handleUpdateAppStatus}
+                    onSelectStudent={(s: any) => { setSelectedStudent(s); setView('admin-student-detail'); }}
+                />
+            )}
+            {view === 'admin-job-detail' && selectedJob && (
+                <AdminJobDetailView 
+                    job={selectedJob} 
+                    applicants={apps.filter(a => a.jobId === selectedJob.id).map(a => ({
+                        application: a,
+                        student: students.find(s => s.id === a.userId)
+                    }))}
+                    onBack={() => setView('admin-dash')}
+                    onEditJob={(j: any) => { setEditingJob(j); setView('admin-post'); }}
+                    onUpdateAppStatus={handleUpdateAppStatus}
+                />
+            )}
+            {view === 'admin-post' && (
+                <AdminPostJobView 
+                    onSave={handleSaveJob} 
+                    onCancel={() => setView('admin-dash')}
+                    editingJob={editingJob}
+                />
+            )}
+            {view === 'admin-students' && (
+                <AdminStudentsView 
+                    students={students} 
+                    apps={apps}
+                    jobs={jobs}
+                    onSelectStudent={(s: any) => { setSelectedStudent(s); setView('admin-student-detail'); }} 
+                />
+            )}
+            {view === 'admin-student-detail' && selectedStudent && (
+                <AdminStudentDetailView 
+                    student={selectedStudent}
+                    onBack={() => setView('admin-students')}
+                    onUpdateScore={handleUpdateScore}
+                />
+            )}
+            {view === 'admin-guides' && (
+                <AdminGuidesView 
+                    guides={guides}
+                    onAdd={() => { setEditingGuide(null); setView('admin-post-guide'); }}
+                    onEdit={(g: any) => { setEditingGuide(g); setView('admin-post-guide'); }}
+                    onDelete={(id: string) => setGuides(guides.filter(g => g.id !== id))}
+                    onBack={() => setView('admin-dash')}
+                />
+            )}
+            {view === 'admin-post-guide' && (
+                <AdminPostGuideView 
+                    onSave={handleSaveGuide} 
+                    onCancel={() => setView('admin-guides')}
+                    editingGuide={editingGuide}
+                />
+            )}
+
+            {/* Bottom Nav */}
+            {user && !['login', 'register', 'student-job-detail', 'student-emergency', 'admin-post', 'admin-post-guide', 'admin-job-detail', 'admin-student-detail'].includes(view) && (
+                <div className="absolute bottom-0 w-full bg-white border-t border-slate-100 flex justify-around items-center py-4 pb-8 z-50 rounded-t-[32px] shadow-[0_-5px_20px_rgba(0,0,0,0.02)]">
+                    {user.role === 'student' ? (
+                        <>
+                            <button onClick={() => setView('student-jobs')} className={`flex flex-col items-center ${view === 'student-jobs' ? 'text-sky-500' : 'text-slate-300'}`}><Home className={`w-6 h-6 mb-1 ${view === 'student-jobs' ? 'fill-current' : ''}`} /><span className="text-[10px] font-bold">Jobs</span></button>
+                            <button onClick={() => setView('student-internship')} className={`flex flex-col items-center ${view === 'student-internship' ? 'text-sky-500' : 'text-slate-300'}`}><Briefcase className={`w-6 h-6 mb-1 ${view === 'student-internship' ? 'fill-current' : ''}`} /><span className="text-[10px] font-bold">My App</span></button>
+                            <button onClick={() => setView('student-services')} className={`flex flex-col items-center ${view === 'student-services' ? 'text-sky-500' : 'text-slate-300'}`}><ShieldAlert className={`w-6 h-6 mb-1 ${view === 'student-services' ? 'fill-current' : ''}`} /><span className="text-[10px] font-bold">Services</span></button>
+                            <button onClick={() => setView('student-profile')} className={`flex flex-col items-center ${view === 'student-profile' ? 'text-sky-500' : 'text-slate-300'}`}><User className={`w-6 h-6 mb-1 ${view === 'student-profile' ? 'fill-current' : ''}`} /><span className="text-[10px] font-bold">Me</span></button>
+                        </>
+                    ) : (
+                        <>
+                            <button onClick={() => setView('admin-dash')} className={`flex flex-col items-center ${['admin-dash', 'admin-job-detail'].includes(view) ? 'text-sky-500' : 'text-slate-300'}`}><LayoutGrid className={`w-6 h-6 mb-1 ${view.includes('admin-dash') ? 'fill-current' : ''}`} /><span className="text-[10px] font-bold">Dash</span></button>
+                            
+                            {/* Review Tab (Apps) */}
+                            <button onClick={() => setView('admin-apps')} className={`flex flex-col items-center relative ${view === 'admin-apps' ? 'text-sky-500' : 'text-slate-300'}`}>
+                                <Inbox className={`w-6 h-6 mb-1 ${view === 'admin-apps' ? 'fill-current' : ''}`} />
+                                {apps.filter(a => a.status === 'pending').length > 0 && <span className="absolute top-0 right-1 w-2.5 h-2.5 bg-rose-500 rounded-full border-2 border-white"></span>}
+                                <span className="text-[10px] font-bold">Review</span>
+                            </button>
+
+                            {/* Post Button (Middle) */}
+                            <button onClick={() => { setEditingJob(null); setView('admin-post'); }} className="w-12 h-12 bg-sky-500 rounded-full flex items-center justify-center text-white shadow-lg shadow-sky-200 -mt-8 border-4 border-slate-50"><Plus className="w-6 h-6" /></button>
+                            
+                            {/* Students Tab */}
+                            <button onClick={() => setView('admin-students')} className={`flex flex-col items-center ${['admin-students', 'admin-student-detail'].includes(view) ? 'text-sky-500' : 'text-slate-300'}`}><Users className={`w-6 h-6 mb-1 ${view.includes('admin-students') ? 'fill-current' : ''}`} /><span className="text-[10px] font-bold">Students</span></button>
+                            
+                            {/* Guides Tab */}
+                            <button onClick={() => setView('admin-guides')} className={`flex flex-col items-center ${['admin-guides', 'admin-post-guide'].includes(view) ? 'text-sky-500' : 'text-slate-300'}`}><BookOpen className={`w-6 h-6 mb-1 ${view.includes('admin-guides') ? 'fill-current' : ''}`} /><span className="text-[10px] font-bold">Guides</span></button>
+                        </>
+                    )}
+                </div>
+            )}
         </div>
-      </Layout>
     );
-  }
-
-  if (currentView === 'register') {
-     return <StudentRegisterView setUsers={setUsers} users={users} setCurrentUser={setCurrentUser} setCurrentView={setCurrentView} />;
-  }
-
-  // --- Student Logic ---
-
-  if (currentUser?.role === 'student') {
-    const activeApp = apps.find(a => a.userId === currentUser.id && (a.status === 'pending' || a.status === 'approved'));
-
-    const NavItem = ({ view, icon: Icon, label }: any) => {
-        const isActive = currentView === view || (view === 'student-jobs' && currentView.startsWith('job-')) || (view === 'student-services' && currentView === 'student-emergency');
-        return (
-          <button 
-            onClick={() => setCurrentView(view)} 
-            className={`flex items-center justify-center w-12 h-12 rounded-full transition-all duration-300 ${isActive ? 'bg-[#38BDF8] text-white shadow-lg shadow-sky-200 scale-110' : 'text-slate-300 hover:bg-sky-50'}`}
-          >
-            <Icon size={22} strokeWidth={isActive ? 3 : 2.5} />
-          </button>
-        );
-    };
-
-    const StudentNav = (
-      <>
-        <NavItem view="student-jobs" icon={Briefcase} label="Jobs" />
-        <NavItem view="student-internship" icon={Check} label="Intern" />
-        <NavItem view="student-services" icon={ShieldAlert} label="Services" />
-        <NavItem view="student-profile" icon={User} label="Me" />
-      </>
-    );
-
-    // -- Student: Jobs --
-    if (currentView === 'student-jobs') {
-      return <StudentJobsView jobs={jobs} currentUser={currentUser} setCurrentView={setCurrentView} nav={StudentNav} />
-    }
-
-    // -- Student: Job Detail --
-    if (currentView.startsWith('job-')) {
-      const jobId = currentView.split('-')[1];
-      const job = jobs.find(j => j.id === jobId);
-      
-      const handleApply = () => {
-        if (activeApp) {
-          alert("You can only apply to one job at a time. Please withdraw your current application first.");
-          return;
-        }
-        if (currentUser.score < (job?.minScore || 0)) {
-          alert(`Score too low 🥺. Need: ${job?.minScore}`);
-          return;
-        }
-        setApps([...apps, { id: `app${Date.now()}`, userId: currentUser.id, jobId: job!.id, status: 'pending', date: new Date().toISOString() }]);
-        alert("Applied! Good luck! ✨");
-        setCurrentView('student-jobs');
-      };
-
-      if (!job) return <div>Job not found</div>;
-
-      const myApp = apps.find(a => a.userId === currentUser.id && a.jobId === job.id);
-      
-      // If user has an active app for ANOTHER job
-      const isBlocked = !!activeApp && activeApp.jobId !== job.id;
-
-      return (
-        <Layout backAction={() => setCurrentView('student-jobs')} bgClass="bg-[#F0F9FF]">
-          <div className="relative pb-8">
-             
-             {/* Image Gallery */}
-             {job.imgUrls && job.imgUrls.length > 0 ? (
-               <div className="w-full h-72 relative overflow-x-auto scrollbar-hide flex snap-x snap-mandatory">
-                  {job.imgUrls.map((url, index) => (
-                    <div key={index} className="w-full shrink-0 h-full snap-center relative">
-                        <img src={url} className="w-full h-full object-cover" />
-                        <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent pointer-events-none" />
-                    </div>
-                  ))}
-                  {/* Dots Indicator */}
-                  {job.imgUrls.length > 1 && (
-                      <div className="absolute bottom-4 left-0 right-0 flex justify-center gap-2">
-                          {job.imgUrls.map((_, i) => (
-                              <div key={i} className="w-2 h-2 rounded-full bg-white/50 backdrop-blur-sm" />
-                          ))}
-                      </div>
-                  )}
-               </div>
-             ) : (
-                <div className="w-full h-40 bg-sky-50 flex items-center justify-center text-sky-200">
-                    <ImageIcon className="w-12 h-12" />
-                </div>
-             )}
-
-             <div className="px-6 pt-6 relative z-10 -mt-6 bg-[#F0F9FF] rounded-t-[40px]">
-                <div className="inline-block bg-[#FEF08A] px-4 py-1.5 rounded-full text-xs font-black uppercase text-yellow-800 mb-6 shadow-sm mt-4">
-                   {job.tags?.[0] || 'Internship'}
-                </div>
-
-                <h1 className="text-3xl font-black text-slate-700 leading-[1.1] mb-2">{job.title}</h1>
-                <div className="text-lg font-bold text-slate-400 mb-8">{job.companyName}</div>
-
-                <div className="grid grid-cols-2 gap-3 mb-8">
-                   <div className="bg-white p-5 rounded-[28px] shadow-sm border border-sky-50">
-                      <div className="w-8 h-8 bg-[#F1F5F9] rounded-full flex items-center justify-center mb-3">
-                         <MapPin className="w-4 h-4 text-slate-500" />
-                      </div>
-                      <div className="text-[10px] font-black text-slate-300 uppercase mb-1">LOCATION</div>
-                      <div className="text-slate-700 font-bold leading-tight">{job.location}</div>
-                   </div>
-                   <div className="bg-white p-5 rounded-[28px] shadow-sm border border-sky-50">
-                      <div className="w-8 h-8 bg-[#E0F2FE] rounded-full flex items-center justify-center mb-3">
-                         <Home className="w-4 h-4 text-blue-500" />
-                      </div>
-                      <div className="text-[10px] font-black text-slate-300 uppercase mb-1">HOUSING</div>
-                      <div className="text-slate-700 font-bold leading-tight">{job.housingCost}</div>
-                   </div>
-                   <div className="col-span-2 bg-white p-5 rounded-[28px] shadow-sm border border-sky-50 flex items-center justify-between">
-                      <div>
-                        <div className="text-[10px] font-black text-slate-300 uppercase mb-1">DURATION</div>
-                        <div className="text-slate-700 font-bold">{job.startDateRange} — {job.endDate}</div>
-                      </div>
-                      <div className="text-right">
-                         <div className="text-[10px] font-black text-slate-300 uppercase mb-1">CAPACITY</div>
-                         <div className="text-slate-700 font-bold">0 / {job.capacity}</div>
-                      </div>
-                   </div>
-                </div>
-
-                <div className="mb-32">
-                   <h3 className="font-black text-slate-700 mb-4 text-xl">About the Job</h3>
-                   <div className="prose prose-sky prose-p:font-bold prose-p:text-slate-500 prose-li:font-bold prose-li:text-slate-500 bg-white p-6 rounded-[32px] shadow-sm border border-sky-50">
-                     <ReactMarkdown>{job.description}</ReactMarkdown>
-                   </div>
-                </div>
-             </div>
-
-             {/* Bottom Fixed Action Bar */}
-             <div className="fixed bottom-6 left-6 right-6 max-w-md mx-auto z-50">
-                <div className="bg-white p-2 pr-2 rounded-full shadow-xl shadow-sky-200/50 flex items-center gap-2 pl-8 border border-sky-50">
-                   <div className="flex-1">
-                      <div className="text-[10px] font-bold text-sky-300 uppercase">Min Score</div>
-                      <div className="text-xl font-black text-slate-700">{job.minScore.toFixed(1)}</div>
-                   </div>
-                   {myApp ? (
-                      <button disabled className="bg-slate-100 text-slate-400 font-bold rounded-full px-8 py-4 h-full">
-                         {myApp.status.toUpperCase()}
-                      </button>
-                   ) : isBlocked ? (
-                      <button disabled className="bg-slate-100 text-slate-400 font-bold rounded-full px-4 py-4 h-full text-xs flex flex-col items-center justify-center leading-none">
-                         <span>Limit Reached</span>
-                         <span className="text-[9px] opacity-70 mt-1">Check Applications</span>
-                      </button>
-                   ) : (
-                      <button onClick={handleApply} className="bg-[#38BDF8] text-white font-black rounded-full px-8 py-4 h-full hover:bg-sky-500 transition-colors shadow-lg shadow-sky-200">
-                         APPLY
-                      </button>
-                   )}
-                </div>
-             </div>
-          </div>
-        </Layout>
-      );
-    }
-
-    // -- Student: Internship (Applications) --
-    if (currentView === 'student-internship') {
-       return <StudentInternshipView currentUser={currentUser} apps={apps} jobs={jobs} nav={StudentNav} setCurrentView={setCurrentView} setApps={setApps} />;
-    }
-
-    if (currentView === 'student-services') {
-       return <StudentServicesView currentUser={currentUser} setCurrentUser={setCurrentUser} users={users} setUsers={setUsers} guides={guides} nav={StudentNav} setCurrentView={setCurrentView} />;
-    }
-    
-    if (currentView === 'student-emergency') {
-        return <StudentEmergencyView currentUser={currentUser} setCurrentView={setCurrentView} />;
-    }
-
-    if (currentView === 'student-profile') {
-      return <StudentProfileView currentUser={currentUser} setCurrentUser={setCurrentUser} users={users} setUsers={setUsers} nav={StudentNav} setCurrentView={setCurrentView} />;
-    }
-  }
-
-  // --- Admin Logic ---
-
-  if (currentUser?.role === 'admin') {
-    const NavItem = ({ view, icon: Icon, label }: any) => {
-        const isActive = currentView === view;
-        return (
-          <button 
-            onClick={() => setCurrentView(view)} 
-            className={`flex items-center justify-center w-12 h-12 rounded-full transition-all ${isActive ? 'bg-slate-700 text-white shadow-md' : 'text-slate-400 hover:bg-slate-100'}`}
-          >
-            <Icon size={20} strokeWidth={2.5} />
-          </button>
-        );
-    };
-
-    const AdminNav = (
-      <>
-        <NavItem view="admin-dash" icon={LayoutGrid} label="Home" />
-        <NavItem view="admin-students" icon={Users} label="Users" />
-        <NavItem view="admin-post-job" icon={Plus} label="Post" />
-        <NavItem view="admin-jobs" icon={Check} label="Review" />
-      </>
-    );
-
-    if (currentView === 'admin-dash') {
-      return <AdminDashView users={users} jobs={jobs} setCurrentView={setCurrentView} nav={AdminNav} navigateTo={navigateTo} />
-    }
-
-    if (currentView === 'admin-jobs') {
-      return (
-        <Layout nav={AdminNav} title="Review">
-           <div className="p-4 flex flex-col items-center justify-center h-[60vh] text-slate-400">
-               <div className="w-20 h-20 bg-white rounded-full flex items-center justify-center mb-6 shadow-sm">
-                 <Check className="w-8 h-8 text-slate-300" />
-               </div>
-               <p className="font-bold">All caught up!</p>
-           </div>
-        </Layout>
-      );
-    }
-
-    if (currentView === 'admin-post-job') {
-      return <AdminPostJobView jobs={jobs} setJobs={setJobs} setCurrentView={setCurrentView} nav={AdminNav} editJob={selectedJob} />;
-    }
-
-    if (currentView === 'admin-student-detail') {
-       return <AdminStudentDetailView studentId={selectedStudentId} users={users} setUsers={setUsers} apps={apps} setApps={setApps} jobs={jobs} setCurrentView={setCurrentView} />
-    }
-
-    if (currentView === 'admin-students') {
-      return <AdminStudentsView users={users} apps={apps} navigateTo={navigateTo} nav={AdminNav} />
-    }
-  }
-
-  return <div className="flex items-center justify-center min-h-screen bg-[#F0F9FF]"><Loader2 className="animate-spin text-sky-300" /></div>;
 };
 
 const root = createRoot(document.getElementById('root')!);

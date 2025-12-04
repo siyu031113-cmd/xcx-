@@ -231,12 +231,12 @@ const LoginView = ({ onLogin, onRegister }: any) => {
           <p className="text-slate-500 text-lg">蓝途启航 · 赴美带薪实习</p>
         </div>
         <div className="space-y-4">
-          <Button onClick={() => onLogin('student')} variant="black" className="w-full text-lg h-16">Student Login</Button>
-          <Button onClick={() => onLogin('admin')} variant="outline" className="w-full text-lg h-16 border-sky-200 text-sky-500 bg-white">Admin Console</Button>
+          <Button onClick={() => onLogin('student')} variant="black" className="w-full text-lg h-16">学生登录 (Student)</Button>
+          <Button onClick={() => onLogin('admin')} variant="outline" className="w-full text-lg h-16 border-sky-200 text-sky-500 bg-white">管理员后台 (Admin)</Button>
         </div>
         <div className="mt-8 text-center">
-           <p className="text-slate-400 mb-2">New here?</p>
-           <button onClick={onRegister} className="text-[#38BDF8] font-bold text-lg">Create Account</button>
+           <p className="text-slate-400 mb-2">首次使用?</p>
+           <button onClick={onRegister} className="text-[#38BDF8] font-bold text-lg">创建账号 (Create Account)</button>
         </div>
       </div>
     </div>
@@ -250,22 +250,22 @@ const RegisterView = ({ onRegister, onCancel }: any) => {
     });
     const handleSubmit = () => {
         if (!formData.name || !formData.school || !formData.phone) {
-            alert("Please fill in all required fields (Name, School, Phone).");
+            alert("请填写所有必填项 (姓名、学校、电话)。");
             return;
         }
         onRegister(formData);
     };
     return (
-        <div className="flex-1 overflow-y-auto bg-[#F0F9FF]">
+        <div className="flex-1 overflow-y-auto overflow-x-hidden bg-[#F0F9FF]">
             <div className="p-6 pt-12 pb-24">
-                 <button onClick={onCancel} className="mb-6 flex items-center text-slate-400 font-bold"><ChevronLeft className="w-5 h-5 mr-1" /> Back</button>
+                 <button onClick={onCancel} className="mb-6 flex items-center text-slate-400 font-bold"><ChevronLeft className="w-5 h-5 mr-1" /> 返回 (Back)</button>
                 <h1 className="text-3xl font-black text-slate-900 mb-2">Blueprint Global Exchange</h1>
                 <p className="text-slate-500 mb-8">蓝途启航 · 赴美带薪实习</p>
                 <div className="bg-white rounded-[32px] p-6 shadow-xl shadow-sky-100 border border-white">
-                    <h2 className="text-xl font-bold text-center mb-6 text-slate-800">Student Registration</h2>
+                    <h2 className="text-xl font-bold text-center mb-6 text-slate-800">学生注册 (Registration)</h2>
                     <div className="space-y-5">
                         <div className="bg-[#FEF9C3] p-4 rounded-2xl border border-yellow-100">
-                             <label className="block text-xs font-bold text-yellow-700 uppercase tracking-wider mb-2">Intended Program Year</label>
+                             <label className="block text-xs font-bold text-yellow-700 uppercase tracking-wider mb-2">意向年份 (Intended Year)</label>
                              <div className="flex gap-2">
                                  {['2025', '2026'].map(y => (
                                      <button key={y} onClick={() => setFormData({...formData, year: y})} className={`flex-1 py-2 rounded-xl font-bold transition-all ${formData.year === y ? 'bg-yellow-400 text-yellow-900 shadow-sm' : 'bg-white/50 text-yellow-700'}`}>{y}</button>
@@ -275,16 +275,16 @@ const RegisterView = ({ onRegister, onCancel }: any) => {
                         <div className="space-y-4">
                             <div>
                                 <label className="text-xs font-bold text-slate-400 ml-2 mb-1 block">真实姓名 (FULL NAME)</label>
-                                <input className="w-full bg-slate-50 p-4 rounded-2xl font-bold text-slate-700 focus:outline-none focus:ring-2 focus:ring-sky-200" placeholder="e.g. Alice Chen" value={formData.name} onChange={e => setFormData({...formData, name: e.target.value})}/>
+                                <input className="w-full bg-slate-50 p-4 rounded-2xl font-bold text-slate-700 focus:outline-none focus:ring-2 focus:ring-sky-200" placeholder="例：张三" value={formData.name} onChange={e => setFormData({...formData, name: e.target.value})}/>
                             </div>
                             <div>
                                 <label className="text-xs font-bold text-slate-400 ml-2 mb-1 block">就读学校 (UNIVERSITY)</label>
-                                <input className="w-full bg-slate-50 p-4 rounded-2xl font-bold text-slate-700 focus:outline-none focus:ring-2 focus:ring-sky-200" placeholder="e.g. Peking University" value={formData.school} onChange={e => setFormData({...formData, school: e.target.value})}/>
+                                <input className="w-full bg-slate-50 p-4 rounded-2xl font-bold text-slate-700 focus:outline-none focus:ring-2 focus:ring-sky-200" placeholder="例：北京大学" value={formData.school} onChange={e => setFormData({...formData, school: e.target.value})}/>
                             </div>
                             <div>
                                 <label className="text-xs font-bold text-slate-400 ml-2 mb-1 block">手机号码 (PHONE)</label>
                                 <div className="flex gap-2">
-                                     <input className="flex-1 bg-slate-50 p-4 rounded-2xl font-bold text-slate-700 focus:outline-none focus:ring-2 focus:ring-sky-200" placeholder="Mobile Number" value={formData.phone} onChange={e => setFormData({...formData, phone: e.target.value})}/>
+                                     <input className="flex-1 bg-slate-50 p-4 rounded-2xl font-bold text-slate-700 focus:outline-none focus:ring-2 focus:ring-sky-200" placeholder="11位手机号" value={formData.phone} onChange={e => setFormData({...formData, phone: e.target.value})}/>
                                     <button className="bg-sky-100 text-sky-600 px-4 rounded-2xl font-bold text-sm">验证码</button>
                                 </div>
                             </div>
@@ -317,7 +317,7 @@ const StudentJobsView = ({ jobs, user, onApply, myApps }: any) => {
     );
 
     return (
-        <div className="flex-1 overflow-y-auto p-4 space-y-6 pb-32 bg-[#F0F9FF]">
+        <div className="flex-1 overflow-y-auto overflow-x-hidden p-4 space-y-6 pb-32 bg-[#F0F9FF]">
             <div className="flex justify-between items-end">
                 <div><h1 className="text-3xl font-black text-slate-900">Job Board</h1><p className="text-slate-400 font-medium">Find your perfect summer</p></div>
                 <div className="w-10 h-10 bg-sky-100 rounded-full flex items-center justify-center text-sky-600 font-bold border border-sky-200">{user.score.toFixed(1)}</div>
@@ -351,7 +351,7 @@ const StudentJobsView = ({ jobs, user, onApply, myApps }: any) => {
             </div>
              {fullJobs.length > 0 && (
                 <div className="pt-8">
-                     <div className="flex items-center gap-2 mb-4"><div className="w-2 h-2 rounded-full bg-slate-300"></div><h2 className="text-sm font-bold text-slate-400 uppercase tracking-widest">Filled / Closed</h2></div>
+                     <div className="flex items-center gap-2 mb-4"><div className="w-2 h-2 rounded-full bg-slate-300"></div><h2 className="text-sm font-bold text-slate-400 uppercase tracking-widest">已满员 / 关闭 (Closed)</h2></div>
                     <div className="space-y-4 opacity-60 grayscale">
                         {fullJobs.map((job: any) => (
                              <div key={job.id} className="bg-white rounded-[32px] p-4 border border-slate-100 relative">
@@ -374,15 +374,15 @@ const StudentJobsView = ({ jobs, user, onApply, myApps }: any) => {
 
 const StudentJobDetail = ({ job, user, onBack, onApplyConfirm, hasActiveApp, isFull }: any) => {
     return (
-        <div className="flex flex-col h-full bg-white">
+        <div className="flex flex-col h-full bg-white overflow-hidden">
             <div className="relative h-64 bg-slate-100">
                 <div className="flex overflow-x-auto snap-x snap-mandatory h-full w-full scrollbar-hide">
                     {job.imgUrls && job.imgUrls.length > 0 ? (job.imgUrls.map((url: string, idx: number) => (<img key={idx} src={url} className="w-full h-full object-cover snap-center flex-shrink-0" alt="Job Cover" />))) : (<div className="w-full h-full flex items-center justify-center text-slate-300"><ImageIcon className="w-12 h-12" /></div>)}
                 </div>
                 <button onClick={onBack} className="absolute top-4 left-4 w-10 h-10 bg-white/80 backdrop-blur rounded-full flex items-center justify-center shadow-lg text-slate-800 z-10"><ChevronLeft /></button>
-                 {job.imgUrls && job.imgUrls.length > 1 && (<div className="absolute bottom-4 right-4 bg-black/50 text-white text-xs px-2 py-1 rounded-full backdrop-blur">Swipe for more photos</div>)}
+                 {job.imgUrls && job.imgUrls.length > 1 && (<div className="absolute bottom-4 right-4 bg-black/50 text-white text-xs px-2 py-1 rounded-full backdrop-blur">左右滑动查看更多</div>)}
             </div>
-            <div className="flex-1 overflow-y-auto p-6 relative -mt-6 bg-white rounded-t-[32px] z-10">
+            <div className="flex-1 overflow-y-auto overflow-x-hidden p-6 relative -mt-6 bg-white rounded-t-[32px] z-10">
                 <div className="absolute top-20 right-[-20px] rotate-[-15deg] text-8xl font-black text-slate-50 select-none pointer-events-none z-0 whitespace-nowrap opacity-50">Blueprint Global</div>
                 <div className="relative z-10">
                     <div className="flex justify-between items-start mb-2">
@@ -401,7 +401,7 @@ const StudentJobDetail = ({ job, user, onBack, onApplyConfirm, hasActiveApp, isF
                 </div>
             </div>
             <div className="p-4 bg-white border-t border-slate-100 sticky bottom-0 z-20 pb-8">
-                {isFull ? (<Button disabled className="w-full text-lg bg-slate-100 text-slate-400 shadow-none cursor-not-allowed">Position Filled</Button>) : hasActiveApp ? (<Button disabled className="w-full text-lg bg-rose-50 text-rose-400 shadow-none border-2 border-rose-100">Limit Reached (1 Active App)</Button>) : user.score < job.minScore ? (<Button disabled className="w-full text-lg bg-slate-100 text-slate-400 shadow-none">Score Too Low (Min {job.minScore})</Button>) : (<Button onClick={() => onApplyConfirm(job.id)} className="w-full text-lg">Apply Now</Button>)}
+                {isFull ? (<Button disabled className="w-full text-lg bg-slate-100 text-slate-400 shadow-none cursor-not-allowed">职位已满 (Position Filled)</Button>) : hasActiveApp ? (<Button disabled className="w-full text-lg bg-rose-50 text-rose-400 shadow-none border-2 border-rose-100">申请名额已满 (限报一个)</Button>) : user.score < job.minScore ? (<Button disabled className="w-full text-lg bg-slate-100 text-slate-400 shadow-none">分数不足 (最低需 {job.minScore})</Button>) : (<Button onClick={() => onApplyConfirm(job.id)} className="w-full text-lg">立即申请 (Apply Now)</Button>)}
             </div>
         </div>
     );
@@ -410,7 +410,7 @@ const StudentJobDetail = ({ job, user, onBack, onApplyConfirm, hasActiveApp, isF
 const StudentInternshipView = ({ user, apps, jobs, onWithdraw }: any) => {
     const myApps = apps.filter((a: any) => a.userId === user.id).sort((a: any, b: any) => new Date(b.date).getTime() - new Date(a.date).getTime());
     return (
-        <div className="flex-1 overflow-y-auto p-6 pt-12 pb-32 min-h-0 bg-[#F0F9FF]">
+        <div className="flex-1 overflow-y-auto overflow-x-hidden p-6 pt-12 pb-32 min-h-0 bg-[#F0F9FF]">
             <h1 className="text-3xl font-black text-slate-900 mb-2">My Applications</h1>
             <p className="text-slate-500 mb-8">Track your status</p>
             {myApps.length === 0 ? (
@@ -428,15 +428,15 @@ const StudentInternshipView = ({ user, apps, jobs, onWithdraw }: any) => {
                                 </div>
                                 {app.status === 'pending' && (
                                     <div className="bg-[#FEF9C3] p-4 rounded-2xl border border-yellow-100 mb-4">
-                                        <div className="flex items-start gap-3"><AlertCircle className="w-5 h-5 text-yellow-600 flex-shrink-0 mt-0.5" /><p className="text-sm text-yellow-800 leading-relaxed font-medium">Your application will be reviewed by the team. After it is reviewed, there will be a long wait. Please do not constantly check in. Once our backend team approves it, you can proceed.</p></div>
+                                        <div className="flex items-start gap-3"><AlertCircle className="w-5 h-5 text-yellow-600 flex-shrink-0 mt-0.5" /><p className="text-sm text-yellow-800 leading-relaxed font-medium">您的申请已提交。审核需要一定时间，请耐心等待，切勿频繁催促。通过后系统将自动更新状态。</p></div>
                                     </div>
                                 )}
                                 {app.status === 'approved' && (
                                      <div className="bg-emerald-50 p-4 rounded-2xl border border-emerald-100 mb-4">
-                                        <div className="flex items-start gap-3"><CheckCircle2 className="w-5 h-5 text-emerald-600 flex-shrink-0 mt-0.5" /><p className="text-sm text-emerald-800 font-medium">Congratulations! You have been approved for this position.</p></div>
+                                        <div className="flex items-start gap-3"><CheckCircle2 className="w-5 h-5 text-emerald-600 flex-shrink-0 mt-0.5" /><p className="text-sm text-emerald-800 font-medium">恭喜！您的申请已通过。</p></div>
                                     </div>
                                 )}
-                                {app.status === 'pending' && (<button onClick={() => onWithdraw(app.id)} className="w-full py-3 rounded-xl border border-rose-100 text-rose-500 font-bold hover:bg-rose-50 transition-colors text-sm">Withdraw Application</button>)}
+                                {app.status === 'pending' && (<button onClick={() => onWithdraw(app.id)} className="w-full py-3 rounded-xl border border-rose-100 text-rose-500 font-bold hover:bg-rose-50 transition-colors text-sm">撤回申请 (Withdraw)</button>)}
                             </div>
                         );
                     })}
@@ -448,7 +448,7 @@ const StudentInternshipView = ({ user, apps, jobs, onWithdraw }: any) => {
 
 const StudentServicesView = ({ user, onEmergency, guides, onSelectGuide }: any) => {
     return (
-        <div className="flex-1 overflow-y-auto p-4 space-y-6 pb-32 min-h-0 bg-[#F0F9FF]">
+        <div className="flex-1 overflow-y-auto overflow-x-hidden p-4 space-y-6 pb-32 min-h-0 bg-[#F0F9FF]">
             <div><h1 className="text-3xl font-black text-slate-900">Services</h1><p className="text-slate-400 font-medium">Essential tools for your trip.</p></div>
             <div onClick={onEmergency} className="bg-[#38BDF8] rounded-[40px] p-6 shadow-xl shadow-sky-200 relative overflow-hidden h-48 flex flex-col justify-between active:scale-[0.98] transition-transform cursor-pointer group">
                 <div className="absolute top-[-20px] right-[-20px] w-32 h-32 bg-white/20 rounded-full blur-xl" /><div className="absolute bottom-[-20px] left-[-20px] w-24 h-24 bg-sky-600/20 rounded-full blur-xl" />
@@ -474,9 +474,9 @@ const StudentEmergencyView = ({ user, onBack, onUpdateUser }: any) => {
         setNewContact({ name: '', phone: '', type: 'Friend' });
     };
     return (
-        <div className="flex-1 overflow-y-auto flex flex-col h-full bg-[#F0F9FF]">
+        <div className="flex-1 overflow-y-auto overflow-x-hidden flex flex-col h-full bg-[#F0F9FF]">
             <div className="bg-[#38BDF8] px-6 pt-12 pb-8 rounded-b-[40px] shadow-xl shadow-sky-200 z-10 flex-shrink-0">
-                <div className="flex items-center justify-between text-white mb-6"><button onClick={onBack} className="flex items-center font-bold opacity-80 hover:opacity-100"><ChevronLeft className="w-5 h-5 mr-1" /> Back</button></div>
+                <div className="flex items-center justify-between text-white mb-6"><button onClick={onBack} className="flex items-center font-bold opacity-80 hover:opacity-100"><ChevronLeft className="w-5 h-5 mr-1" /> 返回 (Back)</button></div>
                 <h1 className="text-3xl font-black text-white mb-2">Emergency Card</h1><p className="text-sky-100 font-medium opacity-90">Access these contacts offline.</p>
             </div>
             <div className="flex-1 overflow-y-auto p-6 space-y-6">
@@ -491,7 +491,7 @@ const StudentEmergencyView = ({ user, onBack, onUpdateUser }: any) => {
                     <h3 className="text-xs font-bold text-slate-400 uppercase tracking-wider mb-4">My Contacts</h3>
                     <div className="space-y-4 mb-6">{user.emergencyContacts?.map((c: any, i: number) => (<div key={i} className="bg-slate-50 p-4 rounded-2xl border border-slate-100"><div className="flex justify-between items-center mb-1"><p className="text-xs font-bold text-sky-500 uppercase">{c.type}</p></div><p className="font-bold text-slate-800 text-lg">{c.name}</p><p className="text-slate-500 font-mono text-lg">{c.phone}</p></div>))}</div>
                     {!isAdding ? (
-                        <button onClick={() => setIsAdding(true)} className="w-full py-4 rounded-2xl border-2 border-dashed border-sky-200 text-sky-400 font-bold flex items-center justify-center gap-2 hover:bg-sky-50 active:scale-95 transition-all"><Plus className="w-5 h-5" />Add Friend / Family</button>
+                        <button onClick={() => setIsAdding(true)} className="w-full py-4 rounded-2xl border-2 border-dashed border-sky-200 text-sky-400 font-bold flex items-center justify-center gap-2 hover:bg-sky-50 active:scale-95 transition-all"><Plus className="w-5 h-5" />添加联系人 (Add Friend)</button>
                     ) : (
                         <div className="bg-sky-50 p-4 rounded-2xl border border-sky-100 animate-in fade-in zoom-in duration-200">
                             <h4 className="font-bold text-sky-800 mb-3 text-center">New Contact</h4>
@@ -499,7 +499,7 @@ const StudentEmergencyView = ({ user, onBack, onUpdateUser }: any) => {
                                 <input className="w-full bg-white p-3 rounded-xl text-slate-700 font-bold focus:outline-none border border-sky-100" placeholder="Name (e.g. Mom)" value={newContact.name} onChange={e => setNewContact({...newContact, name: e.target.value})}/>
                                 <input className="w-full bg-white p-3 rounded-xl text-slate-700 font-bold focus:outline-none border border-sky-100" placeholder="Phone Number" value={newContact.phone} onChange={e => setNewContact({...newContact, phone: e.target.value})}/>
                                 <div className="flex gap-2">{['Friend', 'Family', 'Work'].map(type => (<button key={type} onClick={() => setNewContact({...newContact, type})} className={`flex-1 py-2 rounded-lg text-xs font-bold ${newContact.type === type ? 'bg-sky-400 text-white shadow-md' : 'bg-white text-slate-400'}`}>{type}</button>))}</div>
-                                <div className="flex gap-2 pt-2"><button onClick={() => setIsAdding(false)} className="flex-1 py-3 rounded-xl bg-slate-200 text-slate-500 font-bold">Cancel</button><button onClick={handleAdd} className="flex-1 py-3 rounded-xl bg-sky-400 text-white font-bold shadow-lg shadow-sky-200">Save</button></div>
+                                <div className="flex gap-2 pt-2"><button onClick={() => setIsAdding(false)} className="flex-1 py-3 rounded-xl bg-slate-200 text-slate-500 font-bold">取消</button><button onClick={handleAdd} className="flex-1 py-3 rounded-xl bg-sky-400 text-white font-bold shadow-lg shadow-sky-200">保存</button></div>
                             </div>
                         </div>
                     )}
@@ -514,19 +514,19 @@ const StudentProfileView = ({ user, onLogout, onEdit, isEditing, onSaveProfile }
     const handleSave = () => { onSaveProfile(editData); };
     if (isEditing) {
         return (
-            <div className="flex-1 overflow-y-auto p-6 pt-12 pb-24 min-h-0 bg-[#F0F9FF]">
-                 <div className="flex justify-between items-center mb-6"><h1 className="text-2xl font-black text-slate-900">Edit Profile</h1><button onClick={onEdit} className="text-slate-400 font-bold">Cancel</button></div>
+            <div className="flex-1 overflow-y-auto overflow-x-hidden p-6 pt-12 pb-24 min-h-0 bg-[#F0F9FF]">
+                 <div className="flex justify-between items-center mb-6"><h1 className="text-2xl font-black text-slate-900">编辑个人资料</h1><button onClick={onEdit} className="text-slate-400 font-bold">取消</button></div>
                 <div className="bg-white p-6 rounded-[32px] shadow-lg space-y-4">
                     <div><label className="text-xs font-bold text-slate-400 mb-1 block">姓名 (FULL NAME)</label><input className="w-full bg-slate-50 p-3 rounded-xl font-bold text-slate-800" value={editData.name} onChange={e => setEditData({...editData, name: e.target.value})}/></div>
                      <div><label className="text-xs font-bold text-slate-400 mb-1 block">电话 (PHONE)</label><input className="w-full bg-slate-50 p-3 rounded-xl font-bold text-slate-800" value={editData.phone} onChange={e => setEditData({...editData, phone: e.target.value})}/></div>
                      <div><label className="text-xs font-bold text-slate-400 mb-1 block">学校 (SCHOOL - LOCKED)</label><input disabled className="w-full bg-slate-100 p-3 rounded-xl font-bold text-slate-400 cursor-not-allowed" value={user.school}/></div>
-                    <Button onClick={handleSave} className="w-full mt-4">Save Changes</Button>
+                    <Button onClick={handleSave} className="w-full mt-4">保存修改 (Save Changes)</Button>
                 </div>
             </div>
         );
     }
     return (
-        <div className="flex-1 overflow-y-auto flex flex-col pb-32 min-h-0 bg-[#F0F9FF]">
+        <div className="flex-1 overflow-y-auto overflow-x-hidden flex flex-col pb-32 min-h-0 bg-[#F0F9FF]">
             <div className="bg-gradient-to-b from-sky-200 to-[#F0F9FF] pt-12 pb-20 px-6 rounded-b-[50px] text-center relative z-0 flex-shrink-0">
                 <div className="w-28 h-28 mx-auto bg-sky-200 rounded-full p-1 shadow-xl shadow-sky-100 mb-4 border-4 border-white relative">
                      <div className="w-full h-full bg-[#BAE6FD] rounded-full flex items-center justify-center text-3xl font-black text-sky-600">{user.name.charAt(0)}</div>
@@ -559,221 +559,50 @@ const AdminDashView = ({ jobs, students, onSelectJob, apps, onGoToGuides }: any)
     const fullJobs = filteredJobs.filter((j: any) => { const approvedCount = apps.filter((a: any) => a.jobId === j.id && a.status === 'approved').length; return approvedCount >= j.capacity; });
     
     return (
-        <div className="flex-1 overflow-y-auto p-6 pb-32 bg-[#F0F9FF]">
+        <div className="flex-1 overflow-y-auto overflow-x-hidden p-6 pb-32 bg-[#F0F9FF]">
              <div className="flex items-center justify-between mb-6"><div><p className="text-xs font-bold text-slate-400 uppercase tracking-widest mb-1">ADMIN CONSOLE</p><h1 className="text-3xl font-black text-slate-800">Dashboard</h1></div></div>
              
-            <div className="mb-8 relative"><Search className="absolute left-4 top-3.5 text-slate-400 w-5 h-5" /><input className="w-full bg-white pl-12 pr-4 py-3 rounded-2xl shadow-sm border border-slate-100 focus:outline-none focus:ring-2 focus:ring-sky-200 font-bold text-slate-700" placeholder="Search jobs by Title or #ID..." value={search} onChange={e => setSearch(e.target.value)}/></div>
+            <div className="mb-8 relative"><Search className="absolute left-4 top-3.5 text-slate-400 w-5 h-5" /><input className="w-full bg-white pl-12 pr-4 py-3 rounded-2xl shadow-sm border border-slate-100 focus:outline-none focus:ring-2 focus:ring-sky-200 font-bold text-slate-700" placeholder="Search Title or #ID..." value={search} onChange={e => setSearch(e.target.value)}/></div>
             
             <div className="flex gap-4 mb-8 overflow-x-auto pb-2 scrollbar-hide">
-                 <div className="min-w-[140px] bg-white p-4 rounded-[24px] border border-slate-50 shadow-lg shadow-slate-100"><div className="w-10 h-10 bg-sky-100 rounded-full flex items-center justify-center text-sky-600 mb-2"><Users className="w-5 h-5" /></div><p className="text-2xl font-black text-slate-800">{students.length}</p><p className="text-xs text-slate-400 font-bold uppercase">Students</p></div>
-                 <div className="min-w-[140px] bg-white p-4 rounded-[24px] border border-slate-50 shadow-lg shadow-slate-100"><div className="w-10 h-10 bg-[#FEF9C3] rounded-full flex items-center justify-center text-yellow-600 mb-2"><Briefcase className="w-5 h-5" /></div><p className="text-2xl font-black text-slate-800">{jobs.length}</p><p className="text-xs text-slate-400 font-bold uppercase">Jobs</p></div>
-                 <div onClick={onGoToGuides} className="min-w-[140px] bg-white p-4 rounded-[24px] border border-slate-50 shadow-lg shadow-slate-100 active:scale-95 cursor-pointer"><div className="w-10 h-10 bg-emerald-100 rounded-full flex items-center justify-center text-emerald-600 mb-2"><BookOpen className="w-5 h-5" /></div><p className="text-2xl font-black text-slate-800">Guides</p><p className="text-xs text-slate-400 font-bold uppercase">Manage</p></div>
+                 <div className="min-w-[140px] bg-white p-4 rounded-[24px] border border-slate-50 shadow-lg shadow-slate-100"><div className="w-10 h-10 bg-sky-100 rounded-full flex items-center justify-center text-sky-600 mb-2"><Users className="w-5 h-5" /></div><p className="text-2xl font-black text-slate-800">{students.length}</p><p className="text-xs text-slate-400 font-bold uppercase">学生 (Students)</p></div>
+                 <div className="min-w-[140px] bg-white p-4 rounded-[24px] border border-slate-50 shadow-lg shadow-slate-100"><div className="w-10 h-10 bg-[#FEF9C3] rounded-full flex items-center justify-center text-yellow-600 mb-2"><Briefcase className="w-5 h-5" /></div><p className="text-2xl font-black text-slate-800">{jobs.length}</p><p className="text-xs text-slate-400 font-bold uppercase">职位 (Jobs)</p></div>
+                 <div onClick={onGoToGuides} className="min-w-[140px] bg-white p-4 rounded-[24px] border border-slate-50 shadow-lg shadow-slate-100 active:scale-95 cursor-pointer"><div className="w-10 h-10 bg-emerald-100 rounded-full flex items-center justify-center text-emerald-600 mb-2"><BookOpen className="w-5 h-5" /></div><p className="text-2xl font-black text-slate-800">Guides</p><p className="text-xs text-slate-400 font-bold uppercase">指南 (Manage)</p></div>
             </div>
             
             <div className="mb-8">
-                 <div className="flex items-center gap-2 mb-4"><div className="w-2 h-2 rounded-full bg-emerald-400 shadow-[0_0_10px_rgba(52,211,153,0.5)]"></div><h2 className="text-sm font-bold text-slate-500 uppercase tracking-widest">Active Recruiting</h2></div>
-                <div className="space-y-4">{activeJobs.map((job: any) => (<div key={job.id} onClick={() => onSelectJob(job)} className="bg-white p-5 rounded-[28px] shadow-sm border border-slate-100 active:scale-[0.98] transition-all relative overflow-hidden group"><div className="absolute top-4 right-4 bg-slate-900 text-white text-[10px] font-bold px-2 py-0.5 rounded">#{String(job.seqNo).padStart(2,'0')}</div><div className="flex gap-4"><div className="w-16 h-16 rounded-2xl bg-slate-50 flex-shrink-0 overflow-hidden">{job.imgUrls && job.imgUrls.length > 0 ? (<img src={job.imgUrls[0]} className="w-full h-full object-cover" />) : <div className="w-full h-full flex items-center justify-center text-slate-300"><ImageIcon /></div>}</div><div className="flex-1"><h3 className="text-lg font-black text-slate-800 leading-tight mb-1">{job.title}</h3><p className="text-slate-400 text-xs">{job.companyName}</p></div></div><div className="mt-4 pt-3 border-t border-slate-50 flex justify-between items-center text-sky-500 text-xs font-bold"><span>View Applicants</span><ChevronRight className="w-4 h-4" /></div></div>))}</div>
+                 <div className="flex items-center gap-2 mb-4"><div className="w-2 h-2 rounded-full bg-emerald-400 shadow-[0_0_10px_rgba(52,211,153,0.5)]"></div><h2 className="text-sm font-bold text-slate-500 uppercase tracking-widest">招聘中 (Active)</h2></div>
+                <div className="space-y-4">{activeJobs.map((job: any) => (<div key={job.id} onClick={() => onSelectJob(job)} className="bg-white p-5 rounded-[28px] shadow-sm border border-slate-100 active:scale-[0.98] transition-all relative overflow-hidden group"><div className="absolute top-4 right-4 bg-slate-900 text-white text-[10px] font-bold px-2 py-0.5 rounded">#{String(job.seqNo).padStart(2,'0')}</div><div className="flex gap-4"><div className="w-16 h-16 rounded-2xl bg-slate-50 flex-shrink-0 overflow-hidden">{job.imgUrls && job.imgUrls.length > 0 ? (<img src={job.imgUrls[0]} className="w-full h-full object-cover" />) : <div className="w-full h-full flex items-center justify-center text-slate-300"><ImageIcon /></div>}</div><div className="flex-1"><h3 className="text-lg font-black text-slate-800 leading-tight mb-1">{job.title}</h3><p className="text-slate-400 text-xs">{job.companyName}</p></div></div><div className="mt-4 pt-3 border-t border-slate-50 flex justify-between items-center text-sky-500 text-xs font-bold"><span>查看申请 (View Applicants)</span><ChevronRight className="w-4 h-4" /></div></div>))}</div>
             </div>
              <div>
-                 <div className="flex items-center gap-2 mb-4"><div className="w-2 h-2 rounded-full bg-slate-300"></div><h2 className="text-sm font-bold text-slate-400 uppercase tracking-widest">Filled / Closed</h2></div>
-                <div className="space-y-4 opacity-70 grayscale">{fullJobs.map((job: any) => (<div key={job.id} onClick={() => onSelectJob(job)} className="bg-white p-5 rounded-[28px] border border-slate-100 active:scale-[0.98] relative"><div className="absolute top-4 right-4 bg-slate-200 text-slate-500 text-[10px] font-bold px-2 py-0.5 rounded">FULL</div><div className="flex gap-4"><div className="w-16 h-16 rounded-2xl bg-slate-50 flex-shrink-0 overflow-hidden">{job.imgUrls && job.imgUrls.length > 0 ? (<img src={job.imgUrls[0]} className="w-full h-full object-cover" />) : <div className="w-full h-full flex items-center justify-center text-slate-300"><ImageIcon /></div>}</div><div className="flex-1"><h3 className="text-lg font-black text-slate-600 leading-tight mb-1">{job.title}</h3><p className="text-slate-400 text-xs">{job.companyName}</p></div></div></div>))}</div>
-             </div>
-        </div>
-    );
-};
-
-const AdminApplicationsView = ({ apps, jobs, students, onBack, onUpdateAppStatus, onSelectStudent }: any) => {
-    const [filter, setFilter] = useState('pending'); // 'pending', 'history'
-    
-    // Enrich application data
-    const enrichedApps = apps.map((app: any) => ({
-        ...app,
-        job: jobs.find((j: any) => j.id === app.jobId),
-        student: students.find((s: any) => s.id === app.userId)
-    })).filter((a: any) => a.job && a.student);
-
-    const filteredList = enrichedApps.filter((a: any) => {
-        if (filter === 'pending') return a.status === 'pending';
-        return a.status !== 'pending';
-    }).sort((a: any, b: any) => new Date(b.date).getTime() - new Date(a.date).getTime());
-
-    return (
-        <div className="flex-1 overflow-y-auto p-6 pt-12 pb-24 min-h-0 bg-[#F0F9FF]">
-            <div className="flex justify-between items-center mb-6">
-                 {/* No Back button needed if in bottom nav, but keeping header clean */}
-                 <div></div>
-            </div>
-            <h1 className="text-3xl font-black text-slate-900 mb-2">Application Center</h1>
-            <p className="text-slate-400 mb-6 font-medium">Manage student submissions</p>
-
-            <div className="flex p-1 bg-white rounded-xl mb-6 shadow-sm border border-slate-100">
-                <button onClick={() => setFilter('pending')} className={`flex-1 py-2 rounded-lg text-sm font-bold transition-all ${filter === 'pending' ? 'bg-sky-400 text-white shadow-md' : 'text-slate-400 hover:bg-slate-50'}`}>Pending ({enrichedApps.filter((a:any) => a.status === 'pending').length})</button>
-                <button onClick={() => setFilter('history')} className={`flex-1 py-2 rounded-lg text-sm font-bold transition-all ${filter === 'history' ? 'bg-slate-800 text-white shadow-md' : 'text-slate-400 hover:bg-slate-50'}`}>History</button>
-            </div>
-
-            <div className="space-y-4">
-                {filteredList.length === 0 ? (
-                    <div className="text-center py-20 opacity-50"><Inbox className="w-16 h-16 mx-auto mb-4 text-slate-300" /><p className="text-slate-500 font-medium">No {filter} applications.</p></div>
-                ) : filteredList.map((item: any) => (
-                    <div key={item.id} className="bg-white p-5 rounded-[28px] shadow-sm border border-slate-100">
-                        <div className="flex justify-between items-start mb-4">
-                            <span className="bg-sky-50 text-sky-600 text-[10px] font-bold px-2 py-1 rounded-md uppercase tracking-wide truncate max-w-[150px]">{item.job.title}</span>
-                            <span className="text-slate-300 text-xs font-mono">{new Date(item.date).toLocaleDateString()}</span>
-                        </div>
-                        <div className="flex items-center gap-4 mb-6 cursor-pointer" onClick={() => onSelectStudent(item.student)}>
-                            <div className="w-12 h-12 bg-sky-100 rounded-full flex items-center justify-center font-black text-sky-500 text-lg">{item.student.name.charAt(0)}</div>
-                            <div>
-                                <h3 className="font-bold text-slate-800 text-lg leading-tight flex items-center gap-2">{item.student.name} <ChevronRight className="w-4 h-4 text-slate-300" /></h3>
-                                <p className="text-xs text-slate-400 font-bold uppercase">{item.student.school}</p>
-                            </div>
-                        </div>
-                        {item.status === 'pending' ? (
-                            <div className="grid grid-cols-2 gap-3">
-                                <button onClick={() => onUpdateAppStatus(item.id, 'rejected')} className="py-3 rounded-xl bg-slate-50 text-slate-500 font-bold text-xs hover:bg-rose-50 hover:text-rose-500 transition-colors">Reject</button>
-                                <button onClick={() => onUpdateAppStatus(item.id, 'approved')} className="py-3 rounded-xl bg-[#38BDF8] text-white font-bold text-xs shadow-lg shadow-sky-200 hover:bg-sky-400">Approve</button>
-                            </div>
-                        ) : (
-                            <div className={`w-full py-3 rounded-xl text-center font-bold text-xs border ${item.status === 'approved' ? 'bg-emerald-50 text-emerald-600 border-emerald-100' : 'bg-rose-50 text-rose-600 border-rose-100'}`}>
-                                {item.status.toUpperCase()}
-                            </div>
-                        )}
-                    </div>
-                ))}
+                 <div className="flex items-center gap-2 mb-4"><div className="w-2 h-2 rounded-full bg-slate-300"></div><h2 className="text-sm font-bold text-slate-400 uppercase tracking-widest">已满员 / 关闭 (Closed)</h2></div>
+                <div className="space-y-4 opacity-70 grayscale">{fullJobs.map((job: any) => (<div key={job.id} onClick={() => onSelectJob(job)} className="bg-white p-5 rounded-[28px] border border-slate-100 active:scale-[0.98] relative"><div className="absolute top-4 right-4 bg-slate-200 text-slate-500 text-[10px] font-bold px-2 py-0.5 rounded">FULL</div><div className="flex gap-4"><div className="w-16 h-16 rounded-2xl bg-slate-50 flex-shrink-0 overflow-hidden">{job.imgUrls && job.imgUrls.length > 0 ? (<img src={job.imgUrls[0]} className="w-full h-full object-cover opacity-50" />) : <div className="w-full h-full flex items-center justify-center text-slate-300"><ImageIcon /></div>}</div><div className="flex-1"><h3 className="text-lg font-black text-slate-600 leading-tight mb-1">{job.title}</h3><p className="text-slate-400 text-xs">{job.companyName}</p></div></div></div>))}</div>
             </div>
         </div>
     );
 };
 
-const AdminJobDetailView = ({ job, applicants, onBack, onEditJob, onUpdateAppStatus }: any) => {
+const AdminJobDetailView = ({ job, students, apps, onApprove, onReject, onBack, onEdit }: any) => {
+    const jobApps = apps.filter((a: any) => a.jobId === job.id);
+    const approvedCount = jobApps.filter((a: any) => a.status === 'approved').length;
     return (
-        <div className="flex-1 overflow-y-auto p-6 pt-12 pb-24 min-h-0 bg-[#F0F9FF]">
-            <div className="flex justify-between items-center mb-6"><button onClick={onBack} className="flex items-center text-slate-400 font-bold"><ChevronLeft className="w-5 h-5 mr-1" /> Back</button><button onClick={() => onEditJob(job)} className="bg-white px-4 py-2 rounded-full text-sky-500 font-bold text-xs shadow-sm border border-slate-100 flex items-center gap-2"><Edit3 className="w-4 h-4" /> Edit Job</button></div>
+        <div className="flex-1 overflow-y-auto overflow-x-hidden p-6 pb-32 bg-[#F0F9FF]">
+            <div className="flex justify-between items-center mb-6"><button onClick={onBack} className="flex items-center text-slate-400 font-bold"><ChevronLeft className="w-5 h-5 mr-1" /> 返回 (Dashboard)</button><button onClick={() => onEdit(job)} className="text-sky-500 font-bold">编辑 (Edit)</button></div>
             <div className="bg-white p-6 rounded-[32px] shadow-lg mb-8">
-                 <div className="flex gap-4 mb-4">
-                    <div className="w-20 h-20 rounded-2xl bg-slate-100 flex-shrink-0 overflow-hidden">{job.imgUrls && job.imgUrls.length > 0 ? (<img src={job.imgUrls[0]} className="w-full h-full object-cover" />) : <div className="w-full h-full flex items-center justify-center text-slate-300"><ImageIcon /></div>}</div>
-                    <div><h1 className="text-xl font-black text-slate-800 leading-tight mb-1">{job.title}</h1><p className="text-slate-500 font-medium text-sm">{job.companyName}</p><div className="flex gap-2 mt-2"><span className="bg-slate-100 text-slate-500 text-[10px] font-bold px-2 py-0.5 rounded">#{job.seqNo}</span><span className="bg-[#FEF9C3] text-yellow-700 text-[10px] font-bold px-2 py-0.5 rounded">{job.programYear}</span></div></div>
-                </div>
-                <div className="flex justify-between items-center bg-slate-50 p-3 rounded-2xl"><span className="text-xs font-bold text-slate-400">CAPACITY</span><span className="font-black text-slate-800 text-lg">{applicants.filter((a: any) => a.application.status === 'approved').length} / {job.capacity}</span></div>
+                 <div className="flex justify-between items-start mb-4"><div><h1 className="text-2xl font-black text-slate-900 mb-1">{job.title}</h1><p className="text-slate-400">{job.companyName}</p></div><div className="text-right"><span className="text-3xl font-black text-slate-800">{approvedCount}/{job.capacity}</span><p className="text-xs font-bold text-slate-400 uppercase">已招募 (Filled)</p></div></div>
+                 <div className="h-2 bg-slate-100 rounded-full overflow-hidden mb-4"><div className="h-full bg-sky-400 transition-all duration-500" style={{ width: `${(approvedCount / job.capacity) * 100}%` }}></div></div>
             </div>
-            <h2 className="text-lg font-black text-slate-800 mb-4 px-2">Applicants ({applicants.length})</h2>
+            <h2 className="text-lg font-black text-slate-800 mb-4 px-2">申请人列表 (Applicants)</h2>
             <div className="space-y-4">
-                {applicants.length === 0 ? (
-                    <div className="text-center py-10 text-slate-400 text-sm font-medium">No applications yet.</div>
-                ) : applicants.map((item: any) => (
-                    <div key={item.application.id} className="bg-white p-5 rounded-[28px] border border-slate-100 shadow-sm">
-                        <div className="flex items-center gap-3 mb-4"><div className="w-10 h-10 bg-sky-100 rounded-full flex items-center justify-center font-black text-sky-500">{item.student.name.charAt(0)}</div><div><h3 className="font-bold text-slate-800">{item.student.name}</h3><p className="text-xs text-slate-400 font-bold">{item.student.school}</p></div><div className="ml-auto flex flex-col items-end"><span className={`text-[10px] font-bold uppercase px-2 py-0.5 rounded ${item.application.status === 'approved' ? 'bg-emerald-100 text-emerald-600' : item.application.status === 'rejected' ? 'bg-rose-100 text-rose-600' : 'bg-yellow-100 text-yellow-600'}`}>{item.application.status}</span><span className="text-xs text-slate-300 font-mono mt-1">Score: {item.student.score}</span></div></div>
-                        {item.application.status === 'pending' && (<div className="flex gap-2"><button onClick={() => onUpdateAppStatus(item.application.id, 'rejected')} className="flex-1 py-3 rounded-xl bg-slate-50 text-slate-500 font-bold text-xs hover:bg-rose-50 hover:text-rose-500 transition-colors">Reject</button><button onClick={() => onUpdateAppStatus(item.application.id, 'approved')} className="flex-1 py-3 rounded-xl bg-[#38BDF8] text-white font-bold text-xs shadow-lg shadow-sky-200">Approve</button></div>)}
-                         {item.application.status === 'approved' && (<button onClick={() => onUpdateAppStatus(item.application.id, 'pending')} className="w-full py-2 rounded-xl text-slate-400 text-xs font-bold hover:bg-slate-50">Revoke Approval</button>)}
-                    </div>
-                ))}
-            </div>
-        </div>
-    );
-};
-
-const AdminPostJobView = ({ onSave, onCancel, editingJob }: any) => {
-    const [job, setJob] = useState<Partial<Job>>({ seqNo: 0, title: '', companyName: '', location: '', description: '', programYear: '2025', housing: 'Provided', housingCost: '$150/wk', salary: '$16.00/hr', startDateRange: 'Jun 15 - Jun 30', endDate: 'Sept 15, 2025', capacity: 10, minScore: 6.0, tags: [], imgUrls: [] });
-    useEffect(() => { if (editingJob) setJob(editingJob); }, [editingJob]);
-    const handleImageUpload = (e: any) => { const file = e.target.files[0]; if (file) { const reader = new FileReader(); reader.onloadend = () => { const currentUrls = job.imgUrls || []; if (currentUrls.length < 9) { setJob({ ...job, imgUrls: [...currentUrls, reader.result as string] }); } else { alert("Max 9 images allowed"); } }; reader.readAsDataURL(file); } };
-    return (
-        <div className="flex-1 overflow-y-auto p-6 pb-24 min-h-0 bg-[#F0F9FF]">
-            <div className="flex justify-between items-center mb-6"><h1 className="text-2xl font-black text-slate-900">{editingJob ? 'Edit Position' : 'New Position'}</h1><button onClick={onCancel} className="text-slate-400 font-bold">Cancel</button></div>
-            <div className="space-y-6">
-                <div className="bg-white p-5 rounded-[32px] border border-slate-100">
-                    <div className="flex justify-between mb-4"><label className="text-xs font-bold text-slate-400 uppercase">Gallery ({job.imgUrls?.length || 0}/9)</label></div>
-                    <div className="grid grid-cols-3 gap-2">{job.imgUrls?.map((url, idx) => (<div key={idx} className="aspect-square rounded-xl overflow-hidden relative group"><img src={url} className="w-full h-full object-cover" /><button onClick={() => setJob({...job, imgUrls: job.imgUrls?.filter((_, i) => i !== idx)})} className="absolute inset-0 bg-black/40 hidden group-hover:flex items-center justify-center text-white"><Trash2 className="w-5 h-5" /></button></div>))}{(job.imgUrls?.length || 0) < 9 && (<label className="aspect-square rounded-xl bg-sky-50 border-2 border-dashed border-sky-200 flex flex-col items-center justify-center text-sky-400 cursor-pointer hover:bg-sky-100 transition-colors"><Camera className="w-6 h-6 mb-1" /><span className="text-[10px] font-bold">Add</span><input type="file" className="hidden" accept="image/*" onChange={handleImageUpload} /></label>)}</div>
-                </div>
-                <div className="bg-white p-5 rounded-[32px] space-y-4">
-                     <div><label className="text-xs font-bold text-slate-400 ml-2 mb-1 block">序号 (SEQUENCE NO.)</label><input className="w-full bg-slate-50 p-4 rounded-2xl font-bold text-slate-700 focus:outline-none" type="number" value={job.seqNo} onChange={e => setJob({...job, seqNo: parseInt(e.target.value)})}/></div>
-                    <div><label className="text-xs font-bold text-slate-400 ml-2 mb-1 block">职位名称 (JOB TITLE)</label><input className="w-full bg-slate-50 p-4 rounded-2xl font-bold text-slate-700 focus:outline-none" value={job.title} onChange={e => setJob({...job, title: e.target.value})} placeholder="e.g. Lifeguard"/></div>
-                     <div><label className="text-xs font-bold text-slate-400 ml-2 mb-1 block">公司名称 (COMPANY NAME)</label><input className="w-full bg-slate-50 p-4 rounded-2xl font-bold text-slate-700 focus:outline-none" value={job.companyName} onChange={e => setJob({...job, companyName: e.target.value})} placeholder="e.g. Resort World"/></div>
-                     <div><label className="text-xs font-bold text-slate-400 ml-2 mb-1 block">地点 (LOCATION)</label><input className="w-full bg-slate-50 p-4 rounded-2xl font-bold text-slate-700 focus:outline-none" value={job.location} onChange={e => setJob({...job, location: e.target.value})} placeholder="e.g. City, State"/></div>
-                    <div className="grid grid-cols-2 gap-4"><div><label className="text-xs font-bold text-slate-400 ml-2 mb-1 block">薪资 (SALARY)</label><input className="w-full bg-slate-50 p-4 rounded-2xl font-bold text-slate-700 focus:outline-none" value={job.salary} onChange={e => setJob({...job, salary: e.target.value})}/></div><div><label className="text-xs font-bold text-slate-400 ml-2 mb-1 block">招聘人数 (CAPACITY)</label><input className="w-full bg-slate-50 p-4 rounded-2xl font-bold text-slate-700 focus:outline-none" type="number" value={job.capacity} onChange={e => setJob({...job, capacity: parseInt(e.target.value)})}/></div></div>
-                    <div className="grid grid-cols-2 gap-4"><div><label className="text-xs font-bold text-slate-400 ml-2 mb-1 block">住宿 (HOUSING)</label><select className="w-full bg-slate-50 p-4 rounded-2xl font-bold text-slate-700 focus:outline-none appearance-none" value={job.housing} onChange={e => setJob({...job, housing: e.target.value})}><option value="Provided">Provided</option><option value="Assistance">Assistance</option><option value="None">None</option></select></div><div><label className="text-xs font-bold text-slate-400 ml-2 mb-1 block">费用 (COST)</label><input className="w-full bg-slate-50 p-4 rounded-2xl font-bold text-slate-700 focus:outline-none" value={job.housingCost} onChange={e => setJob({...job, housingCost: e.target.value})}/></div></div>
-                    <div className="grid grid-cols-2 gap-4"><div><label className="text-xs font-bold text-slate-400 ml-2 mb-1 block">开始日期 (START)</label><input className="w-full bg-slate-50 p-4 rounded-2xl font-bold text-slate-700 focus:outline-none" value={job.startDateRange} onChange={e => setJob({...job, startDateRange: e.target.value})} placeholder="Jun 15 - 30"/></div><div><label className="text-xs font-bold text-slate-400 ml-2 mb-1 block">结束日期 (END)</label><input className="w-full bg-slate-50 p-4 rounded-2xl font-bold text-slate-700 focus:outline-none" value={job.endDate} onChange={e => setJob({...job, endDate: e.target.value})} placeholder="Sept 15"/></div></div>
-                    <div className="grid grid-cols-2 gap-4"><div><label className="text-xs font-bold text-slate-400 ml-2 mb-1 block">届数 (YEAR)</label><input className="w-full bg-slate-50 p-4 rounded-2xl font-bold text-slate-700 focus:outline-none" value={job.programYear} onChange={e => setJob({...job, programYear: e.target.value})}/></div><div><label className="text-xs font-bold text-slate-400 ml-2 mb-1 block">最低分数 (MIN SCORE)</label><input className="w-full bg-slate-50 p-4 rounded-2xl font-bold text-slate-700 focus:outline-none" type="number" step="0.5" min="6" max="10" value={job.minScore} onChange={e => setJob({...job, minScore: parseFloat(e.target.value)})}/></div></div>
-                     <div><label className="text-xs font-bold text-slate-400 ml-2 mb-1 block">职位描述 (DESCRIPTION)</label><textarea className="w-full bg-slate-50 p-4 rounded-2xl font-medium text-slate-600 focus:outline-none min-h-[200px]" value={job.description} onChange={e => setJob({...job, description: e.target.value})} placeholder="Describe the role..."/></div>
-                </div>
-                <Button onClick={() => onSave(job)} className="w-full shadow-xl shadow-sky-200">{editingJob ? 'Save Changes' : 'Publish Position'}</Button>
-            </div>
-        </div>
-    );
-};
-
-const AdminStudentsView = ({ students, onSelectStudent, apps, jobs }: any) => {
-    const [search, setSearch] = useState('');
-    const [yearFilter, setYearFilter] = useState('All');
-    const [matchFilter, setMatchFilter] = useState('All'); // 'All' | 'Matched' | 'Unmatched'
-
-    const filteredStudents = students.filter((s: any) => {
-        // Year Logic
-        const yearMatch = yearFilter === 'All' || s.programYear === yearFilter;
-        // Search Logic
-        const searchMatch = s.name.toLowerCase().includes(search.toLowerCase()) || String(s.seqNo).includes(search);
-        
-        // Match Status Logic
-        const approvedApp = apps.find((a: any) => a.userId === s.id && a.status === 'approved');
-        const isMatched = !!approvedApp;
-
-        let statusMatch = true;
-        if (matchFilter === 'Matched') statusMatch = isMatched;
-        if (matchFilter === 'Unmatched') statusMatch = !isMatched;
-
-        return yearMatch && searchMatch && statusMatch;
-    }).sort((a: any, b: any) => (a.seqNo || 0) - (b.seqNo || 0));
-
-    return (
-        <div className="flex-1 overflow-y-auto p-6 pb-32 bg-[#F0F9FF]">
-            <h1 className="text-3xl font-black text-slate-800 mb-6">Student Registry</h1>
-            
-            <div className="flex gap-2 mb-4">
-                <div className="relative flex-1">
-                    <Search className="absolute left-4 top-3.5 text-slate-400 w-5 h-5" />
-                    <input className="w-full bg-white pl-12 pr-4 py-3 rounded-2xl shadow-sm border border-slate-100 focus:outline-none font-bold text-slate-700" placeholder="Search Name or #ID..." value={search} onChange={e => setSearch(e.target.value)}/>
-                </div>
-            </div>
-            <div className="flex gap-2 mb-6">
-                <select className="bg-white px-4 py-2 rounded-xl font-bold text-slate-600 border border-slate-100 focus:outline-none flex-1" value={yearFilter} onChange={e => setYearFilter(e.target.value)}>
-                    <option value="All">All Years</option>
-                    <option value="2025">2025</option>
-                    <option value="2026">2026</option>
-                </select>
-                <select className="bg-white px-4 py-2 rounded-xl font-bold text-slate-600 border border-slate-100 focus:outline-none flex-1" value={matchFilter} onChange={e => setMatchFilter(e.target.value)}>
-                    <option value="All">All Status</option>
-                    <option value="Matched">Matched</option>
-                    <option value="Unmatched">Unmatched</option>
-                </select>
-            </div>
-
-            <div className="space-y-3">
-                {filteredStudents.map((s: any) => {
-                    const approvedApp = apps.find((a: any) => a.userId === s.id && a.status === 'approved');
-                    const matchedJob = approvedApp ? jobs.find((j: any) => j.id === approvedApp.jobId) : null;
-
+                {jobApps.length === 0 ? (<div className="text-center py-10 text-slate-400">暂无申请 (No Applicants)</div>) : jobApps.map((app: any) => {
+                    const student = students.find((s: any) => s.id === app.userId);
+                    if (!student) return null;
                     return (
-                        <div key={s.id} onClick={() => onSelectStudent(s)} className="bg-white p-4 rounded-[24px] border border-slate-100 shadow-sm flex flex-col gap-2 active:scale-[0.98]">
-                            <div className="flex items-center justify-between">
-                                <div className="flex items-center gap-4">
-                                     <div className="w-12 h-12 bg-slate-100 rounded-full flex items-center justify-center font-black text-slate-400 text-sm">#{s.seqNo}</div>
-                                     <div><h3 className="font-bold text-slate-800">{s.name}</h3><p className="text-xs text-slate-400 font-bold uppercase">{s.school}</p></div>
-                                </div>
-                                <div className="flex flex-col items-end gap-1">
-                                     <span className="bg-sky-50 text-sky-600 text-[10px] font-bold px-2 py-0.5 rounded">{s.programYear}</span>
-                                     <span className="text-slate-300 font-bold">{s.score}</span>
-                                </div>
-                            </div>
-                            {/* Match Status Badge */}
-                            {matchedJob ? (
-                                <div className="bg-emerald-50 text-emerald-600 px-3 py-2 rounded-xl text-xs font-bold flex items-center gap-2">
-                                    <CheckCircle2 className="w-4 h-4" />
-                                    Matched: {matchedJob.title}
-                                </div>
-                            ) : (
-                                <div className="bg-slate-50 text-slate-400 px-3 py-2 rounded-xl text-xs font-bold flex items-center gap-2">
-                                    <Clock className="w-4 h-4" />
-                                    Unmatched
-                                </div>
-                            )}
+                        <div key={app.id} className="bg-white p-4 rounded-[24px] border border-slate-100 flex items-center justify-between">
+                            <div className="flex items-center gap-3"><div className="w-10 h-10 rounded-full bg-sky-100 flex items-center justify-center font-bold text-sky-600">{student.name.charAt(0)}</div><div><p className="font-bold text-slate-800">{student.name}</p><p className="text-xs text-slate-400">{student.programYear} • Score: {student.score}</p></div></div>
+                            {app.status === 'pending' ? (
+                                <div className="flex gap-2"><button onClick={() => onReject(app.id)} className="p-2 rounded-full bg-rose-50 text-rose-500"><X className="w-4 h-4" /></button><button onClick={() => onApprove(app.id)} className="p-2 rounded-full bg-emerald-50 text-emerald-500"><Check className="w-4 h-4" /></button></div>
+                            ) : (<span className={`text-xs font-bold px-2 py-1 rounded uppercase ${app.status === 'approved' ? 'text-emerald-500 bg-emerald-50' : 'text-rose-500 bg-rose-50'}`}>{app.status}</span>)}
                         </div>
                     );
                 })}
@@ -782,306 +611,307 @@ const AdminStudentsView = ({ students, onSelectStudent, apps, jobs }: any) => {
     );
 };
 
-const AdminStudentDetailView = ({ student, onBack, onUpdateScore }: any) => {
+const AdminPostJobView = ({ onSave, onCancel, editJob }: any) => {
+    const [job, setJob] = useState(editJob || { title: '', companyName: '', location: '', description: '', programYear: '2025', salary: '', housing: 'Provided', housingCost: '', startDateRange: '', endDate: 'Sept 15, 2025', capacity: 5, minScore: 6.0, imgUrls: [], seqNo: 0 });
+    const handleImageUpload = (e: any) => {
+        if (e.target.files && e.target.files[0]) {
+            const reader = new FileReader();
+            reader.onload = (ev: any) => { setJob({ ...job, imgUrls: [...(job.imgUrls || []), ev.target.result] }); };
+            reader.readAsDataURL(e.target.files[0]);
+        }
+    };
+    const removeImage = (index: number) => { setJob({...job, imgUrls: job.imgUrls.filter((_, i) => i !== index)}); };
+    return (
+        <div className="flex-1 overflow-y-auto overflow-x-hidden p-6 pb-32 bg-[#F0F9FF]">
+            <h1 className="text-2xl font-black text-slate-900 mb-6">发布新职位 / 编辑职位</h1>
+            <div className="space-y-6">
+                <div className="bg-white p-6 rounded-[32px] space-y-4 shadow-sm">
+                    <div><label className="text-xs font-bold text-slate-400 uppercase mb-1 block">编号 (Seq No.)</label><input type="number" className="w-full bg-slate-50 p-3 rounded-xl font-bold text-slate-800" value={job.seqNo} onChange={e => setJob({...job, seqNo: Number(e.target.value)})}/></div>
+                     <div><label className="text-xs font-bold text-slate-400 uppercase mb-1 block">职位名称 (Title)</label><input className="w-full bg-slate-50 p-3 rounded-xl font-bold text-slate-800" value={job.title} onChange={e => setJob({...job, title: e.target.value})}/></div>
+                     <div><label className="text-xs font-bold text-slate-400 uppercase mb-1 block">公司名称 (Company)</label><input className="w-full bg-slate-50 p-3 rounded-xl font-bold text-slate-800" value={job.companyName} onChange={e => setJob({...job, companyName: e.target.value})}/></div>
+                </div>
+                 <div className="bg-white p-6 rounded-[32px] shadow-sm">
+                    <label className="text-xs font-bold text-slate-400 uppercase mb-4 block">职位图片 (Gallery) {job.imgUrls?.length}/9</label>
+                    <div className="grid grid-cols-3 gap-2">
+                        {job.imgUrls?.map((url: string, i: number) => (<div key={i} className="aspect-square rounded-xl overflow-hidden relative group"><img src={url} className="w-full h-full object-cover" /><button onClick={() => removeImage(i)} className="absolute top-1 right-1 bg-black/50 text-white rounded-full p-1"><X className="w-3 h-3" /></button></div>))}
+                        {(!job.imgUrls || job.imgUrls.length < 9) && (<label className="aspect-square rounded-xl bg-slate-50 border-2 border-dashed border-slate-200 flex flex-col items-center justify-center text-slate-400 cursor-pointer hover:bg-slate-100 transition-colors"><Plus className="w-6 h-6 mb-1" /><span className="text-[10px] font-bold">添加 (Add)</span><input type="file" className="hidden" accept="image/*" onChange={handleImageUpload} /></label>)}
+                    </div>
+                </div>
+                <div className="bg-white p-6 rounded-[32px] space-y-4 shadow-sm">
+                     <div className="grid grid-cols-2 gap-4">
+                        <div><label className="text-xs font-bold text-slate-400 uppercase mb-1 block">年份 (Year)</label><select className="w-full bg-slate-50 p-3 rounded-xl font-bold text-slate-800" value={job.programYear} onChange={e => setJob({...job, programYear: e.target.value})}><option>2025</option><option>2026</option></select></div>
+                        <div><label className="text-xs font-bold text-slate-400 uppercase mb-1 block">最低分 (Score)</label><input type="number" step="0.5" className="w-full bg-slate-50 p-3 rounded-xl font-bold text-slate-800" value={job.minScore} onChange={e => setJob({...job, minScore: Number(e.target.value)})}/></div>
+                     </div>
+                     <div><label className="text-xs font-bold text-slate-400 uppercase mb-1 block">地点 (Location)</label><input className="w-full bg-slate-50 p-3 rounded-xl font-bold text-slate-800" value={job.location} onChange={e => setJob({...job, location: e.target.value})}/></div>
+                     <div><label className="text-xs font-bold text-slate-400 uppercase mb-1 block">薪资 (Salary)</label><input className="w-full bg-slate-50 p-3 rounded-xl font-bold text-slate-800" value={job.salary} onChange={e => setJob({...job, salary: e.target.value})}/></div>
+                     <div className="grid grid-cols-2 gap-4">
+                        <div><label className="text-xs font-bold text-slate-400 uppercase mb-1 block">住宿 (Housing)</label><select className="w-full bg-slate-50 p-3 rounded-xl font-bold text-slate-800" value={job.housing} onChange={e => setJob({...job, housing: e.target.value})}><option value="Provided">提供 (Provided)</option><option value="Assistance">协助 (Assistance)</option><option value="None">无 (None)</option></select></div>
+                        <div><label className="text-xs font-bold text-slate-400 uppercase mb-1 block">费用 (Cost)</label><input className="w-full bg-slate-50 p-3 rounded-xl font-bold text-slate-800" value={job.housingCost} onChange={e => setJob({...job, housingCost: e.target.value})}/></div>
+                     </div>
+                     <div className="grid grid-cols-2 gap-4">
+                         <div><label className="text-xs font-bold text-slate-400 uppercase mb-1 block">人数 (Capacity)</label><input type="number" className="w-full bg-slate-50 p-3 rounded-xl font-bold text-slate-800" value={job.capacity} onChange={e => setJob({...job, capacity: Number(e.target.value)})}/></div>
+                         <div><label className="text-xs font-bold text-slate-400 uppercase mb-1 block">开始 (Start)</label><input className="w-full bg-slate-50 p-3 rounded-xl font-bold text-slate-800" value={job.startDateRange} onChange={e => setJob({...job, startDateRange: e.target.value})}/></div>
+                     </div>
+                     <div><label className="text-xs font-bold text-slate-400 uppercase mb-1 block">职位描述 (Description)</label><textarea className="w-full bg-slate-50 p-4 rounded-xl font-bold text-slate-800 h-40 focus:outline-none focus:ring-2 focus:ring-sky-200" value={job.description} onChange={e => setJob({...job, description: e.target.value})} /></div>
+                </div>
+                <div className="flex gap-4"><Button onClick={onCancel} variant="ghost" className="flex-1">取消</Button><Button onClick={() => onSave(job)} className="flex-1">立即发布 (Publish)</Button></div>
+            </div>
+        </div>
+    );
+};
+
+const AdminStudentsView = ({ students, onSelectStudent, apps, jobs }: any) => {
+    const [search, setSearch] = useState('');
+    const [yearFilter, setYearFilter] = useState('All');
+    const [statusFilter, setStatusFilter] = useState('All'); 
+
+    const filtered = students.filter((s: any) => {
+        const matchesSearch = s.name.toLowerCase().includes(search.toLowerCase()) || String(s.seqNo).includes(search);
+        const matchesYear = yearFilter === 'All' || s.programYear === yearFilter;
+        
+        const studentApps = apps.filter((a: any) => a.userId === s.id);
+        const hasApproved = studentApps.some((a: any) => a.status === 'approved');
+        const matchesStatus = statusFilter === 'All' || (statusFilter === 'Matched' ? hasApproved : !hasApproved);
+
+        return matchesSearch && matchesYear && matchesStatus;
+    }).sort((a: any, b: any) => (a.seqNo || 0) - (b.seqNo || 0));
+
+    return (
+        <div className="flex-1 overflow-y-auto overflow-x-hidden p-6 pb-32 bg-[#F0F9FF]">
+            <h1 className="text-3xl font-black text-slate-900 mb-6">Student Registry</h1>
+            <div className="space-y-4 mb-6">
+                <div className="relative"><Search className="absolute left-4 top-3.5 text-slate-400 w-5 h-5" /><input className="w-full bg-white pl-12 pr-4 py-3 rounded-2xl shadow-sm border border-slate-100 focus:outline-none font-bold text-slate-700" placeholder="Search Name or ID..." value={search} onChange={e => setSearch(e.target.value)}/></div>
+                <div className="flex gap-2">
+                    <select className="flex-1 bg-white p-3 rounded-xl font-bold text-slate-600 border border-slate-100 outline-none" value={yearFilter} onChange={e => setYearFilter(e.target.value)}><option value="All">All Years</option><option value="2025">2025</option><option value="2026">2026</option></select>
+                    <select className="flex-1 bg-white p-3 rounded-xl font-bold text-slate-600 border border-slate-100 outline-none" value={statusFilter} onChange={e => setStatusFilter(e.target.value)}><option value="All">All Status</option><option value="Matched">Matched</option><option value="Unmatched">Unmatched</option></select>
+                </div>
+            </div>
+            <div className="space-y-3">
+                {filtered.map((s: any) => {
+                     const studentApps = apps.filter((a: any) => a.userId === s.id && a.status === 'approved');
+                     const matchedJob = studentApps.length > 0 ? jobs.find((j: any) => j.id === studentApps[0].jobId) : null;
+                     return (
+                        <div key={s.id} onClick={() => onSelectStudent(s)} className="bg-white p-4 rounded-[24px] shadow-sm border border-slate-100 active:scale-[0.98] flex items-center gap-4 relative">
+                            <div className="absolute top-4 right-4 text-[10px] font-bold text-slate-300">#{String(s.seqNo).padStart(2,'0')}</div>
+                            <div className="w-12 h-12 rounded-full bg-sky-100 flex items-center justify-center font-bold text-sky-600 text-lg">{s.name.charAt(0)}</div>
+                            <div className="flex-1"><h3 className="font-bold text-slate-800">{s.name}</h3><p className="text-xs text-slate-400">{s.school}</p></div>
+                            <div className="text-right">
+                                <span className="text-lg font-black text-slate-800">{s.score}</span>
+                                {matchedJob && <div className="text-[10px] font-bold text-emerald-500 bg-emerald-50 px-2 py-0.5 rounded mt-1 max-w-[100px] truncate">Matched: {matchedJob.title}</div>}
+                            </div>
+                        </div>
+                     );
+                })}
+            </div>
+        </div>
+    );
+};
+
+const AdminStudentDetailView = ({ student, onUpdate, onBack }: any) => {
     const [score, setScore] = useState(student.score);
     const [seqNo, setSeqNo] = useState(student.seqNo || 0);
+    const handleUpdate = () => onUpdate({ ...student, score: Number(score), seqNo: Number(seqNo) });
     return (
-        <div className="flex-1 overflow-y-auto p-6 pt-12 pb-24 min-h-0 bg-[#F0F9FF]">
+        <div className="flex-1 overflow-y-auto overflow-x-hidden p-6 pb-32 bg-[#F0F9FF]">
             <button onClick={onBack} className="mb-6 flex items-center text-slate-400 font-bold"><ChevronLeft className="w-5 h-5 mr-1" /> Back</button>
             <div className="bg-white p-6 rounded-[32px] shadow-lg mb-6 text-center">
-                 <div className="w-24 h-24 bg-sky-100 rounded-full mx-auto flex items-center justify-center text-3xl font-black text-sky-500 mb-4">{student.name.charAt(0)}</div>
-                 <h1 className="text-2xl font-black text-slate-900">{student.name}</h1>
-                 <p className="text-slate-400 font-bold">{student.school}</p>
-                 <div className="flex justify-center gap-2 mt-4"><span className="bg-slate-100 text-slate-500 px-3 py-1 rounded-full text-xs font-bold">{student.programYear}</span><span className="bg-slate-100 text-slate-500 px-3 py-1 rounded-full text-xs font-bold">{student.phone}</span></div>
+                <div className="w-24 h-24 mx-auto bg-sky-100 rounded-full flex items-center justify-center text-4xl font-black text-sky-600 mb-4">{student.name.charAt(0)}</div>
+                <h1 className="text-2xl font-black text-slate-900">{student.name}</h1>
+                <p className="text-slate-500 font-bold">{student.school}</p>
+                <div className="flex justify-center gap-4 mt-6">
+                    <div className="bg-slate-50 px-4 py-2 rounded-xl"><p className="text-xs text-slate-400 uppercase font-bold">电话 (Phone)</p><p className="font-bold text-slate-800">{student.phone}</p></div>
+                    <div className="bg-slate-50 px-4 py-2 rounded-xl"><p className="text-xs text-slate-400 uppercase font-bold">年份 (Year)</p><p className="font-bold text-slate-800">{student.programYear}</p></div>
+                </div>
             </div>
+            <div className="bg-white p-6 rounded-[32px] shadow-sm">
+                <h3 className="text-xs font-bold text-slate-400 uppercase mb-4">管理员操作 (Admin Actions)</h3>
+                <div className="space-y-4">
+                     <div><label className="text-xs font-bold text-slate-400 ml-2 mb-1 block">分数 (Score)</label><input type="number" step="0.5" className="w-full bg-slate-50 p-3 rounded-xl font-bold text-slate-800" value={score} onChange={e => setScore(e.target.value)}/></div>
+                     <div><label className="text-xs font-bold text-slate-400 ml-2 mb-1 block">编号 (Seq No)</label><input type="number" className="w-full bg-slate-50 p-3 rounded-xl font-bold text-slate-800" value={seqNo} onChange={e => setSeqNo(e.target.value)}/></div>
+                    <Button onClick={handleUpdate} className="w-full">更新学生信息 (Update Student)</Button>
+                </div>
+            </div>
+        </div>
+    );
+};
+
+const AdminApplicationsView = ({ apps, students, jobs, onApprove, onReject, onGoToStudent }: any) => {
+    const [filter, setFilter] = useState<'pending'|'history'>('pending');
+    const filteredApps = apps.filter((a: any) => filter === 'pending' ? a.status === 'pending' : a.status !== 'pending').sort((a:any, b:any) => new Date(b.date).getTime() - new Date(a.date).getTime());
+    return (
+        <div className="flex-1 overflow-y-auto overflow-x-hidden p-6 pb-32 bg-[#F0F9FF]">
+            <h1 className="text-3xl font-black text-slate-900 mb-6">Applications</h1>
+            <div className="flex bg-white p-1 rounded-full mb-6 shadow-sm border border-slate-50"><button onClick={() => setFilter('pending')} className={`flex-1 py-2 rounded-full font-bold text-sm transition-all ${filter === 'pending' ? 'bg-slate-900 text-white shadow' : 'text-slate-400'}`}>Pending ({apps.filter((a:any)=>a.status==='pending').length})</button><button onClick={() => setFilter('history')} className={`flex-1 py-2 rounded-full font-bold text-sm transition-all ${filter === 'history' ? 'bg-slate-900 text-white shadow' : 'text-slate-400'}`}>History</button></div>
+            <div className="space-y-4">
+                {filteredApps.map((app: any) => {
+                    const student = students.find((s: any) => s.id === app.userId);
+                    const job = jobs.find((j: any) => j.id === app.jobId);
+                    if (!student || !job) return null;
+                    return (
+                        <div key={app.id} className="bg-white p-5 rounded-[28px] shadow-sm border border-slate-100">
+                             <div className="flex justify-between mb-2">
+                                <div onClick={() => onGoToStudent(student)} className="flex items-center gap-2 cursor-pointer"><div className="w-8 h-8 rounded-full bg-sky-100 flex items-center justify-center font-bold text-sky-600 text-xs">{student.name.charAt(0)}</div><span className="font-bold text-slate-800">{student.name}</span></div>
+                                <span className="text-xs font-bold text-slate-400">{app.date}</span>
+                             </div>
+                             <div className="pl-10 mb-4"><p className="text-sm text-slate-500 font-medium">Applied for <span className="text-sky-500 font-bold">{job.title}</span></p></div>
+                             {app.status === 'pending' ? (
+                                 <div className="flex gap-2 pl-10">
+                                     <button onClick={() => onReject(app.id)} className="flex-1 bg-rose-50 text-rose-500 py-2 rounded-xl font-bold text-sm hover:bg-rose-100">Reject</button>
+                                     <button onClick={() => onApprove(app.id)} className="flex-1 bg-emerald-50 text-emerald-500 py-2 rounded-xl font-bold text-sm hover:bg-emerald-100 shadow-sm">Approve</button>
+                                 </div>
+                             ) : (<div className="pl-10"><span className={`text-xs font-bold px-3 py-1 rounded-full uppercase ${app.status === 'approved' ? 'bg-emerald-50 text-emerald-600' : 'bg-rose-50 text-rose-600'}`}>{app.status}</span></div>)}
+                        </div>
+                    );
+                })}
+                {filteredApps.length === 0 && <div className="text-center py-10 text-slate-300 font-bold">No applications found.</div>}
+            </div>
+        </div>
+    );
+};
+
+const AdminGuidesView = ({ guides, onBack, onDelete, onCreate }: any) => {
+    return (
+        <div className="flex-1 overflow-y-auto overflow-x-hidden p-6 pb-32 bg-[#F0F9FF]">
+            <div className="flex justify-between items-center mb-6"><button onClick={onBack} className="flex items-center text-slate-400 font-bold"><ChevronLeft className="w-5 h-5 mr-1" /> Back</button><Button onClick={onCreate} className="px-4 py-2 text-sm">New Guide</Button></div>
+            <h1 className="text-3xl font-black text-slate-900 mb-6">Manage Guides</h1>
+            <div className="space-y-4">
+                {guides.map((g: any) => (
+                    <div key={g.id} className="bg-white p-4 rounded-[24px] border border-slate-50 shadow-sm flex justify-between items-center">
+                        <div className="flex items-center gap-4"><div className="w-12 h-12 bg-emerald-50 rounded-xl flex items-center justify-center text-emerald-500 overflow-hidden">{g.imgUrl ? <img src={g.imgUrl} className="w-full h-full object-cover"/> : <BookOpen className="w-6 h-6" />}</div><div><h3 className="font-bold text-slate-800">{g.title}</h3><p className="text-xs text-slate-400">{g.category}</p></div></div>
+                        <button onClick={() => onDelete(g.id)} className="p-2 text-rose-400 hover:bg-rose-50 rounded-full"><Trash2 className="w-5 h-5" /></button>
+                    </div>
+                ))}
+            </div>
+        </div>
+    );
+};
+
+const AdminPostGuideView = ({ onSave, onCancel }: any) => {
+    const [guide, setGuide] = useState({ title: '', content: '', category: 'General', imgUrl: '' });
+    const handleImage = (e: any) => {
+         if (e.target.files?.[0]) {
+             const reader = new FileReader();
+             reader.onload = (ev: any) => setGuide({...guide, imgUrl: ev.target.result});
+             reader.readAsDataURL(e.target.files[0]);
+         }
+    };
+    return (
+        <div className="flex-1 overflow-y-auto overflow-x-hidden p-6 pb-32 bg-[#F0F9FF]">
+            <h1 className="text-2xl font-black text-slate-900 mb-6">New Guide</h1>
             <div className="bg-white p-6 rounded-[32px] shadow-lg space-y-4">
-                <h3 className="font-bold text-slate-800">管理员操作 (Admin Actions)</h3>
-                <div><label className="text-xs font-bold text-slate-400 ml-2 mb-1 block">评分 (SCORE 6.0-10.0)</label><input type="number" step="0.5" className="w-full bg-slate-50 p-4 rounded-2xl font-bold text-slate-700" value={score} onChange={e => setScore(e.target.value)}/></div>
-                 <div><label className="text-xs font-bold text-slate-400 ml-2 mb-1 block">序号 (SEQUENCE ID)</label><input type="number" className="w-full bg-slate-50 p-4 rounded-2xl font-bold text-slate-700" value={seqNo} onChange={e => setSeqNo(e.target.value)}/></div>
-                <Button onClick={() => onUpdateScore(student.id, parseFloat(score), parseInt(seqNo))} className="w-full">Update Student</Button>
-            </div>
-            <div className="mt-8 px-4"><h3 className="font-bold text-slate-400 text-sm uppercase mb-4">紧急联系人 (Emergency Contacts)</h3>{student.emergencyContacts?.map((c: any, i: number) => (<div key={i} className="bg-white p-4 rounded-2xl mb-2 border border-slate-50"><p className="font-bold text-slate-800">{c.name} <span className="text-sky-500 text-xs ml-2">{c.type}</span></p><p className="text-slate-400 text-sm">{c.phone}</p></div>))}</div>
-        </div>
-    );
-};
-
-const AdminGuidesView = ({ guides, onDelete, onEdit, onAdd, onBack }: any) => {
-    return (
-        <div className="flex-1 overflow-y-auto p-6 pb-24 min-h-0 bg-[#F0F9FF]">
-             <div className="flex justify-between items-center mb-6"><div className="flex items-center gap-2"><button onClick={onBack} className="flex items-center text-slate-400 font-bold mr-2"><ChevronLeft className="w-5 h-5" /></button><h1 className="text-3xl font-black text-slate-800">Guides</h1></div><button onClick={onAdd} className="w-12 h-12 bg-sky-500 rounded-full flex items-center justify-center text-white shadow-lg shadow-sky-200"><Plus className="w-6 h-6" /></button></div>
-            <div className="space-y-4">{guides.map((g: any) => (<div key={g.id} className="bg-white p-4 rounded-[28px] border border-slate-100 flex gap-4 items-center"><div className="w-16 h-16 bg-slate-100 rounded-2xl overflow-hidden flex-shrink-0">{g.imgUrl ? <img src={g.imgUrl} className="w-full h-full object-cover"/> : <BookOpen className="w-6 h-6 m-auto mt-5 text-slate-300"/>}</div><div className="flex-1"><h3 className="font-bold text-slate-800 leading-tight">{g.title}</h3><p className="text-xs text-slate-400">{g.category}</p></div><div className="flex flex-col gap-2"><button onClick={() => onEdit(g)} className="p-2 bg-slate-50 rounded-full text-slate-500"><Edit3 className="w-4 h-4" /></button><button onClick={() => onDelete(g.id)} className="p-2 bg-rose-50 rounded-full text-rose-500"><Trash2 className="w-4 h-4" /></button></div></div>))}</div>
-        </div>
-    );
-};
-
-const AdminPostGuideView = ({ onSave, onCancel, editingGuide }: any) => {
-    const [guide, setGuide] = useState<Partial<Guide>>({ title: '', content: '', category: 'General', imgUrl: '' });
-    useEffect(() => { if (editingGuide) setGuide(editingGuide); }, [editingGuide]);
-    const handleImageUpload = (e: any) => { const file = e.target.files[0]; if (file) { const reader = new FileReader(); reader.onloadend = () => { setGuide({ ...guide, imgUrl: reader.result as string }); }; reader.readAsDataURL(file); } };
-    return (
-        <div className="flex-1 overflow-y-auto p-6 pb-24 min-h-0 bg-[#F0F9FF]">
-             <div className="flex justify-between items-center mb-6"><h1 className="text-2xl font-black text-slate-900">{editingGuide ? 'Edit Guide' : 'New Guide'}</h1><button onClick={onCancel} className="text-slate-400 font-bold">Cancel</button></div>
-            <div className="space-y-4 bg-white p-6 rounded-[32px] shadow-lg">
-                 <div className="w-full h-40 bg-slate-50 rounded-2xl border-2 border-dashed border-slate-200 overflow-hidden relative group">{guide.imgUrl ? (<img src={guide.imgUrl} className="w-full h-full object-cover" />) : (<div className="flex flex-col items-center justify-center h-full text-slate-300"><ImageIcon className="w-8 h-8 mb-2" /><span className="text-xs font-bold">Upload Cover</span></div>)}<input type="file" className="absolute inset-0 opacity-0 cursor-pointer" onChange={handleImageUpload} /></div>
-                 <input className="w-full bg-slate-50 p-4 rounded-2xl font-bold text-slate-700 focus:outline-none" placeholder="Title" value={guide.title} onChange={e => setGuide({...guide, title: e.target.value})}/>
-                 <input className="w-full bg-slate-50 p-4 rounded-2xl font-bold text-slate-700 focus:outline-none" placeholder="Category" value={guide.category} onChange={e => setGuide({...guide, category: e.target.value})}/>
-                 <textarea className="w-full bg-slate-50 p-4 rounded-2xl font-medium text-slate-600 focus:outline-none min-h-[400px]" placeholder="Markdown Content..." value={guide.content} onChange={e => setGuide({...guide, content: e.target.value})}/>
-                 <Button onClick={() => onSave(guide)} className="w-full">Save Guide</Button>
+                <input className="w-full bg-slate-50 p-3 rounded-xl font-bold" placeholder="Title" value={guide.title} onChange={e => setGuide({...guide, title: e.target.value})}/>
+                <input className="w-full bg-slate-50 p-3 rounded-xl font-bold" placeholder="Category" value={guide.category} onChange={e => setGuide({...guide, category: e.target.value})}/>
+                <div className="h-32 bg-slate-50 rounded-xl border-2 border-dashed border-slate-200 flex items-center justify-center relative overflow-hidden">
+                    {guide.imgUrl ? <img src={guide.imgUrl} className="w-full h-full object-cover" /> : <div className="text-center text-slate-400"><p className="font-bold text-xs">Cover Image</p></div>}
+                    <input type="file" className="absolute inset-0 opacity-0" onChange={handleImage} />
+                </div>
+                <textarea className="w-full bg-slate-50 p-4 rounded-xl font-mono text-sm h-64 focus:outline-none" placeholder="# Markdown Content..." value={guide.content} onChange={e => setGuide({...guide, content: e.target.value})} />
+                <div className="flex gap-4"><Button onClick={onCancel} variant="ghost" className="flex-1">Cancel</Button><Button onClick={() => onSave(guide)} className="flex-1">Save</Button></div>
             </div>
         </div>
     );
 };
+
+// --- Main App ---
 
 const App = () => {
-    const [user, setUser] = useState<UserData | null>(null);
-    const [view, setView] = useState('login'); // login, register, student-jobs, student-internship, student-services, student-profile, admin-dash, admin-post, admin-students, admin-student-detail, admin-guides, admin-post-guide, admin-apps
-    const [jobs, setJobs] = useState<Job[]>(INITIAL_JOBS);
-    const [apps, setApps] = useState<Application[]>(INITIAL_APPS);
-    const [students, setStudents] = useState<UserData[]>(INITIAL_USERS);
-    const [guides, setGuides] = useState<Guide[]>(INITIAL_GUIDES);
-    const [selectedJob, setSelectedJob] = useState<Job | null>(null);
-    const [selectedStudent, setSelectedStudent] = useState<UserData | null>(null);
-    const [editingJob, setEditingJob] = useState<Job | null>(null);
-    const [selectedGuide, setSelectedGuide] = useState<Guide | null>(null);
-    const [editingGuide, setEditingGuide] = useState<Guide | null>(null);
-    const [isEditingProfile, setIsEditingProfile] = useState(false);
+  const [view, setView] = useState('login');
+  const [user, setUser] = useState<UserData | null>(null);
+  const [jobs, setJobs] = useState(INITIAL_JOBS);
+  const [apps, setApps] = useState(INITIAL_APPS);
+  const [students, setStudents] = useState(INITIAL_USERS.filter(u => u.role === 'student'));
+  const [guides, setGuides] = useState(INITIAL_GUIDES);
+  
+  const [selectedJob, setSelectedJob] = useState<any>(null);
+  const [selectedStudent, setSelectedStudent] = useState<any>(null);
+  const [selectedGuide, setSelectedGuide] = useState<any>(null);
 
-    const handleLogin = (role: Role) => {
-        if (role === 'student') setUser(INITIAL_USERS[0]);
-        else setUser(INITIAL_USERS[1]);
-        setView(role === 'student' ? 'student-jobs' : 'admin-dash');
-    };
+  const handleLogin = (role: Role) => {
+    const u = INITIAL_USERS.find(u => u.role === role);
+    if (u) { setUser(u); setView(role === 'student' ? 'student-jobs' : 'admin-dash'); }
+  };
 
-    const handleRegister = (data: any) => {
-        const newUser: UserData = {
-            id: `u${Date.now()}`,
-            seqNo: students.length + 1,
-            name: data.name,
-            role: 'student',
-            school: data.school,
-            phone: data.phone,
-            score: 6.0,
-            programYear: data.year,
-            emergencyContacts: []
-        };
-        setStudents([...students, newUser]);
-        setUser(newUser);
-        setView('student-jobs');
-    };
+  const handleRegister = (data: any) => {
+      const newUser: UserData = { id: `u${Date.now()}`, seqNo: students.length + 1, role: 'student', emergencyContacts: [], ...data, score: Number(data.score) };
+      setStudents([...students, newUser]);
+      setUser(newUser);
+      setView('student-jobs');
+  };
 
-    const handleApply = (job: Job) => {
-        if (user?.role === 'student') {
-            setSelectedJob(job);
-            setView('student-job-detail');
-        }
-    };
+  const handleApply = (jobId: string) => {
+      if (!user) return;
+      const newApp: Application = { id: `a${Date.now()}`, userId: user.id, jobId, status: 'pending', date: new Date().toLocaleDateString() };
+      setApps([...apps, newApp]);
+      setView('student-internship');
+  };
 
-    const handleApplyConfirm = (jobId: string) => {
-        if (!user) return;
-        const newApp: Application = {
-            id: `a${Date.now()}`,
-            userId: user.id,
-            jobId,
-            status: 'pending',
-            date: new Date().toISOString()
-        };
-        setApps([...apps, newApp]);
-        setView('student-internship');
-    };
+  const handleWithdraw = (appId: string) => {
+      setApps(apps.filter(a => a.id !== appId));
+  };
 
-    const handleWithdrawApp = (appId: string) => {
-        if (confirm("Are you sure you want to withdraw this application?")) {
-            setApps(apps.filter(a => a.id !== appId));
-        }
-    };
+  const updateAppStatus = (appId: string, status: AppStatus) => {
+      setApps(apps.map(a => a.id === appId ? { ...a, status } : a));
+  };
 
-    const handleUpdateUser = (updatedUser: UserData) => {
-        setStudents(students.map(s => s.id === updatedUser.id ? updatedUser : s));
-        setUser(updatedUser);
-    };
+  const handleSaveJob = (jobData: any) => {
+      if (jobData.id) {
+          setJobs(jobs.map(j => j.id === jobData.id ? jobData : j));
+      } else {
+          setJobs([...jobs, { ...jobData, id: `j${Date.now()}` }]);
+      }
+      setView('admin-dash');
+      setSelectedJob(null);
+  };
 
-    const handleSaveJob = (jobData: Job) => {
-        if (editingJob) {
-            setJobs(jobs.map(j => j.id === jobData.id ? jobData : j));
-        } else {
-            setJobs([...jobs, { ...jobData, id: `j${Date.now()}` }]);
-        }
-        setView('admin-dash');
-        setEditingJob(null);
-    };
+  // Nav Bar
+  const Nav = ({ role, active }: any) => (
+      <div className="absolute bottom-0 w-full bg-white border-t border-slate-100 flex justify-around items-center h-20 px-2 rounded-t-[32px] shadow-[0_-10px_40px_rgba(0,0,0,0.05)] z-50">
+          {role === 'student' ? (
+              <>
+                <button onClick={() => setView('student-jobs')} className={`flex flex-col items-center gap-1 ${active==='student-jobs' ? 'text-sky-500' : 'text-slate-300'}`}><Home className={`w-6 h-6 ${active==='student-jobs' && 'fill-current'}`} /><span className="text-[10px] font-bold">职 位</span></button>
+                <button onClick={() => setView('student-internship')} className={`flex flex-col items-center gap-1 ${active==='student-internship' ? 'text-sky-500' : 'text-slate-300'}`}><Briefcase className={`w-6 h-6 ${active==='student-internship' && 'fill-current'}`} /><span className="text-[10px] font-bold">实 习</span></button>
+                <button onClick={() => setView('student-services')} className={`flex flex-col items-center gap-1 ${active==='student-services' ? 'text-sky-500' : 'text-slate-300'}`}><LayoutGrid className={`w-6 h-6 ${active==='student-services' && 'fill-current'}`} /><span className="text-[10px] font-bold">服 务</span></button>
+                <button onClick={() => setView('student-profile')} className={`flex flex-col items-center gap-1 ${active==='student-profile' ? 'text-sky-500' : 'text-slate-300'}`}><User className={`w-6 h-6 ${active==='student-profile' && 'fill-current'}`} /><span className="text-[10px] font-bold">我 的</span></button>
+              </>
+          ) : (
+              <>
+                <button onClick={() => setView('admin-dash')} className={`relative flex flex-col items-center gap-1 ${active==='admin-dash' ? 'text-slate-900' : 'text-slate-300'}`}><LayoutGrid className="w-6 h-6" /><span className="text-[10px] font-bold">Dash</span></button>
+                <button onClick={() => setView('admin-apps')} className={`relative flex flex-col items-center gap-1 ${active==='admin-apps' ? 'text-slate-900' : 'text-slate-300'}`}>
+                    <div className="relative"><Inbox className="w-6 h-6" />{apps.filter(a=>a.status==='pending').length > 0 && <span className="absolute -top-1 -right-1 w-3 h-3 bg-rose-500 rounded-full border-2 border-white"></span>}</div><span className="text-[10px] font-bold">Review</span>
+                </button>
+                <button onClick={() => { setSelectedJob(null); setView('admin-post-job'); }} className="mb-8 w-14 h-14 bg-slate-900 rounded-full flex items-center justify-center text-white shadow-xl shadow-slate-300 active:scale-95 transition-transform"><Plus className="w-7 h-7" /></button>
+                <button onClick={() => setView('admin-students')} className={`flex flex-col items-center gap-1 ${active==='admin-students' ? 'text-slate-900' : 'text-slate-300'}`}><Users className="w-6 h-6" /><span className="text-[10px] font-bold">Students</span></button>
+              </>
+          )}
+      </div>
+  );
 
-    const handleUpdateAppStatus = (appId: string, status: AppStatus) => {
-        setApps(apps.map(a => a.id === appId ? { ...a, status } : a));
-    };
+  return (
+    <div className="flex flex-col h-[100dvh] bg-[#F0F9FF] overflow-hidden font-sans text-slate-900">
+      {view === 'login' && <LoginView onLogin={handleLogin} onRegister={() => setView('register')} />}
+      {view === 'register' && <RegisterView onRegister={handleRegister} onCancel={() => setView('login')} />}
+      
+      {/* Student Views */}
+      {view === 'student-jobs' && user && <><StudentJobsView jobs={jobs} user={user} myApps={apps.filter(a => a.userId === user.id)} onApply={(j:any) => { setSelectedJob(j); setView('student-job-detail'); }} /><Nav role="student" active="student-jobs" /></>}
+      {view === 'student-job-detail' && selectedJob && user && <StudentJobDetail job={selectedJob} user={user} hasActiveApp={apps.some(a => a.userId === user.id && (a.status === 'pending' || a.status === 'approved'))} isFull={apps.filter(a => a.jobId === selectedJob.id && a.status === 'approved').length >= selectedJob.capacity} onBack={() => setView('student-jobs')} onApplyConfirm={(jid: string) => handleApply(jid)} />}
+      {view === 'student-internship' && user && <><StudentInternshipView user={user} apps={apps} jobs={jobs} onWithdraw={handleWithdraw} /><Nav role="student" active="student-internship" /></>}
+      {view === 'student-services' && <><StudentServicesView user={user} onEmergency={() => setView('student-emergency')} guides={guides} onSelectGuide={(g:any) => {setSelectedGuide(g); setView('student-guide-read');}} /><Nav role="student" active="student-services" /></>}
+      {view === 'student-emergency' && <StudentEmergencyView user={user} onBack={() => setView('student-services')} onUpdateUser={(u:any) => {setUser(u); setStudents(students.map(s => s.id === u.id ? u : s))}} />}
+      {view === 'student-guide-read' && selectedGuide && <div className="flex-1 bg-white flex flex-col"><div className="p-4 border-b flex items-center gap-2"><button onClick={() => setView('student-services')}><ChevronLeft /></button><h2 className="font-bold">{selectedGuide.title}</h2></div><div className="p-6 overflow-y-auto prose"><ReactMarkdown>{selectedGuide.content}</ReactMarkdown></div></div>}
+      {view === 'student-profile' && user && <><StudentProfileView user={user} onLogout={() => setView('login')} onEdit={() => setView('student-profile-edit')} /><Nav role="student" active="student-profile" /></>}
+      {view === 'student-profile-edit' && user && <StudentProfileView user={user} isEditing={true} onEdit={() => setView('student-profile')} onSaveProfile={(data:any) => { const updated = {...user, ...data}; setUser(updated); setStudents(students.map(s => s.id === updated.id ? updated : s)); setView('student-profile'); }} />}
 
-    const handleUpdateScore = (userId: string, score: number, seqNo: number) => {
-        setStudents(students.map(s => s.id === userId ? { ...s, score, seqNo } : s));
-        setView('admin-students');
-    };
-
-    // Admin Guide Handlers
-    const handleSaveGuide = (guideData: Guide) => {
-        if (editingGuide) {
-            setGuides(guides.map(g => g.id === guideData.id ? guideData : g));
-        } else {
-            setGuides([...guides, { ...guideData, id: `g${Date.now()}` }]);
-        }
-        setView('admin-guides');
-        setEditingGuide(null);
-    };
-
-    return (
-        <div className="flex flex-col h-[100dvh] bg-slate-50 overflow-hidden">
-            {view === 'login' && <LoginView onLogin={handleLogin} onRegister={() => setView('register')} />}
-            {view === 'register' && <RegisterView onRegister={handleRegister} onCancel={() => setView('login')} />}
-
-            {/* Student Views */}
-            {view === 'student-jobs' && user && (
-                <StudentJobsView 
-                    jobs={jobs} user={user} onApply={handleApply} 
-                    myApps={apps.filter(a => a.userId === user.id)}
-                />
-            )}
-            {view === 'student-job-detail' && selectedJob && user && (
-                <StudentJobDetail 
-                    job={selectedJob} user={user} 
-                    onBack={() => setView('student-jobs')} 
-                    onApplyConfirm={handleApplyConfirm}
-                    hasActiveApp={apps.some(a => a.userId === user.id && (a.status === 'pending' || a.status === 'approved'))}
-                    isFull={apps.filter(a => a.jobId === selectedJob.id && a.status === 'approved').length >= selectedJob.capacity}
-                />
-            )}
-            {view === 'student-internship' && user && (
-                <StudentInternshipView 
-                    user={user} apps={apps} jobs={jobs} 
-                    onWithdraw={handleWithdrawApp}
-                />
-            )}
-            {view === 'student-services' && user && (
-                <StudentServicesView 
-                    user={user} guides={guides}
-                    onEmergency={() => setView('student-emergency')}
-                    onSelectGuide={(g: any) => { /* Mock open guide */ alert(g.content); }}
-                />
-            )}
-            {view === 'student-emergency' && user && (
-                <StudentEmergencyView 
-                    user={user} onBack={() => setView('student-services')}
-                    onUpdateUser={handleUpdateUser}
-                />
-            )}
-            {view === 'student-profile' && user && (
-                <StudentProfileView 
-                    user={user} 
-                    onLogout={() => setView('login')}
-                    isEditing={isEditingProfile}
-                    onEdit={() => setIsEditingProfile(!isEditingProfile)}
-                    onSaveProfile={(data: any) => {
-                        handleUpdateUser({ ...user, ...data });
-                        setIsEditingProfile(false);
-                    }}
-                />
-            )}
-
-            {/* Admin Views */}
-            {view === 'admin-dash' && (
-                <AdminDashView 
-                    jobs={jobs} students={students} apps={apps}
-                    onSelectJob={(j: any) => { setSelectedJob(j); setView('admin-job-detail'); }}
-                    onGoToGuides={() => setView('admin-guides')}
-                />
-            )}
-            {view === 'admin-apps' && (
-                <AdminApplicationsView 
-                    apps={apps} jobs={jobs} students={students}
-                    onBack={() => setView('admin-dash')}
-                    onUpdateAppStatus={handleUpdateAppStatus}
-                    onSelectStudent={(s: any) => { setSelectedStudent(s); setView('admin-student-detail'); }}
-                />
-            )}
-            {view === 'admin-job-detail' && selectedJob && (
-                <AdminJobDetailView 
-                    job={selectedJob} 
-                    applicants={apps.filter(a => a.jobId === selectedJob.id).map(a => ({
-                        application: a,
-                        student: students.find(s => s.id === a.userId)
-                    }))}
-                    onBack={() => setView('admin-dash')}
-                    onEditJob={(j: any) => { setEditingJob(j); setView('admin-post'); }}
-                    onUpdateAppStatus={handleUpdateAppStatus}
-                />
-            )}
-            {view === 'admin-post' && (
-                <AdminPostJobView 
-                    onSave={handleSaveJob} 
-                    onCancel={() => setView('admin-dash')}
-                    editingJob={editingJob}
-                />
-            )}
-            {view === 'admin-students' && (
-                <AdminStudentsView 
-                    students={students} 
-                    apps={apps}
-                    jobs={jobs}
-                    onSelectStudent={(s: any) => { setSelectedStudent(s); setView('admin-student-detail'); }} 
-                />
-            )}
-            {view === 'admin-student-detail' && selectedStudent && (
-                <AdminStudentDetailView 
-                    student={selectedStudent}
-                    onBack={() => setView('admin-students')}
-                    onUpdateScore={handleUpdateScore}
-                />
-            )}
-            {view === 'admin-guides' && (
-                <AdminGuidesView 
-                    guides={guides}
-                    onAdd={() => { setEditingGuide(null); setView('admin-post-guide'); }}
-                    onEdit={(g: any) => { setEditingGuide(g); setView('admin-post-guide'); }}
-                    onDelete={(id: string) => setGuides(guides.filter(g => g.id !== id))}
-                    onBack={() => setView('admin-dash')}
-                />
-            )}
-            {view === 'admin-post-guide' && (
-                <AdminPostGuideView 
-                    onSave={handleSaveGuide} 
-                    onCancel={() => setView('admin-guides')}
-                    editingGuide={editingGuide}
-                />
-            )}
-
-            {/* Bottom Nav */}
-            {user && !['login', 'register', 'student-job-detail', 'student-emergency', 'admin-post', 'admin-post-guide', 'admin-job-detail', 'admin-student-detail'].includes(view) && (
-                <div className="absolute bottom-0 w-full bg-white border-t border-slate-100 flex justify-around items-center py-4 pb-8 z-50 rounded-t-[32px] shadow-[0_-5px_20px_rgba(0,0,0,0.02)]">
-                    {user.role === 'student' ? (
-                        <>
-                            <button onClick={() => setView('student-jobs')} className={`flex flex-col items-center ${view === 'student-jobs' ? 'text-sky-500' : 'text-slate-300'}`}><Home className={`w-6 h-6 mb-1 ${view === 'student-jobs' ? 'fill-current' : ''}`} /><span className="text-[10px] font-bold">Jobs</span></button>
-                            <button onClick={() => setView('student-internship')} className={`flex flex-col items-center ${view === 'student-internship' ? 'text-sky-500' : 'text-slate-300'}`}><Briefcase className={`w-6 h-6 mb-1 ${view === 'student-internship' ? 'fill-current' : ''}`} /><span className="text-[10px] font-bold">My App</span></button>
-                            <button onClick={() => setView('student-services')} className={`flex flex-col items-center ${view === 'student-services' ? 'text-sky-500' : 'text-slate-300'}`}><ShieldAlert className={`w-6 h-6 mb-1 ${view === 'student-services' ? 'fill-current' : ''}`} /><span className="text-[10px] font-bold">Services</span></button>
-                            <button onClick={() => setView('student-profile')} className={`flex flex-col items-center ${view === 'student-profile' ? 'text-sky-500' : 'text-slate-300'}`}><User className={`w-6 h-6 mb-1 ${view === 'student-profile' ? 'fill-current' : ''}`} /><span className="text-[10px] font-bold">Me</span></button>
-                        </>
-                    ) : (
-                        <>
-                            <button onClick={() => setView('admin-dash')} className={`flex flex-col items-center ${['admin-dash', 'admin-job-detail'].includes(view) ? 'text-sky-500' : 'text-slate-300'}`}><LayoutGrid className={`w-6 h-6 mb-1 ${view.includes('admin-dash') ? 'fill-current' : ''}`} /><span className="text-[10px] font-bold">Dash</span></button>
-                            
-                            {/* Review Tab (Apps) */}
-                            <button onClick={() => setView('admin-apps')} className={`flex flex-col items-center relative ${view === 'admin-apps' ? 'text-sky-500' : 'text-slate-300'}`}>
-                                <Inbox className={`w-6 h-6 mb-1 ${view === 'admin-apps' ? 'fill-current' : ''}`} />
-                                {apps.filter(a => a.status === 'pending').length > 0 && <span className="absolute top-0 right-1 w-2.5 h-2.5 bg-rose-500 rounded-full border-2 border-white"></span>}
-                                <span className="text-[10px] font-bold">Review</span>
-                            </button>
-
-                            {/* Post Button (Middle) */}
-                            <button onClick={() => { setEditingJob(null); setView('admin-post'); }} className="w-12 h-12 bg-sky-500 rounded-full flex items-center justify-center text-white shadow-lg shadow-sky-200 -mt-8 border-4 border-slate-50"><Plus className="w-6 h-6" /></button>
-                            
-                            {/* Students Tab */}
-                            <button onClick={() => setView('admin-students')} className={`flex flex-col items-center ${['admin-students', 'admin-student-detail'].includes(view) ? 'text-sky-500' : 'text-slate-300'}`}><Users className={`w-6 h-6 mb-1 ${view.includes('admin-students') ? 'fill-current' : ''}`} /><span className="text-[10px] font-bold">Students</span></button>
-                        </>
-                    )}
-                </div>
-            )}
-        </div>
-    );
+      {/* Admin Views */}
+      {view === 'admin-dash' && <><AdminDashView jobs={jobs} students={students} apps={apps} onSelectJob={(j:any) => { setSelectedJob(j); setView('admin-job-detail'); }} onGoToGuides={() => setView('admin-guides')} /><Nav role="admin" active="admin-dash" /></>}
+      {view === 'admin-job-detail' && selectedJob && <AdminJobDetailView job={selectedJob} students={students} apps={apps} onBack={() => setView('admin-dash')} onEdit={(j:any) => { setView('admin-post-job'); }} onApprove={(aid:string) => updateAppStatus(aid, 'approved')} onReject={(aid:string) => updateAppStatus(aid, 'rejected')} />}
+      {view === 'admin-post-job' && <AdminPostJobView onSave={handleSaveJob} onCancel={() => setView('admin-dash')} editJob={selectedJob} />}
+      {view === 'admin-students' && <><AdminStudentsView students={students} apps={apps} jobs={jobs} onSelectStudent={(s:any) => { setSelectedStudent(s); setView('admin-student-detail'); }} /><Nav role="admin" active="admin-students" /></>}
+      {view === 'admin-student-detail' && selectedStudent && <AdminStudentDetailView student={selectedStudent} onBack={() => setView('admin-students')} onUpdate={(u:any) => { setStudents(students.map(s => s.id === u.id ? u : s)); setSelectedStudent(u); }} />}
+      {view === 'admin-apps' && <><AdminApplicationsView apps={apps} students={students} jobs={jobs} onApprove={(id:string) => updateAppStatus(id, 'approved')} onReject={(id:string) => updateAppStatus(id, 'rejected')} onGoToStudent={(s:any) => { setSelectedStudent(s); setView('admin-student-detail'); }} /><Nav role="admin" active="admin-apps" /></>}
+      {view === 'admin-guides' && <AdminGuidesView guides={guides} onBack={() => setView('admin-dash')} onCreate={() => setView('admin-post-guide')} onDelete={(id:string) => setGuides(guides.filter(g => g.id !== id))} />}
+      {view === 'admin-post-guide' && <AdminPostGuideView onCancel={() => setView('admin-guides')} onSave={(g:any) => { setGuides([...guides, { ...g, id: `g${Date.now()}` }]); setView('admin-guides'); }} />}
+    </div>
+  );
 };
 
 const root = createRoot(document.getElementById('root')!);
